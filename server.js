@@ -4,17 +4,19 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Folder where uploaded files will be stored
+// Password
+const PASSWORD = process.env.PASSWORD || "change-me";
+
+// Folder for uploaded files
 const uploadFolder = path.join(__dirname, "uploads");
 
-// Create uploads folder if it doesn't exist
 if (!fs.existsSync(uploadFolder)) {
     fs.mkdirSync(uploadFolder);
 }
 
-// File storage settings
+// File storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, uploadFolder);
@@ -27,16 +29,33 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Show the website
+// Simple password protection
+function checkPassword(req, res, next) {
+    const password = req.query.password;
+
+    if (password === PASSWORD) {
+        next();
+    } else {
+        res.status(401).send(`
+            <h2>Password Required</h2>
+            <form>
+                <input type="password" name="password" placeholder="Password">
+                <button type="submit">Login</button>
+            </form>
+        `);
+    }
+}
+
+// Website
 app.use(express.static("public"));
 
-// Upload a file
-app.post("/upload", upload.single("file"), (req, res) => {
-    res.redirect("/");
+// Upload
+app.post("/upload", checkPassword, upload.single("file"), (req, res) => {
+    res.redirect("/?password=" + PASSWORD);
 });
 
-// Get list of files
-app.get("/files", (req, res) => {
+// List files
+app.get("/files", checkPassword, (req, res) => {
     fs.readdir(uploadFolder, (err, files) => {
         if (err) {
             return res.json([]);
@@ -46,8 +65,8 @@ app.get("/files", (req, res) => {
     });
 });
 
-// Download a file
-app.get("/download/:file", (req, res) => {
+// Download
+app.get("/download/:file", checkPassword, (req, res) => {
     const filePath = path.join(uploadFolder, req.params.file);
 
     if (fs.existsSync(filePath)) {
@@ -57,18 +76,18 @@ app.get("/download/:file", (req, res) => {
     }
 });
 
-// Delete a file
-app.get("/delete/:file", (req, res) => {
+// Delete
+app.get("/delete/:file", checkPassword, (req, res) => {
     const filePath = path.join(uploadFolder, req.params.file);
 
     if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
     }
 
-    res.redirect("/");
+    res.redirect("/?password=" + PASSWORD);
 });
 
-// Start the server
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
