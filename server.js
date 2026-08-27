@@ -16,19 +16,29 @@ const PASSWORD = process.env.PASSWORD;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_KEY;
+const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY;
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET;
 
 // ======================================================
-// CHECK ENVIRONMENT VARIABLES
+// ENVIRONMENT CHECK
 // ======================================================
+
+console.log("Checking environment variables...");
+
+if (!PASSWORD) {
+    console.error("WARNING: PASSWORD is missing.");
+}
+
+if (!ADMIN_PASSWORD) {
+    console.error("WARNING: ADMIN_PASSWORD is missing.");
+}
 
 if (!SUPABASE_URL) {
     console.error("ERROR: SUPABASE_URL is missing.");
 }
 
 if (!SUPABASE_KEY) {
-    console.error("ERROR: SUPABASE_KEY is missing.");
+    console.error("ERROR: SUPABASE_SECRET_KEY is missing.");
 }
 
 if (!SUPABASE_BUCKET) {
@@ -83,7 +93,7 @@ function checkAdminPassword(password) {
 }
 
 // ======================================================
-// LOGIN / FILE LIST
+// FILE LIST
 // ======================================================
 
 app.get("/files", async (req, res) => {
@@ -194,10 +204,15 @@ app.post(
                 const file of req.files
             ) {
 
-                // Remove unsafe characters from filename
+                // --------------------------------------------------
+                // SAFE FILENAME
+                // --------------------------------------------------
+
                 const originalName =
                     path
-                        .basename(file.originalname)
+                        .basename(
+                            file.originalname
+                        )
                         .replace(
                             /[^a-zA-Z0-9._-]/g,
                             "_"
@@ -206,12 +221,21 @@ app.post(
                 const timestamp =
                     Date.now();
 
+                const randomPart =
+                    Math.random()
+                        .toString(36)
+                        .substring(2, 8);
+
                 const safeName =
-                    `${timestamp}-${originalName}`;
+                    `${timestamp}-${randomPart}-${originalName}`;
 
                 console.log(
-                    `Uploading: ${safeName}`
+                    `Uploading file: ${safeName}`
                 );
+
+                // --------------------------------------------------
+                // SUPABASE UPLOAD
+                // --------------------------------------------------
 
                 const { error } =
                     await supabase
@@ -301,7 +325,9 @@ app.get(
                 await supabase
                     .storage
                     .from(SUPABASE_BUCKET)
-                    .download(filename);
+                    .download(
+                        filename
+                    );
 
             if (error) {
 
@@ -362,14 +388,18 @@ app.post(
         ) {
 
             return res.status(401).json({
+
                 message:
                     "Incorrect admin password."
+
             });
         }
 
         res.json({
+
             message:
                 "Admin verified."
+
         });
     }
 );
@@ -429,7 +459,10 @@ app.post(
                 (data || []).filter(
                     file => {
 
-                        if (!file.created_at) {
+                        if (
+                            !file.created_at
+                        ) {
+
                             return false;
                         }
 
@@ -443,4 +476,236 @@ app.post(
 
                         const month =
                             String(
-                                fileDate.getMonth() +
+                                fileDate.getMonth() + 1
+                            ).padStart(
+                                2,
+                                "0"
+                            );
+
+                        const day =
+                            String(
+                                fileDate.getDate()
+                            ).padStart(
+                                2,
+                                "0"
+                            );
+
+                        return (
+                            `${year}-${month}-${day}` ===
+                            date
+                        );
+                    }
+                );
+
+            if (
+                filesForDate.length === 0
+            ) {
+
+                return res.status(404).send(
+                    "No files were uploaded on this date."
+                );
+            }
+
+            res.setHeader(
+                "Content-Type",
+                "application/zip"
+            );
+
+            res.setHeader(
+                "Content-Disposition",
+                `attachment; filename="Aashutosh-Files-${date}.zip"`
+            );
+
+            const archive =
+                archiver(
+                    "zip",
+                    {
+                        zlib: {
+                            level: 9
+                        }
+                    }
+                );
+
+            archive.on(
+                "error",
+                error => {
+
+                    console.error(
+                        "ARCHIVE ERROR:",
+                        error
+                    );
+
+                    if (
+                        !res.headersSent
+                    ) {
+
+                        res.status(
+                            500
+                        ).end();
+
+                    }
+                }
+            );
+
+            archive.pipe(res);
+
+            for (
+                const file of filesForDate
+            ) {
+
+                const {
+                    data: fileData,
+                    error: downloadError
+                } =
+                    await supabase
+                        .storage
+                        .from(SUPABASE_BUCKET)
+                        .download(
+                            file.name
+                        );
+
+                if (
+                    downloadError
+                ) {
+
+                    console.error(
+                        "ZIP FILE DOWNLOAD ERROR:",
+                        downloadError
+                    );
+
+                    continue;
+                }
+
+                const buffer =
+                    Buffer.from(
+                        await fileData.arrayBuffer()
+                    );
+
+                archive.append(
+                    buffer,
+                    {
+                        name:
+                            file.name
+                    }
+                );
+            }
+
+            await archive.finalize();
+
+        } catch (error) {
+
+            console.error(
+                "ZIP DOWNLOAD ERROR:",
+                error
+            );
+
+            if (
+                !res.headersSent
+            ) {
+
+                res.status(500).send(
+                    "ZIP download failed."
+                );
+            }
+        }
+    }
+);
+
+// ======================================================
+// DELETE FILE
+// ======================================================
+
+app.post(
+    "/delete",
+    async (req, res) => {
+
+        const {
+            file,
+            password
+        } = req.body;
+
+        if (
+            !checkAdminPassword(password)
+        ) {
+
+            return res.status(401).json({
+
+                message:
+                    "Incorrect admin password."
+
+            });
+        }
+
+        if (!file) {
+
+            return res.status(400).json({
+
+                message:
+                    "No file specified."
+
+            });
+        }
+
+        try {
+
+            const { error } =
+                await supabase
+                    .storage
+                    .from(SUPABASE_BUCKET)
+                    .remove([
+                        file
+                    ]);
+
+            if (error) {
+
+                console.error(
+                    "SUPABASE DELETE ERROR:",
+                    error
+                );
+
+                return res.status(500).json({
+
+                    message:
+                        `Failed to delete file: ${error.message}`
+
+                });
+            }
+
+            res.json({
+
+                message:
+                    "File deleted successfully."
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "DELETE ERROR:",
+                error
+            );
+
+            res.status(500).json({
+
+                message:
+                    "Delete failed."
+
+            });
+        }
+    }
+);
+
+// ======================================================
+// START SERVER
+// ======================================================
+
+app.listen(
+    PORT,
+    () => {
+
+        console.log(
+            `Server running on port ${PORT}`
+        );
+
+    }
+);
