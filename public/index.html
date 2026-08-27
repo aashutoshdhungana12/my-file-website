@@ -9,7 +9,7 @@
 
 <title>Aashutosh's Cloud Storage</title>
 
-<!-- Font Awesome Icons -->
+<!-- Font Awesome -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -115,9 +115,9 @@ body {
 }
 
 
-/* ================= CONTACT & INSTAGRAM ================= */
+/* ================= CONTACT / INSTAGRAM ================= */
 
-.social-links {
+.contact-instagram {
 
     display: flex;
 
@@ -125,44 +125,59 @@ body {
 
     align-items: center;
 
-    gap: 18px;
+    gap: 7px;
 
     margin-bottom: 25px;
+
+    font-size: 14px;
+
+    color: #8994a6;
 }
 
 
-.contact-link,
 .instagram-link {
 
     display: inline-flex;
 
     align-items: center;
 
-    gap: 7px;
+    gap: 6px;
 
     color: #55a7ff;
 
     text-decoration: none;
 
-    font-size: 14px;
-
     transition: 0.2s;
 }
 
 
-.contact-link:hover,
+.instagram-link i {
+
+    font-size: 17px;
+
+    background:
+        linear-gradient(
+            45deg,
+            #feda75,
+            #fa7e1e,
+            #d62976,
+            #962fbf,
+            #4f5bd5
+        );
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+
 .instagram-link:hover {
 
     color: white;
 
     text-decoration: underline;
-}
-
-
-.contact-link i,
-.instagram-link i {
-
-    font-size: 16px;
 }
 
 
@@ -1092,13 +1107,6 @@ input[type="file"] {
         text-align: center;
     }
 
-    .social-links {
-
-        flex-direction: column;
-
-        gap: 8px;
-    }
-
 }
 
 </style>
@@ -1138,18 +1146,13 @@ Private cloud storage • Authorized access only
 </p>
 
 
-<!-- CONTACT & INSTAGRAM -->
+<!-- CONTACT -->
 
-<div class="social-links">
+<div class="contact-instagram">
 
-<a
-    class="contact-link"
-    href="mailto:your-email@example.com"
->
-<i class="fa-solid fa-envelope"></i>
-Contact
-</a>
-
+<span>
+Contact:
+</span>
 
 <a
     class="instagram-link"
@@ -1157,8 +1160,11 @@ Contact
     target="_blank"
     rel="noopener noreferrer"
 >
+
 <i class="fa-brands fa-instagram"></i>
+
 @aashutosh.dhungana
+
 </a>
 
 </div>
