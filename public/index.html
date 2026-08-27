@@ -33,20 +33,26 @@ body {
 
 #loginScreen {
     min-height: 100vh;
+
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
     padding: 20px;
 }
 
 .login-box {
     width: 100%;
     max-width: 430px;
+
     padding: 40px 35px;
 
     background: rgba(15,20,30,0.96);
 
     border: 1px solid #273246;
+
     border-radius: 20px;
 
     text-align: center;
@@ -55,11 +61,14 @@ body {
         0 20px 70px rgba(0,0,0,0.6);
 }
 
+/* ================= PROFILE PICTURE ================= */
+
 .profile-image {
     width: 90px;
     height: 90px;
 
     border-radius: 50%;
+
     object-fit: cover;
 
     margin-bottom: 18px;
@@ -72,33 +81,68 @@ body {
 
 .login-box h1 {
     margin: 0;
+
     font-size: 27px;
 }
 
 .subtitle {
     color: #8994a6;
+
     margin: 10px 0 25px;
 }
 
 /* ================= INSTAGRAM ================= */
 
-.instagram-link {
-    display: inline-block;
+.instagram-contact {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 9px;
 
     margin-bottom: 25px;
+}
 
-    color: #55a7ff;
+.instagram-link {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     text-decoration: none;
-
-    font-size: 14px;
 
     transition: 0.2s;
 }
 
-.instagram-link:hover {
-    color: white;
-    text-decoration: underline;
+.instagram-icon {
+    width: 23px;
+
+    height: 23px;
+
+    display: block;
+
+    transition: 0.2s;
+}
+
+.instagram-link:hover .instagram-icon {
+    transform: scale(1.12);
+
+    filter:
+        drop-shadow(
+            0 0 6px
+            rgba(255,0,120,0.35)
+        );
+}
+
+.instagram-username {
+    color: #aeb9ca;
+
+    font-size: 14px;
+
+    font-weight: 500;
 }
 
 /* ================= PASSWORD ================= */
@@ -209,6 +253,7 @@ body {
 
 #dashboard {
     display: none;
+
     min-height: 100vh;
 }
 
@@ -232,6 +277,7 @@ header {
 
 .brand {
     font-size: 21px;
+
     font-weight: bold;
 }
 
@@ -251,19 +297,19 @@ header {
     gap: 10px;
 }
 
-/* ================= DOWNLOAD ALL ================= */
+/* ================= DOWNLOAD YOUR FILES ================= */
 
 .download-all {
     background:
         linear-gradient(
             135deg,
-            #2878ff,
-            #1554c7
+            #162235,
+            #111a29
         );
 
-    border: none;
+    border: 1px solid #3d6fa8;
 
-    color: white;
+    color: #ffffff;
 
     padding: 10px 15px;
 
@@ -276,14 +322,23 @@ header {
     transition: 0.2s;
 
     box-shadow:
-        0 5px 18px rgba(40,120,255,0.2);
+        0 5px 18px rgba(40,120,255,0.15);
 }
 
 .download-all:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #1d304a,
+            #17263a
+        );
+
+    border-color: #5c91ca;
+
     transform: translateY(-1px);
 
     box-shadow:
-        0 7px 22px rgba(40,120,255,0.35);
+        0 7px 22px rgba(40,120,255,0.25);
 }
 
 /* ================= LOGOUT ================= */
@@ -356,7 +411,7 @@ main {
     flex-wrap: wrap;
 }
 
-/* ================= CUSTOM FILE BUTTON ================= */
+/* ================= CHOOSE FILES ================= */
 
 .file-input-wrapper {
     flex: 1;
@@ -370,6 +425,7 @@ main {
     position: absolute;
 
     width: 1px;
+
     height: 1px;
 
     opacity: 0;
@@ -412,7 +468,8 @@ main {
     transition: 0.2s;
 
     box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.03);
+        inset 0 1px 0
+        rgba(255,255,255,0.03);
 }
 
 .choose-files-button:hover {
@@ -430,7 +487,8 @@ main {
     transform: translateY(-1px);
 
     box-shadow:
-        0 5px 18px rgba(40,120,255,0.12);
+        0 5px 18px
+        rgba(40,120,255,0.12);
 }
 
 .choose-icon {
@@ -499,7 +557,7 @@ main {
     min-height: 20px;
 }
 
-/* ================= FILES ================= */
+/* ================= FILE LIST ================= */
 
 .files-header {
     display: flex;
@@ -593,47 +651,83 @@ main {
     flex-shrink: 0;
 }
 
+/* ================= DOWNLOAD ================= */
+
 .download {
-    background: #172333;
+    background:
+        linear-gradient(
+            135deg,
+            #162235,
+            #111a29
+        );
 
     color: #55a7ff;
 
-    border: 1px solid #29415d;
+    border: 1px solid #3d6fa8;
 
     padding: 8px 12px;
 
-    border-radius: 7px;
+    border-radius: 8px;
 
     text-decoration: none;
+
+    font-weight: bold;
 
     transition: 0.2s;
 }
 
 .download:hover {
-    background: #203247;
+    background:
+        linear-gradient(
+            135deg,
+            #1d304a,
+            #17263a
+        );
+
+    border-color: #5c91ca;
+
+    transform: translateY(-1px);
 }
 
+/* ================= DELETE ================= */
+
 .delete {
-    background: #29171b;
+    background:
+        linear-gradient(
+            135deg,
+            #35191e,
+            #281419
+        );
 
     color: #ff6672;
 
-    border: 1px solid #543038;
+    border: 1px solid #71343d;
 
     padding: 8px 12px;
 
-    border-radius: 7px;
+    border-radius: 8px;
 
     cursor: pointer;
+
+    font-weight: bold;
 
     transition: 0.2s;
 }
 
 .delete:hover {
-    background: #351c21;
+    background:
+        linear-gradient(
+            135deg,
+            #482026,
+            #35191f
+        );
+
+    border-color: #a14854;
 
     transform: translateY(-1px);
 }
+
+/* ================= EMPTY ================= */
 
 .empty {
     text-align: center;
@@ -647,141 +741,7 @@ main {
     border-radius: 13px;
 }
 
-/* ================= DOWNLOAD ADMIN MODAL ================= */
-
-#downloadAdminModal {
-    display: none;
-
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0,0,0,0.78);
-
-    justify-content: center;
-
-    align-items: center;
-
-    padding: 20px;
-
-    z-index: 1050;
-}
-
-.download-admin-box {
-    background: #101722;
-
-    border: 1px solid #303b4d;
-
-    width: 100%;
-
-    max-width: 420px;
-
-    padding: 30px;
-
-    border-radius: 16px;
-
-    text-align: center;
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,0.65);
-}
-
-.download-admin-box h2 {
-    margin-top: 0;
-
-    margin-bottom: 10px;
-}
-
-.download-admin-box p {
-    color: #8994a6;
-
-    line-height: 1.6;
-
-    margin-bottom: 22px;
-}
-
-.admin-password {
-    width: 100%;
-
-    padding: 13px;
-
-    background: #080d14;
-
-    color: white;
-
-    border: 1px solid #364154;
-
-    border-radius: 8px;
-
-    text-align: center;
-
-    outline: none;
-
-    font-size: 15px;
-}
-
-.admin-password:focus {
-    border-color: #4da3ff;
-
-    box-shadow:
-        0 0 15px rgba(77,163,255,0.15);
-}
-
-#adminDownloadMessage {
-    min-height: 20px;
-
-    margin-top: 12px;
-
-    color: #ff5966;
-
-    font-size: 14px;
-}
-
-.admin-modal-buttons {
-    display: flex;
-
-    gap: 10px;
-
-    margin-top: 15px;
-}
-
-.admin-modal-buttons button {
-    flex: 1;
-
-    padding: 11px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-}
-
-.admin-cancel {
-    background: #1b2431;
-
-    border: 1px solid #303b4d;
-
-    color: white;
-}
-
-.admin-cancel:hover {
-    background: #252f3e;
-}
-
-.admin-confirm {
-    background: #2878ff;
-
-    border: none;
-
-    color: white;
-
-    font-weight: bold;
-}
-
-.admin-confirm:hover {
-    background: #1764df;
-}
-
-/* ================= DATE DOWNLOAD MODAL ================= */
+/* ================= DOWNLOAD MODAL ================= */
 
 #downloadModal {
     display: none;
@@ -817,7 +777,8 @@ main {
     text-align: center;
 
     box-shadow:
-        0 25px 80px rgba(0,0,0,0.65);
+        0 25px 80px
+        rgba(0,0,0,0.65);
 }
 
 .download-modal-box h2 {
@@ -918,6 +879,140 @@ main {
     font-size: 14px;
 }
 
+/* ================= ADMIN PASSWORD MODAL ================= */
+
+#adminModal {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.78);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    z-index: 1200;
+}
+
+.admin-modal-box {
+    background: #101722;
+
+    border: 1px solid #303b4d;
+
+    width: 100%;
+
+    max-width: 430px;
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,0.65);
+}
+
+.admin-modal-box h2 {
+    margin-top: 0;
+
+    margin-bottom: 10px;
+}
+
+.admin-modal-box p {
+    color: #8994a6;
+
+    line-height: 1.5;
+
+    margin-bottom: 22px;
+}
+
+.admin-password {
+    width: 100%;
+
+    padding: 13px;
+
+    background: #080d14;
+
+    color: white;
+
+    border: 1px solid #364154;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    outline: none;
+}
+
+.admin-password:focus {
+    border-color: #4da3ff;
+
+    box-shadow:
+        0 0 12px
+        rgba(77,163,255,0.15);
+}
+
+.admin-message {
+    min-height: 20px;
+
+    margin-top: 12px;
+
+    color: #ff5966;
+
+    font-size: 14px;
+}
+
+.admin-buttons {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+.admin-buttons button {
+    flex: 1;
+
+    padding: 11px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+.admin-cancel {
+    background: #1b2431;
+
+    border: 1px solid #303b4d;
+
+    color: white;
+}
+
+.admin-cancel:hover {
+    background: #252f3e;
+}
+
+.admin-confirm {
+    background: #2878ff;
+
+    border: none;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+.admin-confirm:hover {
+    background: #1764df;
+}
+
 /* ================= DELETE MODAL ================= */
 
 #deleteModal {
@@ -952,9 +1047,6 @@ main {
     border-radius: 15px;
 
     text-align: center;
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,0.65);
 }
 
 .modal h2 {
@@ -966,7 +1058,7 @@ main {
 .modal p {
     color: #8994a6;
 
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .delete-password {
@@ -1032,7 +1124,7 @@ main {
 }
 
 .confirm-delete:hover {
-    background: #bd2938;
+    background: #b92737;
 }
 
 #deleteMessage {
@@ -1111,9 +1203,8 @@ main {
 
 <img
     class="profile-image"
-    src="https://www.instagram.com/p/DcgfuXzCKAO/"
-    alt="Aashutosh"
-    onerror="this.style.display='none';"
+    src="https://api.dicebear.com/9.x/adventurer/svg?seed=Aashutosh"
+    alt="Profile Picture"
 >
 
 <h1>
@@ -1124,13 +1215,91 @@ Aashutosh's Cloud Storage
 Private cloud storage • Authorized access only
 </p>
 
+<div class="instagram-contact">
+
 <a
-    class="instagram-link"
     href="https://www.instagram.com/aashutosh.dhungana/"
     target="_blank"
+    class="instagram-link"
+    aria-label="Instagram"
 >
-Contact : Instagram • aashutosh.dhungana
+
+<svg
+    class="instagram-icon"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+>
+
+<defs>
+
+<linearGradient
+    id="instagramGradient"
+    x1="0%"
+    y1="100%"
+    x2="100%"
+    y2="0%"
+>
+
+<stop
+    offset="0%"
+    stop-color="#FFD600"
+/>
+
+<stop
+    offset="45%"
+    stop-color="#FF7A00"
+/>
+
+<stop
+    offset="75%"
+    stop-color="#FF0169"
+/>
+
+<stop
+    offset="100%"
+    stop-color="#D300C5"
+/>
+
+</linearGradient>
+
+</defs>
+
+<rect
+    x="2"
+    y="2"
+    width="20"
+    height="20"
+    rx="6"
+    fill="none"
+    stroke="url(#instagramGradient)"
+    stroke-width="2"
+/>
+
+<circle
+    cx="12"
+    cy="12"
+    r="4.5"
+    fill="none"
+    stroke="url(#instagramGradient)"
+    stroke-width="2"
+/>
+
+<circle
+    cx="17.5"
+    cy="6.5"
+    r="1.2"
+    fill="#FF0169"
+/>
+
+</svg>
+
 </a>
+
+<span class="instagram-username">
+aashutosh.dhungana
+</span>
+
+</div>
 
 <input
     id="password"
@@ -1175,9 +1344,9 @@ AASHUTOSH'S CLOUD STORAGE
 
 <button
     class="download-all"
-    onclick="openAdminDownloadModal()"
+    onclick="openAdminModal()"
 >
-💾 DOWNLOAD YOUR FILES
+⬇️ DOWNLOAD YOUR FILES
 </button>
 
 <button
@@ -1196,7 +1365,7 @@ Logout
 <div class="welcome">
 
 <h2>
-Welcome, Aashutosh
+Welcome Aashutosh
 </h2>
 
 <p>
@@ -1210,7 +1379,7 @@ Dashboard
 <div class="upload-box">
 
 <h3>
-⬆️ Upload Files
+Upload Files
 </h3>
 
 <form id="uploadForm">
@@ -1230,8 +1399,15 @@ Dashboard
     for="fileInput"
     class="choose-files-button"
 >
-<span class="choose-icon">📂</span>
-<span>CHOOSE FILES</span>
+
+<span class="choose-icon">
+📂
+</span>
+
+<span>
+CHOOSE FILES
+</span>
+
 </label>
 
 </div>
@@ -1247,7 +1423,9 @@ Upload
 </div>
 
 <div id="selectedFiles">
+
 No files selected.
+
 </div>
 
 </form>
@@ -1261,7 +1439,7 @@ No files selected.
 <div class="files-header">
 
 <h3>
-📂 Recently Uploaded Files
+Recently Uploaded Files
 </h3>
 
 <button
@@ -1279,11 +1457,11 @@ No files selected.
 
 </section>
 
-<!-- ================= ADMIN DOWNLOAD PASSWORD MODAL ================= -->
+<!-- ================= ADMIN PASSWORD MODAL ================= -->
 
-<div id="downloadAdminModal">
+<div id="adminModal">
 
-<div class="download-admin-box">
+<div class="admin-modal-box">
 
 <h2>
 🔒 ADMIN ONLY
@@ -1295,27 +1473,30 @@ If you are the admin, please enter the admin password.
 </p>
 
 <input
-    id="adminDownloadPassword"
+    id="adminPassword"
     class="admin-password"
     type="password"
     placeholder="Enter admin password"
     autocomplete="off"
 >
 
-<div id="adminDownloadMessage"></div>
+<div
+    id="adminMessage"
+    class="admin-message"
+></div>
 
-<div class="admin-modal-buttons">
+<div class="admin-buttons">
 
 <button
     class="admin-cancel"
-    onclick="closeAdminDownloadModal()"
+    onclick="closeAdminModal()"
 >
 Cancel
 </button>
 
 <button
     class="admin-confirm"
-    onclick="confirmAdminDownload()"
+    onclick="verifyAdminPassword()"
 >
 Continue
 </button>
@@ -1326,21 +1507,24 @@ Continue
 
 </div>
 
-<!-- ================= DATE DOWNLOAD MODAL ================= -->
+<!-- ================= DOWNLOAD DATE MODAL ================= -->
 
 <div id="downloadModal">
 
 <div class="download-modal-box">
 
 <h2>
-💾 Download Your Files
+⬇️ Download Your Files
 </h2>
 
 <p>
 Select a date to download all files uploaded on that day.
 </p>
 
-<div id="dateList" class="date-list">
+<div
+    id="dateList"
+    class="date-list"
+>
 
 <div class="empty">
 Loading dates...
@@ -1368,7 +1552,7 @@ Cancel
 <div class="modal">
 
 <h2>
-🔒 ADMIN ONLY
+🗑️ ADMIN ONLY
 </h2>
 
 <p>
@@ -1399,7 +1583,7 @@ Cancel
     class="confirm-delete"
     onclick="confirmDelete()"
 >
-❌ DELETE
+🗑️ Delete
 </button>
 
 </div>
@@ -1509,6 +1693,24 @@ async function login() {
 }
 
 
+/* ================= ENTER TO LOGIN ================= */
+
+document
+    .getElementById("password")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                login();
+
+            }
+
+        }
+    );
+
+
 /* ================= LOAD FILES ================= */
 
 async function loadFiles() {
@@ -1550,7 +1752,7 @@ async function loadFiles() {
         if (files.length === 0) {
 
             list.innerHTML =
-                '<div class="empty">📂 No files uploaded yet.</div>';
+                '<div class="empty">No files uploaded yet.</div>';
 
             return;
         }
@@ -1633,7 +1835,7 @@ async function loadFiles() {
                 "delete";
 
             deleteButton.textContent =
-                "❌ Delete";
+                "🗑️ Delete";
 
             deleteButton.onclick =
                 function() {
@@ -1688,7 +1890,7 @@ document
 
             if (files.length === 0) {
 
-                selected.innerHTML =
+                selected.textContent =
                     "No files selected.";
 
                 return;
@@ -1697,7 +1899,9 @@ document
             if (files.length > 20) {
 
                 selected.innerHTML =
-                    '<span style="color:#ff5966;font-weight:bold;">Maximum of 20 files can be selected at once.</span>';
+                    '<span style="color:#ff5966;font-weight:bold;">' +
+                    "Maximum of 20 files can be selected at once." +
+                    "</span>";
 
                 this.value = "";
 
@@ -1726,7 +1930,10 @@ document
                     escapeHTML(file.name) +
                     "</span>";
 
-                if (index < files.length - 1) {
+                if (
+                    index <
+                    files.length - 1
+                ) {
 
                     html += "<br>";
 
@@ -1736,7 +1943,6 @@ document
 
             selected.innerHTML =
                 html;
-
         }
     );
 
@@ -1892,26 +2098,26 @@ function escapeHTML(text) {
 }
 
 
-/* ================= ADMIN DOWNLOAD ================= */
+/* ================= ADMIN MODAL ================= */
 
-function openAdminDownloadModal() {
+function openAdminModal() {
 
     const modal =
         document.getElementById(
-            "downloadAdminModal"
+            "adminModal"
         );
 
-    const password =
+    const input =
         document.getElementById(
-            "adminDownloadPassword"
+            "adminPassword"
         );
 
     const message =
         document.getElementById(
-            "adminDownloadMessage"
+            "adminMessage"
         );
 
-    password.value = "";
+    input.value = "";
 
     message.textContent = "";
 
@@ -1920,40 +2126,39 @@ function openAdminDownloadModal() {
 
     setTimeout(function() {
 
-        password.focus();
+        input.focus();
 
     }, 100);
-
 }
 
 
-function closeAdminDownloadModal() {
+function closeAdminModal() {
 
     document
         .getElementById(
-            "downloadAdminModal"
+            "adminModal"
         )
         .style.display =
         "none";
 }
 
 
-async function confirmAdminDownload() {
+async function verifyAdminPassword() {
 
-    const password =
+    const input =
         document.getElementById(
-            "adminDownloadPassword"
+            "adminPassword"
         );
 
     const message =
         document.getElementById(
-            "adminDownloadMessage"
+            "adminMessage"
         );
 
-    const value =
-        password.value.trim();
+    const password =
+        input.value.trim();
 
-    if (!value) {
+    if (!password) {
 
         message.textContent =
             "Please enter the admin password.";
@@ -1962,70 +2167,55 @@ async function confirmAdminDownload() {
     }
 
     /*
-     * Verify the admin password by making
-     * a protected request to the files endpoint.
+     * We verify the admin password
+     * by making a request to the
+     * date download endpoint.
      *
-     * The server's ADMIN password should be
-     * used for the admin-only download route.
+     * A harmless date is used only
+     * for authentication.
      */
+
+    message.textContent =
+        "Verifying...";
 
     try {
 
         const response =
             await fetch(
-                "/download-date?password=" +
-                encodeURIComponent(value) +
-                "&date=0000-00-00"
+                "/download-date?date=1900-01-01&password=" +
+                encodeURIComponent(password)
             );
 
         /*
-         * A 404 here means the password was accepted
-         * but there are no files for that dummy date.
-         * A 400 means the date was invalid.
+         * 401 means wrong password.
          *
-         * Since the current server uses the same
-         * password-check middleware, this verifies
-         * the password without downloading anything.
+         * 404 means password was accepted,
+         * but there are no files on that date.
          */
 
         if (
-            response.status === 404 ||
-            response.status === 400
+            response.status === 401
         ) {
-
-            adminPassword =
-                value;
-
-            closeAdminDownloadModal();
-
-            openDownloadModal();
-
-            return;
-        }
-
-        if (response.status === 401) {
 
             message.textContent =
                 "🔴 Incorrect admin password.";
 
-            password.value = "";
+            input.value = "";
 
-            password.focus();
+            input.focus();
 
             return;
         }
 
-        /*
-         * Any other successful/valid response
-         * also means the password passed.
-         */
-
-        if (response.ok) {
+        if (
+            response.status === 404 ||
+            response.ok
+        ) {
 
             adminPassword =
-                value;
+                password;
 
-            closeAdminDownloadModal();
+            closeAdminModal();
 
             openDownloadModal();
 
@@ -2033,7 +2223,7 @@ async function confirmAdminDownload() {
         }
 
         message.textContent =
-            "🔴 Unable to verify admin password.";
+            "Unable to verify password.";
 
     } catch (error) {
 
@@ -2041,12 +2231,29 @@ async function confirmAdminDownload() {
 
         message.textContent =
             "Connection error. Try again.";
-
     }
 }
 
 
-/* ================= DOWNLOAD YOUR FILES ================= */
+/* ================= ADMIN ENTER KEY ================= */
+
+document
+    .getElementById("adminPassword")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                verifyAdminPassword();
+
+            }
+
+        }
+    );
+
+
+/* ================= DOWNLOAD MODAL ================= */
 
 function openDownloadModal() {
 
@@ -2212,8 +2419,7 @@ function buildDateList() {
                             m +
                             "-" +
                             d
-                        ) ===
-                        dateString;
+                        ) === dateString;
 
                     }
                 );
@@ -2252,6 +2458,8 @@ function buildDateList() {
 }
 
 
+/* ================= DOWNLOAD BY DATE ================= */
+
 function downloadDate(date) {
 
     const message =
@@ -2276,44 +2484,45 @@ function downloadDate(date) {
     setTimeout(function() {
 
         message.textContent =
-            "Your download is being prepared.";
+            "Download started.";
 
-    }, 500);
+    }, 1000);
 }
 
 
-/* ================= DELETE ================= */
+/* ================= DELETE MODAL ================= */
 
 function openDeleteModal(file) {
 
     fileToDelete =
         file;
 
-    const modal =
-        document.getElementById(
-            "deleteModal"
-        );
-
-    const password =
-        document.getElementById(
+    document
+        .getElementById(
             "deletePassword"
-        );
+        )
+        .value = "";
 
-    const message =
-        document.getElementById(
+    document
+        .getElementById(
             "deleteMessage"
-        );
+        )
+        .textContent = "";
 
-    password.value = "";
-
-    message.textContent = "";
-
-    modal.style.display =
+    document
+        .getElementById(
+            "deleteModal"
+        )
+        .style.display =
         "flex";
 
     setTimeout(function() {
 
-        password.focus();
+        document
+            .getElementById(
+                "deletePassword"
+            )
+            .focus();
 
     }, 100);
 }
@@ -2336,25 +2545,37 @@ function closeDeleteModal() {
 async function confirmDelete() {
 
     const password =
-        document.getElementById(
-            "deletePassword"
-        );
+        document
+            .getElementById(
+                "deletePassword"
+            )
+            .value
+            .trim();
 
     const message =
-        document.getElementById(
-            "deleteMessage"
-        );
+        document
+            .getElementById(
+                "deleteMessage"
+            );
 
-    const value =
-        password.value.trim();
-
-    if (!value) {
+    if (!password) {
 
         message.textContent =
             "Please enter the deletion password.";
 
         return;
     }
+
+    if (!fileToDelete) {
+
+        message.textContent =
+            "No file selected.";
+
+        return;
+    }
+
+    message.textContent =
+        "Deleting...";
 
     try {
 
@@ -2369,13 +2590,14 @@ async function confirmDelete() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
-                        file:
-                            fileToDelete,
+                    body:
+                        JSON.stringify({
+                            file:
+                                fileToDelete,
 
-                        password:
-                            value
-                    })
+                            password:
+                                password
+                        })
                 }
             );
 
@@ -2397,9 +2619,6 @@ async function confirmDelete() {
                     "Delete failed."
                 );
 
-            password.value = "";
-
-            password.focus();
         }
 
     } catch (error) {
@@ -2408,56 +2627,28 @@ async function confirmDelete() {
 
         message.textContent =
             "🔴 Connection error.";
-
     }
 }
 
 
-/* ================= FORMAT SIZE ================= */
+/* ================= DELETE ENTER KEY ================= */
 
-function formatSize(bytes) {
+document
+    .getElementById(
+        "deletePassword"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
 
-    if (!bytes) {
-        return "0 B";
-    }
+            if (event.key === "Enter") {
 
-    const units =
-        [
-            "B",
-            "KB",
-            "MB",
-            "GB",
-            "TB"
-        ];
+                confirmDelete();
 
-    let size =
-        bytes;
+            }
 
-    let index =
-        0;
-
-    while (
-        size >= 1024 &&
-        index < units.length - 1
-    ) {
-
-        size =
-            size / 1024;
-
-        index++;
-
-    }
-
-    return (
-        size.toFixed(
-            index === 0
-                ? 0
-                : 2
-        ) +
-        " " +
-        units[index]
+        }
     );
-}
 
 
 /* ================= FORMAT DATE ================= */
@@ -2489,6 +2680,52 @@ function formatTime(date) {
 }
 
 
+/* ================= FORMAT SIZE ================= */
+
+function formatSize(bytes) {
+
+    if (!bytes) {
+        return "Unknown size";
+    }
+
+    const units = [
+        "Bytes",
+        "KB",
+        "MB",
+        "GB",
+        "TB"
+    ];
+
+    let size =
+        bytes;
+
+    let index =
+        0;
+
+    while (
+        size >= 1024 &&
+        index < units.length - 1
+    ) {
+
+        size =
+            size / 1024;
+
+        index++;
+
+    }
+
+    return (
+        size.toFixed(
+            index === 0
+                ? 0
+                : 2
+        ) +
+        " " +
+        units[index]
+    );
+}
+
+
 /* ================= LOGOUT ================= */
 
 function logout() {
@@ -2497,9 +2734,6 @@ function logout() {
         "";
 
     adminPassword =
-        "";
-
-    fileToDelete =
         "";
 
     allFiles =
@@ -2533,76 +2767,32 @@ function logout() {
         .textContent =
         "";
 
-    closeDownloadModal();
+    closeAdminModal();
 
-    closeAdminDownloadModal();
+    closeDownloadModal();
 
     closeDeleteModal();
 }
 
 
-/* ================= ENTER KEY LOGIN ================= */
+/* ================= CLOSE MODALS WITH ESC ================= */
 
-document
-    .getElementById("password")
-    .addEventListener(
-        "keydown",
-        function(event) {
+document.addEventListener(
+    "keydown",
+    function(event) {
 
-            if (
-                event.key === "Enter"
-            ) {
-
-                login();
-
-            }
-
+        if (event.key !== "Escape") {
+            return;
         }
-    );
 
+        closeAdminModal();
 
-/* ================= ENTER KEY ADMIN DOWNLOAD ================= */
+        closeDownloadModal();
 
-document
-    .getElementById(
-        "adminDownloadPassword"
-    )
-    .addEventListener(
-        "keydown",
-        function(event) {
+        closeDeleteModal();
 
-            if (
-                event.key === "Enter"
-            ) {
-
-                confirmAdminDownload();
-
-            }
-
-        }
-    );
-
-
-/* ================= ENTER KEY DELETE ================= */
-
-document
-    .getElementById(
-        "deletePassword"
-    )
-    .addEventListener(
-        "keydown",
-        function(event) {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                confirmDelete();
-
-            }
-
-        }
-    );
+    }
+);
 
 </script>
 
