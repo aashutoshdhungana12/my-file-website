@@ -23,14 +23,17 @@ const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET;
 // ENVIRONMENT CHECK
 // ======================================================
 
-console.log("Checking environment variables...");
+console.log("========================================");
+console.log("AASHUTOSH'S CLOUD STORAGE");
+console.log("Starting server...");
+console.log("========================================");
 
 if (!PASSWORD) {
-    console.error("WARNING: PASSWORD is missing.");
+    console.error("ERROR: PASSWORD is missing.");
 }
 
 if (!ADMIN_PASSWORD) {
-    console.error("WARNING: ADMIN_PASSWORD is missing.");
+    console.error("ERROR: ADMIN_PASSWORD is missing.");
 }
 
 if (!SUPABASE_URL) {
@@ -45,14 +48,30 @@ if (!SUPABASE_BUCKET) {
     console.error("ERROR: SUPABASE_BUCKET is missing.");
 }
 
+if (
+    SUPABASE_URL &&
+    SUPABASE_KEY &&
+    SUPABASE_BUCKET
+) {
+    console.log("Supabase configuration found.");
+    console.log(
+        "Supabase bucket:",
+        SUPABASE_BUCKET
+    );
+}
+
 // ======================================================
 // SUPABASE
 // ======================================================
 
-const supabase = createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+let supabase = null;
+
+if (SUPABASE_URL && SUPABASE_KEY) {
+    supabase = createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+}
 
 // ======================================================
 // MIDDLEWARE
@@ -75,7 +94,7 @@ const upload = multer({
 });
 
 // ======================================================
-// AUTHENTICATION
+// HELPER FUNCTIONS
 // ======================================================
 
 function checkPassword(req) {
@@ -84,12 +103,26 @@ function checkPassword(req) {
         req.query.password ||
         req.body?.password;
 
-    return password === PASSWORD;
+    return (
+        PASSWORD &&
+        password === PASSWORD
+    );
 }
 
 function checkAdminPassword(password) {
 
-    return password === ADMIN_PASSWORD;
+    return (
+        ADMIN_PASSWORD &&
+        password === ADMIN_PASSWORD
+    );
+}
+
+function storageReady() {
+
+    return (
+        supabase &&
+        SUPABASE_BUCKET
+    );
 }
 
 // ======================================================
@@ -102,6 +135,14 @@ app.get("/files", async (req, res) => {
 
         return res.status(401).json({
             message: "Access denied."
+        });
+    }
+
+    if (!storageReady()) {
+
+        return res.status(500).json({
+            message:
+                "Storage configuration is missing."
         });
     }
 
@@ -182,6 +223,14 @@ app.post(
             return res.status(401).json({
                 message:
                     "Access denied."
+            });
+        }
+
+        if (!storageReady()) {
+
+            return res.status(500).json({
+                message:
+                    "Storage configuration is missing."
             });
         }
 
@@ -316,6 +365,13 @@ app.get(
             );
         }
 
+        if (!storageReady()) {
+
+            return res.status(500).send(
+                "Storage configuration is missing."
+            );
+        }
+
         try {
 
             const filename =
@@ -423,6 +479,13 @@ app.post(
 
             return res.status(401).send(
                 "Incorrect admin password."
+            );
+        }
+
+        if (!storageReady()) {
+
+            return res.status(500).send(
+                "Storage configuration is missing."
             );
         }
 
@@ -636,6 +699,16 @@ app.post(
             });
         }
 
+        if (!storageReady()) {
+
+            return res.status(500).json({
+
+                message:
+                    "Storage configuration is missing."
+
+            });
+        }
+
         if (!file) {
 
             return res.status(400).json({
@@ -703,9 +776,20 @@ app.listen(
     PORT,
     () => {
 
+        console.log("========================================");
         console.log(
             `Server running on port ${PORT}`
         );
+
+        if (SUPABASE_BUCKET) {
+
+            console.log(
+                `Storage bucket: ${SUPABASE_BUCKET}`
+            );
+
+        }
+
+        console.log("========================================");
 
     }
 );
