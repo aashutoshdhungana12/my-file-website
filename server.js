@@ -140,76 +140,121 @@ async function getAllFiles() {
     return files;
 }
 
-// ==================== UPLOAD ====================
+// ==================== UPLOAD MULTIPLE FILES ====================
 
 app.post(
     "/upload",
     checkPassword,
-    upload.single("file"),
+    upload.array("files", 20),
     async function(req, res) {
 
         try {
 
-            if (!req.file) {
+            if (
+                !req.files ||
+                req.files.length === 0
+            ) {
 
                 return res.status(400).json({
                     success: false,
-                    message: "No file selected."
+                    message: "No files selected."
                 });
             }
 
-            const originalName =
-                path.basename(
-                    req.file.originalname
-                );
+            let uploaded = 0;
+            let failed = 0;
 
-            const randomID =
-                Math.random()
-                    .toString(36)
-                    .substring(2, 8);
+            for (const file of req.files) {
 
-            const fileName =
-                Date.now() +
-                "-" +
-                randomID +
-                "-" +
-                originalName;
+                try {
 
-            const result =
-                await supabase.storage
-                    .from(BUCKET)
-                    .upload(
-                        fileName,
-                        req.file.buffer,
-                        {
-                            contentType:
-                                req.file.mimetype,
-                            upsert: false
-                        }
+                    const originalName =
+                        path.basename(
+                            file.originalname
+                        );
+
+                    const randomID =
+                        Math.random()
+                            .toString(36)
+                            .substring(2, 8);
+
+                    const fileName =
+                        Date.now() +
+                        "-" +
+                        randomID +
+                        "-" +
+                        originalName;
+
+                    const result =
+                        await supabase.storage
+                            .from(BUCKET)
+                            .upload(
+                                fileName,
+                                file.buffer,
+                                {
+                                    contentType:
+                                        file.mimetype,
+                                    upsert: false
+                                }
+                            );
+
+                    if (result.error) {
+
+                        console.error(
+                            "Supabase upload error:",
+                            result.error
+                        );
+
+                        failed++;
+
+                        continue;
+                    }
+
+                    console.log(
+                        "File uploaded: " +
+                        fileName
                     );
 
-            if (result.error) {
+                    uploaded++;
 
-                console.error(
-                    "Supabase upload error:",
-                    result.error
-                );
+                } catch (error) {
 
-                return res.status(500).json({
-                    success: false,
-                    message: "Upload failed."
-                });
+                    console.error(
+                        "Error uploading file:",
+                        error
+                    );
+
+                    failed++;
+                }
             }
 
-            console.log(
-                "File uploaded: " +
-                fileName
-            );
+            let message;
+
+            if (failed === 0) {
+
+                message =
+                    uploaded +
+                    " file(s) uploaded successfully.";
+
+            } else if (uploaded === 0) {
+
+                message =
+                    "All file uploads failed.";
+
+            } else {
+
+                message =
+                    uploaded +
+                    " file(s) uploaded successfully, " +
+                    failed +
+                    " failed.";
+            }
 
             res.json({
                 success: true,
-                message:
-                    "File uploaded successfully."
+                uploaded: uploaded,
+                failed: failed,
+                message: message
             });
 
         } catch (error) {
@@ -404,7 +449,7 @@ app.get(
                 );
             }
 
-            // Create ZIP
+            // ==================== CREATE ZIP ====================
 
             const archive =
                 archiver("zip", {
@@ -438,6 +483,7 @@ app.get(
                     );
 
                     if (!res.headersSent) {
+
                         res.status(500).send(
                             "Could not create download."
                         );
