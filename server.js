@@ -5,6 +5,7 @@ const { createClient } = require("@supabase/supabase-js");
 const path = require("path");
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 // ==================== ENVIRONMENT VARIABLES ====================
@@ -13,6 +14,8 @@ const PASSWORD = process.env.PASSWORD;
 const DELETE_PASSWORD = process.env.DELETE_PASSWORD;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
+
+// Check environment variables
 
 if (!PASSWORD) {
     console.error("ERROR: PASSWORD is missing.");
@@ -34,6 +37,7 @@ if (!SUPABASE_SECRET_KEY) {
     process.exit(1);
 }
 
+
 // ==================== SUPABASE ====================
 
 const supabase = createClient(
@@ -43,11 +47,13 @@ const supabase = createClient(
 
 const BUCKET = "files";
 
+
 // ==================== MULTER ====================
 
 const upload = multer({
     storage: multer.memoryStorage()
 });
+
 
 // ==================== MIDDLEWARE ====================
 
@@ -58,6 +64,7 @@ app.use(
         path.join(__dirname, "public")
     )
 );
+
 
 // ==================== MAIN PASSWORD ====================
 
@@ -74,13 +81,14 @@ function checkPassword(req, res, next) {
     next();
 }
 
+
 // ==================== UPLOAD ====================
 
 app.post(
     "/upload",
     checkPassword,
     upload.single("file"),
-    async (req, res) => {
+    async function(req, res) {
 
         try {
 
@@ -92,19 +100,28 @@ app.post(
                 });
             }
 
+
             const originalName =
-                path.basename(req.file.originalname);
+                path.basename(
+                    req.file.originalname
+                );
+
+
+            const randomID =
+                Math.random()
+                    .toString(36)
+                    .substring(2, 8);
+
 
             const fileName =
                 Date.now() +
                 "-" +
-                Math.random()
-                    .toString(36)
-                    .substring(2, 8) +
+                randomID +
                 "-" +
                 originalName;
 
-            const { error } =
+
+            const result =
                 await supabase.storage
                     .from(BUCKET)
                     .upload(
@@ -113,15 +130,17 @@ app.post(
                         {
                             contentType:
                                 req.file.mimetype,
+
                             upsert: false
                         }
                     );
 
-            if (error) {
+
+            if (result.error) {
 
                 console.error(
                     "Supabase upload error:",
-                    error
+                    result.error
                 );
 
                 return res.status(500).json({
@@ -130,15 +149,19 @@ app.post(
                 });
             }
 
+
             console.log(
-                "File uploaded:",
+                "File uploaded: " +
                 fileName
             );
 
+
             res.json({
                 success: true,
-                message: "File uploaded successfully."
+                message:
+                    "File uploaded successfully."
             });
+
 
         } catch (error) {
 
@@ -152,19 +175,21 @@ app.post(
                 message: "Upload failed."
             });
         }
+
     }
 );
+
 
 // ==================== LIST FILES ====================
 
 app.get(
     "/files",
     checkPassword,
-    async (req, res) => {
+    async function(req, res) {
 
         try {
 
-            const { data, error } =
+            const result =
                 await supabase.storage
                     .from(BUCKET)
                     .list(
@@ -172,6 +197,7 @@ app.get(
                         {
                             limit: 1000,
                             offset: 0,
+
                             sortBy: {
                                 column: "created_at",
                                 order: "desc"
@@ -179,62 +205,96 @@ app.get(
                         }
                     );
 
-            if (error) {
+
+            if (result.error) {
 
                 console.error(
                     "Supabase list error:",
-                    error
+                    result.error
                 );
 
                 return res.status(500).json({
                     success: false,
-                    message: "Could not load files."
+                    message:
+                        "Could not load files."
                 });
             }
 
-            const files = (data || [])
-                .filter(file => file.name)
-                .map(file => {
 
-                    let originalName =
-                        file.name;
+            const data =
+                result.data || [];
 
-                    // Remove timestamp and random ID
-                    originalName =
-                        originalName.replace(
-                            /^\d+-[a-z0-9]+-/,
-                            ""
-                        );
 
-                    return {
-                        name: file.name,
+            const files =
+                data
+                    .filter(function(file) {
+                        return file.name;
+                    })
+                    .map(function(file) {
 
-                        originalName:
-                            originalName,
+                        let originalName =
+                            file.name;
 
-                        createdAt:
-                            file.created_at ||
-                            file.updated_at,
 
-                        size:
+                        originalName =
+                            originalName.replace(
+                                /^\d+-[a-z0-9]+-/,
+                                ""
+                            );
+
+
+                        let size = 0;
+
+
+                        if (
                             file.metadata &&
                             file.metadata.size
-                                ? file.metadata.size
-                                : 0
-                    };
-                });
+                        ) {
 
-            // Newest first
+                            size =
+                                file.metadata.size;
+                        }
+
+
+                        return {
+
+                            name:
+                                file.name,
+
+                            originalName:
+                                originalName,
+
+                            createdAt:
+                                file.created_at ||
+                                file.updated_at,
+
+                            size:
+                                size
+                        };
+
+                    });
+
+
+            // Make absolutely sure newest files
+            // appear first.
+
             files.sort(
-                (a, b) =>
-                    new Date(b.createdAt) -
-                    new Date(a.createdAt)
+                function(a, b) {
+
+                    return (
+                        new Date(b.createdAt) -
+                        new Date(a.createdAt)
+                    );
+
+                }
             );
+
 
             res.json({
                 success: true,
                 files: files
             });
+
 
         } catch (error) {
 
@@ -245,34 +305,39 @@ app.get(
 
             res.status(500).json({
                 success: false,
-                message: "Could not load files."
+                message:
+                    "Could not load files."
             });
         }
+
     }
 );
+
 
 // ==================== DOWNLOAD ====================
 
 app.get(
     "/download/:file",
     checkPassword,
-    async (req, res) => {
+    async function(req, res) {
 
         try {
 
             const fileName =
                 req.params.file;
 
-            const { data, error } =
+
+            const result =
                 await supabase.storage
                     .from(BUCKET)
                     .download(fileName);
 
-            if (error) {
+
+            if (result.error) {
 
                 console.error(
                     "Supabase download error:",
-                    error
+                    result.error
                 );
 
                 return res
@@ -280,13 +345,20 @@ app.get(
                     .send("File not found.");
             }
 
+
             let originalName =
-                fileName.replace(
+                fileName;
+
+
+            originalName =
+                originalName.replace(
                     /^\d+-[a-z0-9]+-/,
                     ""
                 );
 
-            // FIXED CONTENT-DISPOSITION LINE
+
+            // No backticks used here.
+
             res.setHeader(
                 "Content-Disposition",
                 "attachment; filename=\"" +
@@ -294,11 +366,15 @@ app.get(
                 "\""
             );
 
-            res.send(
+
+            const buffer =
                 Buffer.from(
-                    await data.arrayBuffer()
-                )
-            );
+                    await result.data.arrayBuffer()
+                );
+
+
+            res.send(buffer);
+
 
         } catch (error) {
 
@@ -311,22 +387,26 @@ app.get(
                 .status(500)
                 .send("Download failed.");
         }
+
     }
 );
+
 
 // ==================== DELETE ====================
 
 app.post(
     "/delete",
-    async (req, res) => {
+    async function(req, res) {
 
         try {
 
             const file =
                 req.body.file;
 
+
             const password =
                 req.body.password;
+
 
             if (!password) {
 
@@ -337,7 +417,11 @@ app.post(
                 });
             }
 
-            if (password !== DELETE_PASSWORD) {
+
+            if (
+                password !==
+                DELETE_PASSWORD
+            ) {
 
                 return res.status(401).json({
                     success: false,
@@ -345,6 +429,7 @@ app.post(
                         "Incorrect deletion password."
                 });
             }
+
 
             if (!file) {
 
@@ -355,34 +440,40 @@ app.post(
                 });
             }
 
-            const { error } =
+
+            const result =
                 await supabase.storage
                     .from(BUCKET)
                     .remove([file]);
 
-            if (error) {
+
+            if (result.error) {
 
                 console.error(
                     "Supabase delete error:",
-                    error
+                    result.error
                 );
 
                 return res.status(500).json({
                     success: false,
-                    message: "Delete failed."
+                    message:
+                        "Delete failed."
                 });
             }
 
+
             console.log(
-                "File deleted:",
+                "File deleted: " +
                 file
             );
+
 
             res.json({
                 success: true,
                 message:
                     "File deleted successfully."
             });
+
 
         } catch (error) {
 
@@ -393,34 +484,41 @@ app.post(
 
             res.status(500).json({
                 success: false,
-                message: "Delete failed."
+                message:
+                    "Delete failed."
             });
         }
+
     }
 );
+
 
 // ==================== HEALTH CHECK ====================
 
 app.get(
     "/health",
-    (req, res) => {
+    function(req, res) {
 
         res.json({
             status: "online"
         });
+
     }
 );
+
 
 // ==================== START SERVER ====================
 
 app.listen(
     PORT,
     "0.0.0.0",
-    () => {
+    function() {
 
         console.log(
-            `Server running on port ${PORT}`
+            "Server running on port " +
+            PORT
         );
+
     }
 );
 ```
