@@ -5,7 +5,6 @@ const { createClient } = require("@supabase/supabase-js");
 const path = require("path");
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 // Environment variables
@@ -14,7 +13,7 @@ const DELETE_PASSWORD = process.env.DELETE_PASSWORD;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 
-// Connect to Supabase
+// Supabase connection
 const supabase = createClient(
     SUPABASE_URL,
     SUPABASE_SECRET_KEY
@@ -22,7 +21,7 @@ const supabase = createClient(
 
 const BUCKET = "files";
 
-// File uploads are temporarily stored in memory
+// Upload files into memory temporarily
 const upload = multer({
     storage: multer.memoryStorage()
 });
@@ -33,7 +32,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Check main password
 function checkPassword(req, res, next) {
-
     if (req.query.password !== PASSWORD) {
         return res.status(401).json({
             success: false,
@@ -44,52 +42,52 @@ function checkPassword(req, res, next) {
     next();
 }
 
-// =============================
-// UPLOAD FILE
-// =============================
+// ==================== UPLOAD ====================
 
-app.post("/upload", checkPassword, upload.single("file"), async (req, res) => {
+app.post(
+    "/upload",
+    checkPassword,
+    upload.single("file"),
+    async (req, res) => {
 
-    if (!req.file) {
-        return res.status(400).json({
-            success: false,
-            message: "No file selected."
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "No file selected."
+            });
+        }
+
+        const fileName =
+            Date.now() +
+            "-" +
+            Math.random().toString(36).substring(2, 8) +
+            "-" +
+            req.file.originalname;
+
+        const { error } = await supabase.storage
+            .from(BUCKET)
+            .upload(fileName, req.file.buffer, {
+                contentType: req.file.mimetype,
+                upsert: false
+            });
+
+        if (error) {
+            console.error("Supabase upload error:", error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Upload failed."
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "File uploaded successfully."
         });
     }
+);
 
-    const fileName =
-        Date.now() +
-        "-" +
-        Math.random().toString(36).substring(2, 8) +
-        "-" +
-        req.file.originalname;
-
-    const { error } = await supabase.storage
-        .from(BUCKET)
-        .upload(fileName, req.file.buffer, {
-            contentType: req.file.mimetype,
-            upsert: false
-        });
-
-    if (error) {
-
-        console.error("Supabase upload error:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Upload failed."
-        });
-    }
-
-    res.json({
-        success: true,
-        message: "File uploaded successfully."
-    });
-});
-
-// =============================
-// GET FILES
-// =============================
+// ==================== LIST FILES ====================
 
 app.get("/files", checkPassword, async (req, res) => {
 
@@ -104,7 +102,6 @@ app.get("/files", checkPassword, async (req, res) => {
         });
 
     if (error) {
-
         console.error("Supabase list error:", error);
 
         return res.status(500).json({
@@ -113,18 +110,20 @@ app.get("/files", checkPassword, async (req, res) => {
         });
     }
 
-    const files = data.map(file => ({
+    const files = data
+        .filter(file => file.name)
+        .map(file => ({
+            name: file.name,
 
-        name: file.name,
+            originalName: file.name.replace(
+                /^\d+-[a-z0-9]+-/,
+                ""
+            ),
 
-        originalName: file.name
-            .replace(/^\d+-[a-z0-9]+-/, ""),
+            createdAt: file.created_at,
 
-        createdAt: file.created_at,
-
-        size: file.metadata?.size || 0
-
-    }));
+            size: file.metadata?.size || 0
+        }));
 
     res.json({
         success: true,
@@ -132,9 +131,7 @@ app.get("/files", checkPassword, async (req, res) => {
     });
 });
 
-// =============================
-// DOWNLOAD FILE
-// =============================
+// ==================== DOWNLOAD ====================
 
 app.get("/download/:file", checkPassword, async (req, res) => {
 
@@ -145,14 +142,15 @@ app.get("/download/:file", checkPassword, async (req, res) => {
         .download(fileName);
 
     if (error) {
-
         console.error("Supabase download error:", error);
 
         return res.status(404).send("File not found.");
     }
 
-    const originalName = fileName
-        .replace(/^\d+-[a-z0-9]+-/, "");
+    const originalName = fileName.replace(
+        /^\d+-[a-z0-9]+-/,
+        ""
+    );
 
     res.setHeader(
         "Content-Disposition",
@@ -166,17 +164,13 @@ app.get("/download/:file", checkPassword, async (req, res) => {
     );
 });
 
-// =============================
-// DELETE FILE
-// =============================
+// ==================== DELETE ====================
 
 app.post("/delete", async (req, res) => {
 
     const { file, password } = req.body;
 
-    // Separate deletion password
     if (password !== DELETE_PASSWORD) {
-
         return res.status(401).json({
             success: false,
             message: "Incorrect deletion password."
@@ -184,7 +178,6 @@ app.post("/delete", async (req, res) => {
     }
 
     if (!file) {
-
         return res.status(400).json({
             success: false,
             message: "No file specified."
@@ -196,7 +189,6 @@ app.post("/delete", async (req, res) => {
         .remove([file]);
 
     if (error) {
-
         console.error("Supabase delete error:", error);
 
         return res.status(500).json({
@@ -211,15 +203,9 @@ app.post("/delete", async (req, res) => {
     });
 });
 
-// =============================
-// START SERVER
-// =============================
+// ==================== SERVER ====================
 
 app.listen(PORT, () => {
-
-    console.log(
-        `Server running on port ${PORT}`
-    );
-
+    console.log(`Server running on port ${PORT}`);
 });
 ```
