@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const archiver = require("archiver");
 const { createClient } = require("@supabase/supabase-js");
 const path = require("path");
 
@@ -13,8 +14,6 @@ const PASSWORD = process.env.PASSWORD;
 const DELETE_PASSWORD = process.env.DELETE_PASSWORD;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
-
-// Check environment variables
 
 if (!PASSWORD) {
     console.error("ERROR: PASSWORD is missing.");
@@ -36,7 +35,6 @@ if (!SUPABASE_SECRET_KEY) {
     process.exit(1);
 }
 
-
 // ==================== SUPABASE ====================
 
 const supabase = createClient(
@@ -46,13 +44,11 @@ const supabase = createClient(
 
 const BUCKET = "files";
 
-
 // ==================== MULTER ====================
 
 const upload = multer({
     storage: multer.memoryStorage()
 });
-
 
 // ==================== MIDDLEWARE ====================
 
@@ -64,8 +60,7 @@ app.use(
     )
 );
 
-
-// ==================== MAIN PASSWORD ====================
+// ==================== PASSWORD CHECK ====================
 
 function checkPassword(req, res, next) {
 
@@ -80,6 +75,70 @@ function checkPassword(req, res, next) {
     next();
 }
 
+// ==================== GET ALL FILE DATA ====================
+
+async function getAllFiles() {
+
+    const result = await supabase.storage
+        .from(BUCKET)
+        .list("", {
+            limit: 1000,
+            offset: 0,
+            sortBy: {
+                column: "created_at",
+                order: "desc"
+            }
+        });
+
+    if (result.error) {
+        throw result.error;
+    }
+
+    const data = result.data || [];
+
+    const files = data
+        .filter(function(file) {
+            return file.name;
+        })
+        .map(function(file) {
+
+            let originalName = file.name;
+
+            originalName = originalName.replace(
+                /^\d+-[a-z0-9]+-/,
+                ""
+            );
+
+            let size = 0;
+
+            if (
+                file.metadata &&
+                file.metadata.size
+            ) {
+                size = file.metadata.size;
+            }
+
+            return {
+                name: file.name,
+                originalName: originalName,
+                createdAt:
+                    file.created_at ||
+                    file.updated_at,
+                size: size
+            };
+        });
+
+    files.sort(function(a, b) {
+
+        return (
+            new Date(b.createdAt) -
+            new Date(a.createdAt)
+        );
+
+    });
+
+    return files;
+}
 
 // ==================== UPLOAD ====================
 
@@ -125,7 +184,6 @@ app.post(
                         {
                             contentType:
                                 req.file.mimetype,
-
                             upsert: false
                         }
                     );
@@ -169,7 +227,6 @@ app.post(
     }
 );
 
-
 // ==================== LIST FILES ====================
 
 app.get(
@@ -179,94 +236,8 @@ app.get(
 
         try {
 
-            const result =
-                await supabase.storage
-                    .from(BUCKET)
-                    .list(
-                        "",
-                        {
-                            limit: 1000,
-                            offset: 0,
-
-                            sortBy: {
-                                column: "created_at",
-                                order: "desc"
-                            }
-                        }
-                    );
-
-            if (result.error) {
-
-                console.error(
-                    "Supabase list error:",
-                    result.error
-                );
-
-                return res.status(500).json({
-                    success: false,
-                    message:
-                        "Could not load files."
-                });
-            }
-
-            const data =
-                result.data || [];
-
             const files =
-                data
-                    .filter(function(file) {
-                        return file.name;
-                    })
-                    .map(function(file) {
-
-                        let originalName =
-                            file.name;
-
-                        originalName =
-                            originalName.replace(
-                                /^\d+-[a-z0-9]+-/,
-                                ""
-                            );
-
-                        let size = 0;
-
-                        if (
-                            file.metadata &&
-                            file.metadata.size
-                        ) {
-                            size =
-                                file.metadata.size;
-                        }
-
-                        return {
-                            name:
-                                file.name,
-
-                            originalName:
-                                originalName,
-
-                            createdAt:
-                                file.created_at ||
-                                file.updated_at,
-
-                            size:
-                                size
-                        };
-
-                    });
-
-            // Newest files first
-
-            files.sort(
-                function(a, b) {
-
-                    return (
-                        new Date(b.createdAt) -
-                        new Date(a.createdAt)
-                    );
-
-                }
-            );
+                await getAllFiles();
 
             res.json({
                 success: true,
@@ -288,7 +259,6 @@ app.get(
         }
     }
 );
-
 
 // ==================== DOWNLOAD INDIVIDUAL FILE ====================
 
@@ -356,6 +326,194 @@ app.get(
     }
 );
 
+// ==================== DOWNLOAD FILES BY DATE ====================
+
+app.get(
+    "/download-date",
+    checkPassword,
+    async function(req, res) {
+
+        try {
+
+            const selectedDate =
+                req.query.date;
+
+            if (!selectedDate) {
+
+                return res.status(400).send(
+                    "Date is required."
+                );
+            }
+
+            // Expected format: YYYY-MM-DD
+
+            if (
+                !/^\d{4}-\d{2}-\d{2}$/.test(
+                    selectedDate
+                )
+            ) {
+
+                return res.status(400).send(
+                    "Invalid date."
+                );
+            }
+
+            const files =
+                await getAllFiles();
+
+            const matchingFiles =
+                files.filter(function(file) {
+
+                    if (!file.createdAt) {
+                        return false;
+                    }
+
+                    const date =
+                        new Date(file.createdAt);
+
+                    const year =
+                        date.getFullYear();
+
+                    const month =
+                        String(
+                            date.getMonth() + 1
+                        ).padStart(2, "0");
+
+                    const day =
+                        String(
+                            date.getDate()
+                        ).padStart(2, "0");
+
+                    const fileDate =
+                        year +
+                        "-" +
+                        month +
+                        "-" +
+                        day;
+
+                    return (
+                        fileDate ===
+                        selectedDate
+                    );
+                });
+
+            if (matchingFiles.length === 0) {
+
+                return res.status(404).send(
+                    "No files were uploaded on this date."
+                );
+            }
+
+            // Create ZIP
+
+            const archive =
+                archiver("zip", {
+                    zlib: {
+                        level: 9
+                    }
+                });
+
+            const formattedDate =
+                selectedDate;
+
+            res.setHeader(
+                "Content-Type",
+                "application/zip"
+            );
+
+            res.setHeader(
+                "Content-Disposition",
+                "attachment; filename=\"Aashutosh-Files-" +
+                formattedDate +
+                ".zip\""
+            );
+
+            archive.on(
+                "error",
+                function(error) {
+
+                    console.error(
+                        "Archive error:",
+                        error
+                    );
+
+                    if (!res.headersSent) {
+                        res.status(500).send(
+                            "Could not create download."
+                        );
+                    }
+                }
+            );
+
+            archive.pipe(res);
+
+            for (
+                const file of matchingFiles
+            ) {
+
+                try {
+
+                    const result =
+                        await supabase.storage
+                            .from(BUCKET)
+                            .download(
+                                file.name
+                            );
+
+                    if (result.error) {
+
+                        console.error(
+                            "Could not download:",
+                            file.name,
+                            result.error
+                        );
+
+                        continue;
+                    }
+
+                    const buffer =
+                        Buffer.from(
+                            await result.data.arrayBuffer()
+                        );
+
+                    archive.append(
+                        buffer,
+                        {
+                            name:
+                                file.originalName
+                        }
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Error adding file:",
+                        file.name,
+                        error
+                    );
+                }
+            }
+
+            await archive.finalize();
+
+        } catch (error) {
+
+            console.error(
+                "Date download error:",
+                error
+            );
+
+            if (!res.headersSent) {
+
+                res
+                    .status(500)
+                    .send(
+                        "Could not create download."
+                    );
+            }
+        }
+    }
+);
 
 // ==================== DELETE ====================
 
@@ -447,7 +605,6 @@ app.post(
     }
 );
 
-
 // ==================== HEALTH CHECK ====================
 
 app.get(
@@ -460,7 +617,6 @@ app.get(
 
     }
 );
-
 
 // ==================== START SERVER ====================
 
