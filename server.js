@@ -20,6 +20,22 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET;
 
 // ======================================================
+// CHECK ENVIRONMENT VARIABLES
+// ======================================================
+
+if (!SUPABASE_URL) {
+    console.error("ERROR: SUPABASE_URL is missing.");
+}
+
+if (!SUPABASE_KEY) {
+    console.error("ERROR: SUPABASE_KEY is missing.");
+}
+
+if (!SUPABASE_BUCKET) {
+    console.error("ERROR: SUPABASE_BUCKET is missing.");
+}
+
+// ======================================================
 // SUPABASE
 // ======================================================
 
@@ -49,10 +65,11 @@ const upload = multer({
 });
 
 // ======================================================
-// AUTHENTICATION HELPER
+// AUTHENTICATION
 // ======================================================
 
 function checkPassword(req) {
+
     const password =
         req.query.password ||
         req.body?.password;
@@ -61,6 +78,7 @@ function checkPassword(req) {
 }
 
 function checkAdminPassword(password) {
+
     return password === ADMIN_PASSWORD;
 }
 
@@ -71,6 +89,7 @@ function checkAdminPassword(password) {
 app.get("/files", async (req, res) => {
 
     if (!checkPassword(req)) {
+
         return res.status(401).json({
             message: "Access denied."
         });
@@ -91,21 +110,35 @@ app.get("/files", async (req, res) => {
                 });
 
         if (error) {
-            console.error(error);
+
+            console.error(
+                "SUPABASE LIST ERROR:",
+                error
+            );
 
             return res.status(500).json({
-                message: "Unable to load files."
+                message:
+                    `Unable to load files: ${error.message}`
             });
         }
 
-        const files = (data || []).map(file => ({
-            name: file.name,
-            originalName: file.name,
-            size: file.metadata?.size || 0,
-            createdAt:
-                file.created_at ||
-                file.updated_at
-        }));
+        const files =
+            (data || []).map(file => ({
+
+                name:
+                    file.name,
+
+                originalName:
+                    file.name,
+
+                size:
+                    file.metadata?.size || 0,
+
+                createdAt:
+                    file.created_at ||
+                    file.updated_at
+
+            }));
 
         res.json({
             files
@@ -113,10 +146,14 @@ app.get("/files", async (req, res) => {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "FILE LIST ERROR:",
+            error
+        );
 
         res.status(500).json({
-            message: "Server error."
+            message:
+                "Server error."
         });
     }
 });
@@ -131,14 +168,21 @@ app.post(
     async (req, res) => {
 
         if (!checkPassword(req)) {
+
             return res.status(401).json({
-                message: "Access denied."
+                message:
+                    "Access denied."
             });
         }
 
-        if (!req.files || req.files.length === 0) {
+        if (
+            !req.files ||
+            req.files.length === 0
+        ) {
+
             return res.status(400).json({
-                message: "No files selected."
+                message:
+                    "No files selected."
             });
         }
 
@@ -146,13 +190,28 @@ app.post(
 
             const uploaded = [];
 
-            for (const file of req.files) {
+            for (
+                const file of req.files
+            ) {
+
+                // Remove unsafe characters from filename
+                const originalName =
+                    path
+                        .basename(file.originalname)
+                        .replace(
+                            /[^a-zA-Z0-9._-]/g,
+                            "_"
+                        );
 
                 const timestamp =
                     Date.now();
 
                 const safeName =
-                    `${timestamp}-${file.originalname}`;
+                    `${timestamp}-${originalName}`;
+
+                console.log(
+                    `Uploading: ${safeName}`
+                );
 
                 const { error } =
                     await supabase
@@ -164,34 +223,55 @@ app.post(
                             {
                                 contentType:
                                     file.mimetype,
-                                upsert: false
+
+                                upsert:
+                                    false
                             }
                         );
 
                 if (error) {
 
-                    console.error(error);
+                    console.error(
+                        "SUPABASE UPLOAD ERROR:",
+                        error
+                    );
 
                     return res.status(500).json({
+
                         message:
-                            `Failed to upload ${file.originalname}.`
+                            `Failed to upload ${file.originalname}: ${error.message}`
+
                     });
                 }
 
-                uploaded.push(safeName);
+                uploaded.push(
+                    safeName
+                );
             }
 
+            console.log(
+                `${uploaded.length} file(s) uploaded successfully.`
+            );
+
             res.json({
+
                 message:
                     `${uploaded.length} file${uploaded.length === 1 ? "" : "s"} uploaded successfully.`
+
             });
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "UPLOAD ERROR:",
+                error
+            );
 
             res.status(500).json({
-                message: "Upload failed."
+
+                message:
+                    `Upload failed: ${error.message}`
+
             });
         }
     }
@@ -206,6 +286,7 @@ app.get(
     async (req, res) => {
 
         if (!checkPassword(req)) {
+
             return res.status(401).send(
                 "Access denied."
             );
@@ -224,7 +305,10 @@ app.get(
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "SUPABASE DOWNLOAD ERROR:",
+                    error
+                );
 
                 return res.status(404).send(
                     "File not found."
@@ -250,7 +334,10 @@ app.get(
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "DOWNLOAD ERROR:",
+                error
+            );
 
             res.status(500).send(
                 "Download failed."
@@ -270,7 +357,9 @@ app.post(
         const { password } =
             req.body;
 
-        if (!checkAdminPassword(password)) {
+        if (
+            !checkAdminPassword(password)
+        ) {
 
             return res.status(401).json({
                 message:
@@ -298,7 +387,9 @@ app.post(
             date
         } = req.body;
 
-        if (!checkAdminPassword(password)) {
+        if (
+            !checkAdminPassword(password)
+        ) {
 
             return res.status(401).send(
                 "Incorrect admin password."
@@ -324,210 +415,32 @@ app.post(
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "SUPABASE LIST ERROR:",
+                    error
+                );
 
                 return res.status(500).send(
-                    "Unable to retrieve files."
+                    `Unable to retrieve files: ${error.message}`
                 );
             }
 
             const filesForDate =
-                (data || []).filter(file => {
+                (data || []).filter(
+                    file => {
 
-                    if (!file.created_at) {
-                        return false;
-                    }
+                        if (!file.created_at) {
+                            return false;
+                        }
 
-                    const fileDate =
-                        new Date(
-                            file.created_at
-                        );
+                        const fileDate =
+                            new Date(
+                                file.created_at
+                            );
 
-                    const year =
-                        fileDate.getFullYear();
+                        const year =
+                            fileDate.getFullYear();
 
-                    const month =
-                        String(
-                            fileDate.getMonth() + 1
-                        ).padStart(2, "0");
-
-                    const day =
-                        String(
-                            fileDate.getDate()
-                        ).padStart(2, "0");
-
-                    return (
-                        `${year}-${month}-${day}` ===
-                        date
-                    );
-                });
-
-            if (
-                filesForDate.length === 0
-            ) {
-
-                return res.status(404).send(
-                    "No files were uploaded on this date."
-                );
-            }
-
-            res.setHeader(
-                "Content-Type",
-                "application/zip"
-            );
-
-            res.setHeader(
-                "Content-Disposition",
-                `attachment; filename="Aashutosh-Files-${date}.zip"`
-            );
-
-            const archive =
-                archiver("zip", {
-                    zlib: {
-                        level: 9
-                    }
-                });
-
-            archive.on(
-                "error",
-                error => {
-
-                    console.error(error);
-
-                    if (!res.headersSent) {
-                        res.status(500).end();
-                    }
-                }
-            );
-
-            archive.pipe(res);
-
-            for (
-                const file of filesForDate
-            ) {
-
-                const { data: fileData, error: downloadError } =
-                    await supabase
-                        .storage
-                        .from(SUPABASE_BUCKET)
-                        .download(file.name);
-
-                if (downloadError) {
-
-                    console.error(
-                        downloadError
-                    );
-
-                    continue;
-                }
-
-                const buffer =
-                    Buffer.from(
-                        await fileData.arrayBuffer()
-                    );
-
-                archive.append(
-                    buffer,
-                    {
-                        name:
-                            file.name
-                    }
-                );
-            }
-
-            await archive.finalize();
-
-        } catch (error) {
-
-            console.error(error);
-
-            if (!res.headersSent) {
-
-                res.status(500).send(
-                    "ZIP download failed."
-                );
-            }
-        }
-    }
-);
-
-// ======================================================
-// DELETE FILE
-// ======================================================
-
-app.post(
-    "/delete",
-    async (req, res) => {
-
-        const {
-            file,
-            password
-        } = req.body;
-
-        if (!checkAdminPassword(password)) {
-
-            return res.status(401).json({
-                message:
-                    "Incorrect admin password."
-            });
-        }
-
-        if (!file) {
-
-            return res.status(400).json({
-                message:
-                    "No file specified."
-            });
-        }
-
-        try {
-
-            const { error } =
-                await supabase
-                    .storage
-                    .from(SUPABASE_BUCKET)
-                    .remove([
-                        file
-                    ]);
-
-            if (error) {
-
-                console.error(error);
-
-                return res.status(500).json({
-                    message:
-                        "Failed to delete file."
-                });
-            }
-
-            res.json({
-                message:
-                    "File deleted successfully."
-            });
-
-        } catch (error) {
-
-            console.error(error);
-
-            res.status(500).json({
-                message:
-                    "Delete failed."
-            });
-        }
-    }
-);
-
-// ======================================================
-// START SERVER
-// ======================================================
-
-app.listen(
-    PORT,
-    () => {
-
-        console.log(
-            `Server running on port ${PORT}`
-        );
-
-    }
-);
+                        const month =
+                            String(
+                                fileDate.getMonth() +
