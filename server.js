@@ -75,6 +75,21 @@ function checkPassword(req, res, next) {
     next();
 }
 
+// ==================== ADMIN PASSWORD CHECK ====================
+
+function checkAdminPassword(req, res, next) {
+
+    if (req.body.password !== DELETE_PASSWORD) {
+
+        return res.status(401).json({
+            success: false,
+            message: "Incorrect admin password."
+        });
+    }
+
+    next();
+}
+
 // ==================== GET ALL FILE DATA ====================
 
 async function getAllFiles() {
@@ -305,6 +320,60 @@ app.get(
     }
 );
 
+// ==================== VERIFY ADMIN PASSWORD ====================
+
+app.post(
+    "/verify-admin",
+    async function(req, res) {
+
+        try {
+
+            const password =
+                req.body.password;
+
+            if (!password) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Admin password required."
+                });
+            }
+
+            if (
+                password !==
+                DELETE_PASSWORD
+            ) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Incorrect admin password."
+                });
+            }
+
+            res.json({
+                success: true,
+                message:
+                    "Admin authentication successful."
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Admin verification error:",
+                error
+            );
+
+            res.status(500).json({
+                success: false,
+                message:
+                    "Could not verify admin password."
+            });
+        }
+    }
+);
+
 // ==================== DOWNLOAD INDIVIDUAL FILE ====================
 
 app.get(
@@ -373,15 +442,38 @@ app.get(
 
 // ==================== DOWNLOAD FILES BY DATE ====================
 
-app.get(
+app.post(
     "/download-date",
-    checkPassword,
     async function(req, res) {
 
         try {
 
+            const password =
+                req.body.password;
+
             const selectedDate =
-                req.query.date;
+                req.body.date;
+
+            // ==================== ADMIN PASSWORD ====================
+
+            if (!password) {
+
+                return res.status(401).send(
+                    "Admin password required."
+                );
+            }
+
+            if (
+                password !==
+                DELETE_PASSWORD
+            ) {
+
+                return res.status(401).send(
+                    "Incorrect admin password."
+                );
+            }
+
+            // ==================== DATE CHECK ====================
 
             if (!selectedDate) {
 
@@ -389,8 +481,6 @@ app.get(
                     "Date is required."
                 );
             }
-
-            // Expected format: YYYY-MM-DD
 
             if (
                 !/^\d{4}-\d{2}-\d{2}$/.test(
@@ -402,6 +492,8 @@ app.get(
                     "Invalid date."
                 );
             }
+
+            // ==================== GET FILES ====================
 
             const files =
                 await getAllFiles();
@@ -458,9 +550,6 @@ app.get(
                     }
                 });
 
-            const formattedDate =
-                selectedDate;
-
             res.setHeader(
                 "Content-Type",
                 "application/zip"
@@ -469,7 +558,7 @@ app.get(
             res.setHeader(
                 "Content-Disposition",
                 "attachment; filename=\"Aashutosh-Files-" +
-                formattedDate +
+                selectedDate +
                 ".zip\""
             );
 
@@ -492,6 +581,8 @@ app.get(
             );
 
             archive.pipe(res);
+
+            // ==================== ADD FILES ====================
 
             for (
                 const file of matchingFiles
@@ -565,36 +656,13 @@ app.get(
 
 app.post(
     "/delete",
+    checkAdminPassword,
     async function(req, res) {
 
         try {
 
             const file =
                 req.body.file;
-
-            const password =
-                req.body.password;
-
-            if (!password) {
-
-                return res.status(401).json({
-                    success: false,
-                    message:
-                        "Deletion password required."
-                });
-            }
-
-            if (
-                password !==
-                DELETE_PASSWORD
-            ) {
-
-                return res.status(401).json({
-                    success: false,
-                    message:
-                        "Incorrect deletion password."
-                });
-            }
 
             if (!file) {
 
