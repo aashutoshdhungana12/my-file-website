@@ -12,19 +12,7 @@ let fileToDelete = "";
 
 let allFiles = [];
 
-/*
- * This is the important part for multiple selection.
- *
- * We DON'T rely only on input.files.
- * Instead, we keep our own array of selected files.
- *
- * This allows:
- *
- * Choose 10 files
- * -> Choose another 10 files
- * -> All 20 stay selected
- */
-let selectedFiles = [];
+let adminDownloadPassword = "";
 
 
 /* =========================================================
@@ -60,10 +48,6 @@ async function login() {
 
     try {
 
-        /*
-         * We check the password by requesting
-         * the protected files endpoint.
-         */
         const response =
             await fetch(
                 "/files?password=" +
@@ -85,9 +69,6 @@ async function login() {
             return;
         }
 
-        /*
-         * Password is correct.
-         */
         accessPassword =
             password;
 
@@ -113,10 +94,7 @@ async function login() {
 
     } catch (error) {
 
-        console.error(
-            "Login error:",
-            error
-        );
+        console.error(error);
 
         message.textContent =
             "Connection error. Try again.";
@@ -155,9 +133,11 @@ function logout() {
 
     accessPassword = "";
 
+    adminDownloadPassword = "";
+
     allFiles = [];
 
-    selectedFiles = [];
+    fileToDelete = "";
 
     document
         .getElementById("dashboard")
@@ -175,12 +155,11 @@ function logout() {
         .getElementById("loginMessage")
         .textContent = "";
 
-    clearSelectedFiles();
+    closeDownloadModal();
 
-    document
-        .getElementById("fileList")
-        .innerHTML = "";
+    closeAdminDownloadAuth();
 
+    closeDeleteModal();
 }
 
 
@@ -206,10 +185,6 @@ async function loadFiles() {
                 )
             );
 
-        /*
-         * If the password is no longer valid,
-         * return to login.
-         */
         if (!response.ok) {
 
             logout();
@@ -307,7 +282,7 @@ async function loadFiles() {
                 "download";
 
             download.textContent =
-                "Download";
+                "📥 Download";
 
             download.href =
                 "/download/" +
@@ -319,11 +294,6 @@ async function loadFiles() {
                     accessPassword
                 );
 
-            download.setAttribute(
-                "download",
-                ""
-            );
-
 
             /* ================= DELETE ================= */
 
@@ -334,7 +304,7 @@ async function loadFiles() {
                 "delete";
 
             deleteButton.textContent =
-                "Delete";
+                "🗑️ Delete";
 
             deleteButton.onclick =
                 function() {
@@ -365,10 +335,7 @@ async function loadFiles() {
 
     } catch (error) {
 
-        console.error(
-            "Load files error:",
-            error
-        );
+        console.error(error);
 
         list.innerHTML =
             '<div class="empty">Unable to load files.</div>';
@@ -380,111 +347,85 @@ async function loadFiles() {
    MULTIPLE FILE SELECTION
    ========================================================= */
 
-/*
- * When the user chooses files:
- *
- * selectedFiles already contains previous selections.
- *
- * We add the new files to it instead of replacing them.
- */
-
 document
     .getElementById("fileInput")
     .addEventListener(
         "change",
-        function(event) {
+        function() {
 
-            const newlySelectedFiles =
-                Array.from(
-                    event.target.files
+            const files =
+                Array.from(this.files);
+
+            const selected =
+                document.getElementById(
+                    "selectedFiles"
                 );
 
 
-            if (
-                newlySelectedFiles.length === 0
-            ) {
+            /* ================= NO FILES ================= */
 
-                return;
+            if (files.length === 0) {
 
-            }
-
-
-            /*
-             * Maximum total selection:
-             * 20 files.
-             */
-
-            const remainingSlots =
-                20 -
-                selectedFiles.length;
-
-
-            if (remainingSlots <= 0) {
-
-                showUploadMessage(
-                    "You already have 20 files selected.",
-                    true
-                );
-
-                /*
-                 * Reset the actual input so
-                 * the user can open it again.
-                 */
-                event.target.value = "";
+                selected.textContent =
+                    "Maximum of 20 files can be selected at once.";
 
                 return;
             }
 
 
-            /*
-             * Only add files that fit within
-             * the 20-file limit.
-             */
+            /* ================= MAXIMUM ================= */
 
-            const filesToAdd =
-                newlySelectedFiles.slice(
-                    0,
-                    remainingSlots
-                );
+            if (files.length > 20) {
 
+                selected.innerHTML =
+                    '<span class="selected-file-count">' +
+                    "Maximum of 20 files can be selected at once." +
+                    "</span>" +
+                    "<br>" +
+                    "Please select 20 files or fewer.";
 
-            /*
-             * Add files to our permanent
-             * selection array.
-             */
+                this.value = "";
 
-            filesToAdd.forEach(
-                function(file) {
-
-                    /*
-                     * Prevent the same file from
-                     * being added twice when the
-                     * user chooses it again.
-                     *
-                     * We compare:
-                     * name + size + lastModified
-                     */
-
-                    const alreadySelected =
-                        selectedFiles.some(
-                            function(existingFile) {
-
-                                return (
-                                    existingFile.name ===
-                                        file.name &&
-                                    existingFile.size ===
-                                        file.size &&
-                                    existingFile.lastModified ===
-                                        file.lastModified
-                                );
-
-                            }
-                        );
+                return;
+            }
 
 
-                    if (!alreadySelected) {
+            /* ================= COUNT ================= */
 
-                        selectedFiles.push(file);
+            let html =
+                '<span class="selected-file-count">' +
+                files.length +
+                " file" +
+                (
+                    files.length === 1
+                        ? ""
+                        : "s"
+                ) +
+                " selected" +
+                "</span>";
+
+
+            html += "<br><br>";
+
+
+            /* ================= NUMBER FILES ================= */
+
+            files.forEach(
+                function(file, index) {
+
+                    html +=
+                        '<span class="selected-file-name">' +
+                        (index + 1) +
+                        ". 📄 " +
+                        escapeHTML(file.name) +
+                        "</span>";
+
+                    if (
+                        index <
+                        files.length - 1
+                    ) {
+
+                        html += "<br>";
 
                     }
 
@@ -492,103 +433,11 @@ document
             );
 
 
-            /*
-             * Reset the input.
-             *
-             * This is VERY important.
-             *
-             * It allows the user to select
-             * the same file picker again.
-             */
-
-            event.target.value = "";
-
-
-            updateSelectedFilesDisplay();
+            selected.innerHTML =
+                html;
 
         }
     );
-
-
-/* =========================================================
-   UPDATE SELECTED FILE DISPLAY
-   ========================================================= */
-
-function updateSelectedFilesDisplay() {
-
-    const selected =
-        document.getElementById(
-            "selectedFiles"
-        );
-
-
-    if (
-        selectedFiles.length === 0
-    ) {
-
-        selected.innerHTML =
-            "No files selected.";
-
-        return;
-    }
-
-
-    let html =
-        '<span class="selected-file-count">' +
-        selectedFiles.length +
-        " file" +
-        (
-            selectedFiles.length === 1
-                ? ""
-                : "s"
-        ) +
-        " selected" +
-        "</span>";
-
-
-    selectedFiles.forEach(
-        function(file, index) {
-
-            html +=
-                '<span class="selected-file-name">' +
-                "📄 " +
-                escapeHTML(file.name) +
-                "</span>";
-
-        }
-    );
-
-
-    selected.innerHTML =
-        html;
-}
-
-
-/* =========================================================
-   CLEAR SELECTED FILES
-   ========================================================= */
-
-function clearSelectedFiles() {
-
-    selectedFiles = [];
-
-
-    const input =
-        document.getElementById(
-            "fileInput"
-        );
-
-    input.value = "";
-
-
-    const selected =
-        document.getElementById(
-            "selectedFiles"
-        );
-
-    selected.textContent =
-        "No files selected.";
-}
 
 
 /* =========================================================
@@ -604,6 +453,11 @@ document
             event.preventDefault();
 
 
+            const input =
+                document.getElementById(
+                    "fileInput"
+                );
+
             const message =
                 document.getElementById(
                     "uploadMessage"
@@ -614,16 +468,13 @@ document
                     "uploadButton"
                 );
 
+            const files =
+                Array.from(input.files);
 
-            /*
-             * Use our selectedFiles array.
-             *
-             * NOT input.files.
-             */
 
-            if (
-                selectedFiles.length === 0
-            ) {
+            /* ================= CHECK ================= */
+
+            if (files.length === 0) {
 
                 message.textContent =
                     "Please choose at least one file.";
@@ -632,37 +483,37 @@ document
             }
 
 
-            if (
-                selectedFiles.length > 20
-            ) {
+            if (files.length > 20) {
 
                 message.textContent =
-                    "You can upload a maximum of 20 files at once.";
+                    "Maximum of 20 files can be selected at once.";
 
                 return;
             }
 
 
-            /*
-             * Create FormData.
-             */
+            /* ================= FORM DATA ================= */
 
             const formData =
                 new FormData();
 
 
             /*
-             * Add EVERY selected file
-             * using the field name "files".
+             * IMPORTANT:
+             *
+             * Every selected file is added
+             * using the SAME field name:
+             *
+             * "files"
              *
              * This matches:
              *
              * upload.array("files", 20)
              *
-             * in server.js.
+             * on the server.
              */
 
-            selectedFiles.forEach(
+            files.forEach(
                 function(file) {
 
                     formData.append(
@@ -674,17 +525,18 @@ document
             );
 
 
+            /* ================= UI ================= */
+
             message.textContent =
                 "Uploading " +
-                selectedFiles.length +
+                files.length +
                 " file" +
                 (
-                    selectedFiles.length === 1
+                    files.length === 1
                         ? ""
                         : "s"
                 ) +
                 "...";
-
 
             uploadButton.disabled =
                 true;
@@ -703,50 +555,32 @@ document
                         ),
                         {
                             method: "POST",
-
                             body: formData
                         }
                     );
 
 
-                let result;
-
-                try {
-
-                    result =
-                        await response.json();
-
-                } catch (error) {
-
-                    result = {
-                        message:
-                            "Server returned an invalid response."
-                    };
-
-                }
+                const result =
+                    await response.json();
 
 
                 if (response.ok) {
 
                     message.textContent =
                         "🟢 " +
-                        (
-                            result.message ||
-                            "Files uploaded successfully."
-                        );
+                        result.message;
 
 
-                    /*
-                     * Clear the selected files
-                     * only AFTER successful upload.
-                     */
-
-                    clearSelectedFiles();
+                    input.value = "";
 
 
-                    /*
-                     * Reload the file list.
-                     */
+                    document
+                        .getElementById(
+                            "selectedFiles"
+                        )
+                        .textContent =
+                        "Maximum of 20 files can be selected at once.";
+
 
                     await loadFiles();
 
@@ -765,10 +599,7 @@ document
 
             } catch (error) {
 
-                console.error(
-                    "Upload error:",
-                    error
-                );
+                console.error(error);
 
                 message.textContent =
                     "🔴 Connection error.";
@@ -788,37 +619,6 @@ document
 
 
 /* =========================================================
-   UPLOAD MESSAGE
-   ========================================================= */
-
-function showUploadMessage(
-    text,
-    isError
-) {
-
-    const message =
-        document.getElementById(
-            "uploadMessage"
-        );
-
-    message.textContent =
-        text;
-
-    if (isError) {
-
-        message.style.color =
-            "#ff5966";
-
-    } else {
-
-        message.style.color =
-            "#36e38b";
-
-    }
-}
-
-
-/* =========================================================
    ESCAPE HTML
    ========================================================= */
 
@@ -835,88 +635,202 @@ function escapeHTML(text) {
 
 
 /* =========================================================
-   FORMAT FILE SIZE
+   ADMIN DOWNLOAD AUTHENTICATION
    ========================================================= */
 
-function formatSize(bytes) {
+/*
+ * User clicks:
+ *
+ * 📥 DOWNLOAD YOUR FILES
+ *
+ * It does NOT directly open the date menu.
+ *
+ * It first opens the admin authentication popup.
+ */
 
-    if (!bytes) {
-        return "0 B";
-    }
+function openAdminDownloadAuth() {
 
+    const modal =
+        document.getElementById(
+            "adminDownloadModal"
+        );
 
-    const units = [
-        "B",
-        "KB",
-        "MB",
-        "GB",
-        "TB"
-    ];
+    const password =
+        document.getElementById(
+            "adminDownloadPassword"
+        );
 
-
-    let size =
-        Number(bytes);
-
-    let index =
-        0;
-
-
-    while (
-        size >= 1024 &&
-        index < units.length - 1
-    ) {
-
-        size =
-            size / 1024;
-
-        index++;
-
-    }
+    const message =
+        document.getElementById(
+            "adminDownloadMessage"
+        );
 
 
-    return (
-        size.toFixed(
-            size >= 10 || index === 0
-                ? 0
-                : 1
-        ) +
-        " " +
-        units[index]
+    password.value = "";
+
+    message.textContent = "";
+
+    modal.style.display =
+        "flex";
+
+
+    setTimeout(
+        function() {
+
+            password.focus();
+
+        },
+        100
     );
+}
+
+
+/* ================= CLOSE ADMIN AUTH ================= */
+
+function closeAdminDownloadAuth() {
+
+    document
+        .getElementById(
+            "adminDownloadModal"
+        )
+        .style.display =
+        "none";
+}
+
+
+/* ================= VERIFY ADMIN PASSWORD ================= */
+
+async function verifyAdminDownload() {
+
+    const password =
+        document
+            .getElementById(
+                "adminDownloadPassword"
+            )
+            .value
+            .trim();
+
+    const message =
+        document.getElementById(
+            "adminDownloadMessage"
+        );
+
+
+    if (!password) {
+
+        message.textContent =
+            "⚠️ Please enter the admin password.";
+
+        return;
+    }
+
+
+    message.textContent =
+        "🔐 Verifying admin access...";
+
+
+    try {
+
+        /*
+         * We contact the admin-protected
+         * download endpoint.
+         *
+         * An intentionally invalid date is used.
+         *
+         * If the server returns:
+         *
+         * 401 = wrong admin password
+         *
+         * 400 = password accepted,
+         *       date is invalid
+         *
+         * 404 = password accepted,
+         *       no files on that date
+         *
+         * Therefore 400 or 404 means
+         * authentication succeeded.
+         */
+
+        const response =
+            await fetch(
+                "/download-date?password=" +
+                encodeURIComponent(password) +
+                "&date=invalid"
+            );
+
+
+        /* ================= WRONG PASSWORD ================= */
+
+        if (response.status === 401) {
+
+            message.textContent =
+                "🔴 Incorrect admin password.";
+
+            return;
+        }
+
+
+        /*
+         * The server accepted the password.
+         */
+
+        if (
+            response.status === 400 ||
+            response.status === 404
+        ) {
+
+            adminDownloadPassword =
+                password;
+
+            closeAdminDownloadAuth();
+
+
+            setTimeout(
+                function() {
+
+                    openDownloadModal();
+
+                },
+                150
+            );
+
+            return;
+        }
+
+
+        message.textContent =
+            "🔴 Admin verification failed.";
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "🔴 Connection error. Please try again.";
+    }
 }
 
 
 /* =========================================================
-   FORMAT DATE
+   ADMIN PASSWORD ENTER KEY
    ========================================================= */
 
-function formatDate(date) {
+document
+    .getElementById(
+        "adminDownloadPassword"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
 
-    return date.toLocaleDateString(
-        "en-US",
-        {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
+            if (event.key === "Enter") {
+
+                verifyAdminDownload();
+
+            }
+
         }
     );
-}
-
-
-/* =========================================================
-   FORMAT TIME
-   ========================================================= */
-
-function formatTime(date) {
-
-    return date.toLocaleTimeString(
-        "en-US",
-        {
-            hour: "numeric",
-            minute: "2-digit"
-        }
-    );
-}
 
 
 /* =========================================================
@@ -935,14 +849,18 @@ function openDownloadModal() {
             "downloadMessage"
         );
 
+
     message.textContent = "";
 
     modal.style.display =
         "flex";
 
+
     buildDateList();
 }
 
+
+/* ================= CLOSE ================= */
 
 function closeDownloadModal() {
 
@@ -966,12 +884,11 @@ function buildDateList() {
             "dateList"
         );
 
+
     dateList.innerHTML = "";
 
 
-    if (
-        !allFiles.length
-    ) {
+    if (!allFiles.length) {
 
         dateList.innerHTML =
             '<div class="empty">No uploaded files available.</div>';
@@ -1000,12 +917,10 @@ function buildDateList() {
             const year =
                 date.getFullYear();
 
-
             const month =
                 String(
                     date.getMonth() + 1
                 ).padStart(2, "0");
-
 
             const day =
                 String(
@@ -1094,12 +1009,10 @@ function buildDateList() {
                         const y =
                             fileDate.getFullYear();
 
-
                         const m =
                             String(
                                 fileDate.getMonth() + 1
                             ).padStart(2, "0");
-
 
                         const d =
                             String(
@@ -1122,11 +1035,12 @@ function buildDateList() {
 
             button.innerHTML =
                 '<div class="date-day">' +
-                escapeHTML(dayName) +
+                "📅 " +
+                dayName +
                 "</div>" +
 
                 '<div class="date-number">' +
-                escapeHTML(fullDate) +
+                fullDate +
                 " • " +
                 filesOnDate.length +
                 " file" +
@@ -1141,7 +1055,7 @@ function buildDateList() {
             button.onclick =
                 function() {
 
-                    downloadByDate(
+                    downloadFilesByDate(
                         dateString
                     );
 
@@ -1158,10 +1072,10 @@ function buildDateList() {
 
 
 /* =========================================================
-   DOWNLOAD BY DATE
+   DOWNLOAD FILES BY DATE
    ========================================================= */
 
-function downloadByDate(
+async function downloadFilesByDate(
     dateString
 ) {
 
@@ -1171,41 +1085,140 @@ function downloadByDate(
         );
 
 
+    if (!adminDownloadPassword) {
+
+        closeDownloadModal();
+
+        openAdminDownloadAuth();
+
+        return;
+    }
+
+
     message.textContent =
-        "Preparing your files...";
+        "📦 Preparing your files...";
 
 
-    const url =
-        "/download-date?date=" +
-        encodeURIComponent(
-            dateString
-        ) +
-        "&password=" +
-        encodeURIComponent(
-            accessPassword
+    try {
+
+        const response =
+            await fetch(
+                "/download-date?password=" +
+                encodeURIComponent(
+                    adminDownloadPassword
+                ) +
+                "&date=" +
+                encodeURIComponent(
+                    dateString
+                )
+            );
+
+
+        if (response.status === 401) {
+
+            adminDownloadPassword = "";
+
+            closeDownloadModal();
+
+            openAdminDownloadAuth();
+
+            document
+                .getElementById(
+                    "adminDownloadMessage"
+                )
+                .textContent =
+                "🔴 Admin authentication expired.";
+
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            let errorMessage =
+                "Could not create the download.";
+
+            try {
+
+                errorMessage =
+                    await response.text();
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+            message.textContent =
+                "🔴 " +
+                errorMessage;
+
+            return;
+        }
+
+
+        /*
+         * Receive ZIP as a Blob.
+         */
+
+        const blob =
+            await response.blob();
+
+
+        /*
+         * Create a temporary download link.
+         */
+
+        const url =
+            window.URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            "Aashutosh-Files-" +
+            dateString +
+            ".zip";
+
+
+        document.body.appendChild(
+            link
         );
 
 
-    /*
-     * Navigate to the ZIP endpoint.
-     *
-     * The server creates the ZIP and
-     * sends it as a download.
-     */
-
-    window.location.href =
-        url;
+        link.click();
 
 
-    setTimeout(
-        function() {
+        link.remove();
 
-            message.textContent =
-                "Your download is being prepared.";
 
-        },
-        500
-    );
+        window.URL.revokeObjectURL(
+            url
+        );
+
+
+        message.textContent =
+            "🟢 Download ready.";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "🔴 Connection error.";
+
+    }
 }
 
 
@@ -1213,9 +1226,7 @@ function downloadByDate(
    DELETE MODAL
    ========================================================= */
 
-function openDeleteModal(
-    fileName
-) {
+function openDeleteModal(fileName) {
 
     fileToDelete =
         fileName;
@@ -1256,6 +1267,8 @@ function openDeleteModal(
 }
 
 
+/* ================= CLOSE DELETE ================= */
+
 function closeDeleteModal() {
 
     document
@@ -1264,20 +1277,6 @@ function closeDeleteModal() {
         )
         .style.display =
         "none";
-
-
-    document
-        .getElementById(
-            "deletePassword"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "deleteMessage"
-        )
-        .textContent = "";
 
 
     fileToDelete = "";
@@ -1291,10 +1290,12 @@ function closeDeleteModal() {
 async function confirmDelete() {
 
     const password =
-        document.getElementById(
-            "deletePassword"
-        ).value;
-
+        document
+            .getElementById(
+                "deletePassword"
+            )
+            .value
+            .trim();
 
     const message =
         document.getElementById(
@@ -1305,7 +1306,7 @@ async function confirmDelete() {
     if (!password) {
 
         message.textContent =
-            "Enter the deletion password.";
+            "⚠️ Please enter the admin password.";
 
         return;
     }
@@ -1314,14 +1315,14 @@ async function confirmDelete() {
     if (!fileToDelete) {
 
         message.textContent =
-            "No file selected.";
+            "🔴 No file selected.";
 
         return;
     }
 
 
     message.textContent =
-        "Deleting...";
+        "🛡️ Verifying admin access...";
 
 
     try {
@@ -1337,15 +1338,16 @@ async function confirmDelete() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        file:
-                            fileToDelete,
+                            file:
+                                fileToDelete,
 
-                        password:
-                            password
+                            password:
+                                password
 
-                    })
+                        })
                 }
             );
 
@@ -1356,23 +1358,16 @@ async function confirmDelete() {
 
         if (response.ok) {
 
-            message.style.color =
-                "#36e38b";
-
             message.textContent =
                 "🟢 File deleted successfully.";
 
 
-            fileToDelete = "";
-
-
-            await loadFiles();
-
-
             setTimeout(
-                function() {
+                async function() {
 
                     closeDeleteModal();
+
+                    await loadFiles();
 
                 },
                 700
@@ -1380,9 +1375,6 @@ async function confirmDelete() {
 
 
         } else {
-
-            message.style.color =
-                "#ff5966";
 
             message.textContent =
                 "🔴 " +
@@ -1396,13 +1388,7 @@ async function confirmDelete() {
 
     } catch (error) {
 
-        console.error(
-            "Delete error:",
-            error
-        );
-
-        message.style.color =
-            "#ff5966";
+        console.error(error);
 
         message.textContent =
             "🔴 Connection error.";
@@ -1412,11 +1398,13 @@ async function confirmDelete() {
 
 
 /* =========================================================
-   ENTER KEY FOR DELETE PASSWORD
+   DELETE PASSWORD ENTER KEY
    ========================================================= */
 
 document
-    .getElementById("deletePassword")
+    .getElementById(
+        "deletePassword"
+    )
     .addEventListener(
         "keydown",
         function(event) {
@@ -1427,9 +1415,131 @@ document
 
             }
 
-            if (event.key === "Escape") {
+        }
+    );
 
-                closeDeleteModal();
+
+/* =========================================================
+   FORMAT DATE
+   ========================================================= */
+
+function formatDate(date) {
+
+    if (
+        !date ||
+        isNaN(date.getTime())
+    ) {
+
+        return "Unknown date";
+
+    }
+
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+}
+
+
+/* =========================================================
+   FORMAT TIME
+   ========================================================= */
+
+function formatTime(date) {
+
+    if (
+        !date ||
+        isNaN(date.getTime())
+    ) {
+
+        return "";
+
+    }
+
+
+    return date.toLocaleTimeString(
+        "en-US",
+        {
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
+}
+
+
+/* =========================================================
+   FORMAT FILE SIZE
+   ========================================================= */
+
+function formatSize(bytes) {
+
+    if (!bytes || bytes === 0) {
+
+        return "Unknown size";
+
+    }
+
+
+    const units = [
+        "B",
+        "KB",
+        "MB",
+        "GB",
+        "TB"
+    ];
+
+
+    let size =
+        Number(bytes);
+
+    let index = 0;
+
+
+    while (
+        size >= 1024 &&
+        index < units.length - 1
+    ) {
+
+        size =
+            size / 1024;
+
+        index++;
+
+    }
+
+
+    return (
+        size < 10
+            ? size.toFixed(1)
+            : Math.round(size)
+    ) +
+    " " +
+    units[index];
+}
+
+
+/* =========================================================
+   CLOSE MODALS WHEN CLICKING OUTSIDE
+   ========================================================= */
+
+document
+    .getElementById(
+        "adminDownloadModal"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                closeAdminDownloadAuth();
 
             }
 
@@ -1437,49 +1547,41 @@ document
     );
 
 
-/* =========================================================
-   CLOSE MODALS WITH ESCAPE
-   ========================================================= */
+document
+    .getElementById(
+        "downloadModal"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
 
-document.addEventListener(
-    "keydown",
-    function(event) {
+            if (
+                event.target === this
+            ) {
 
-        if (event.key !== "Escape") {
-            return;
-        }
+                closeDownloadModal();
 
-
-        const downloadModal =
-            document.getElementById(
-                "downloadModal"
-            );
-
-
-        const deleteModal =
-            document.getElementById(
-                "deleteModal"
-            );
-
-
-        if (
-            downloadModal.style.display ===
-            "flex"
-        ) {
-
-            closeDownloadModal();
+            }
 
         }
+    );
 
 
-        if (
-            deleteModal.style.display ===
-            "flex"
-        ) {
+document
+    .getElementById(
+        "deleteModal"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
 
-            closeDeleteModal();
+            if (
+                event.target === this
+            ) {
+
+                closeDeleteModal();
+
+            }
 
         }
-
-    }
-);
+    );
