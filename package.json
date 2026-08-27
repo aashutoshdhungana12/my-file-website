@@ -1,5 +1,5 @@
 {
-  "name": "aashutosh-cloud-storage",
+  "name": "website",
   "version": "1.0.0",
   "description": "Aashutosh's personal cloud storage",
   "main": "server.js",
@@ -10,11 +10,9 @@
   "author": "Aashutosh Dhungana",
   "license": "ISC",
   "type": "commonjs",
-  "engines": {
-    "node": ">=18"
-  },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
+    "archiver": "^7.0.1",
     "express": "^5.2.1",
     "multer": "^2.2.0"
   }
