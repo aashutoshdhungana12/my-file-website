@@ -30,6 +30,91 @@ body {
     color: white;
 }
 
+/* ================= AUTHENTICATION SCREEN EFFECT ================= */
+
+body.auth-success::after,
+body.auth-error::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    border: 4px solid transparent;
+}
+
+body.auth-success::after {
+    animation: greenScreenGlow 2.5s ease-out forwards;
+}
+
+body.auth-error::after {
+    animation: redScreenGlow 2.5s ease-out forwards;
+}
+
+@keyframes greenScreenGlow {
+
+    0% {
+        border-color: rgba(54, 227, 139, 0);
+        box-shadow:
+            inset 0 0 0 rgba(54, 227, 139, 0),
+            0 0 0 rgba(54, 227, 139, 0);
+    }
+
+    20% {
+        border-color: rgba(54, 227, 139, 0.95);
+        box-shadow:
+            inset 0 0 35px rgba(54, 227, 139, 0.45),
+            0 0 35px rgba(54, 227, 139, 0.45);
+    }
+
+    60% {
+        border-color: rgba(54, 227, 139, 0.7);
+        box-shadow:
+            inset 0 0 25px rgba(54, 227, 139, 0.3),
+            0 0 25px rgba(54, 227, 139, 0.3);
+    }
+
+    100% {
+        border-color: rgba(54, 227, 139, 0);
+        box-shadow:
+            inset 0 0 0 rgba(54, 227, 139, 0),
+            0 0 0 rgba(54, 227, 139, 0);
+    }
+
+}
+
+@keyframes redScreenGlow {
+
+    0% {
+        border-color: rgba(255, 77, 90, 0);
+        box-shadow:
+            inset 0 0 0 rgba(255, 77, 90, 0),
+            0 0 0 rgba(255, 77, 90, 0);
+    }
+
+    20% {
+        border-color: rgba(255, 77, 90, 0.95);
+        box-shadow:
+            inset 0 0 35px rgba(255, 77, 90, 0.45),
+            0 0 35px rgba(255, 77, 90, 0.45);
+    }
+
+    60% {
+        border-color: rgba(255, 77, 90, 0.7);
+        box-shadow:
+            inset 0 0 25px rgba(255, 77, 90, 0.3),
+            0 0 25px rgba(255, 77, 90, 0.3);
+    }
+
+    100% {
+        border-color: rgba(255, 77, 90, 0);
+        box-shadow:
+            inset 0 0 0 rgba(255, 77, 90, 0),
+            0 0 0 rgba(255, 77, 90, 0);
+    }
+
+}
+
+
 /* ================= LOGIN ================= */
 
 #loginScreen {
@@ -90,6 +175,7 @@ body {
     margin: 10px 0 25px;
 }
 
+
 /* ================= INSTAGRAM ================= */
 
 .instagram-link {
@@ -128,6 +214,7 @@ body {
     flex-shrink: 0;
 }
 
+
 /* ================= PASSWORD ================= */
 
 .password-input {
@@ -156,6 +243,7 @@ body {
     box-shadow:
         0 0 15px rgba(77,163,255,0.2);
 }
+
 
 /* ================= LOGIN BUTTON ================= */
 
@@ -232,6 +320,7 @@ body {
 
 }
 
+
 /* ================= DASHBOARD ================= */
 
 #dashboard {
@@ -239,6 +328,7 @@ body {
 
     min-height: 100vh;
 }
+
 
 /* ================= HEADER ================= */
 
@@ -280,6 +370,7 @@ header {
     gap: 10px;
 }
 
+
 /* ================= DOWNLOAD ALL ================= */
 
 .download-all {
@@ -315,6 +406,7 @@ header {
         0 7px 22px rgba(40,120,255,0.35);
 }
 
+
 /* ================= LOGOUT ================= */
 
 .logout {
@@ -337,6 +429,7 @@ header {
     background: #242d3c;
 }
 
+
 /* ================= MAIN ================= */
 
 main {
@@ -358,6 +451,7 @@ main {
 .welcome p {
     color: #8994a6;
 }
+
 
 /* ================= UPLOAD ================= */
 
@@ -384,6 +478,7 @@ main {
 
     flex-wrap: wrap;
 }
+
 
 /* ================= FILE INPUT ================= */
 
@@ -503,6 +598,7 @@ main {
     color: #aeb9ca;
 }
 
+
 /* ================= UPLOAD BUTTON ================= */
 
 .upload-button {
@@ -552,6 +648,7 @@ main {
 
     min-height: 20px;
 }
+
 
 /* ================= FILES ================= */
 
@@ -701,6 +798,7 @@ main {
     border-radius: 13px;
 }
 
+
 /* ================= ADMIN MODAL ================= */
 
 #adminModal {
@@ -831,6 +929,7 @@ main {
 
     font-weight: bold;
 }
+
 
 /* ================= DOWNLOAD MODAL ================= */
 
@@ -969,6 +1068,7 @@ main {
     font-size: 14px;
 }
 
+
 /* ================= DELETE MODAL ================= */
 
 #deleteModal {
@@ -1088,6 +1188,7 @@ main {
     font-size: 14px;
 }
 
+
 /* ================= MOBILE ================= */
 
 @media (max-width: 650px) {
@@ -1141,6 +1242,7 @@ main {
     .login-box {
         padding: 35px 25px;
     }
+
 }
 
 </style>
@@ -1148,6 +1250,7 @@ main {
 </head>
 
 <body>
+
 
 <!-- ================= LOGIN ================= -->
 
@@ -1168,6 +1271,7 @@ Aashutosh's Cloud Storage
 <p class="subtitle">
 Private cloud storage • Authorized access only
 </p>
+
 
 <a
     class="instagram-link"
@@ -1217,6 +1321,7 @@ aashutosh.dhungana
 
 </a>
 
+
 <input
     id="password"
     class="password-input"
@@ -1239,6 +1344,7 @@ AUTHENTICATE
 </section>
 
 
+
 <!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard">
@@ -1256,6 +1362,7 @@ AASHUTOSH'S CLOUD STORAGE
 </div>
 
 </div>
+
 
 <div class="header-buttons">
 
@@ -1280,6 +1387,7 @@ Logout
 
 <main>
 
+
 <div class="welcome">
 
 <h2>
@@ -1291,6 +1399,7 @@ Dashboard
 </p>
 
 </div>
+
 
 
 <!-- ================= UPLOAD ================= -->
@@ -1305,6 +1414,7 @@ Upload Files
 
 <div class="upload-row">
 
+
 <div class="file-input-wrapper">
 
 <input
@@ -1318,15 +1428,24 @@ Upload Files
     for="fileInput"
     class="choose-files-button"
 >
-<span class="choose-icon">📂</span>
-<span>CHOOSE FILES</span>
+
+<span class="choose-icon">
+📂
+</span>
+
+<span>
+CHOOSE FILES
+</span>
+
 </label>
+
 
 <div class="file-limit">
 Maximum of 20 files can be selected at once
 </div>
 
 </div>
+
 
 <button
     class="upload-button"
@@ -1338,15 +1457,18 @@ Upload
 
 </div>
 
+
 <div id="selectedFiles">
 No files selected.
 </div>
 
 </form>
 
+
 <div id="uploadMessage"></div>
 
 </div>
+
 
 
 <!-- ================= FILE LIST ================= -->
@@ -1366,11 +1488,13 @@ Recently Uploaded Files
 
 </div>
 
+
 <div id="fileList"></div>
 
 </main>
 
 </section>
+
 
 
 <!-- ================= ADMIN MODAL ================= -->
@@ -1388,6 +1512,7 @@ Only the admin can use this feature.<br>
 If you are the admin, please enter the admin password.
 </p>
 
+
 <input
     id="adminPassword"
     class="admin-password"
@@ -1396,7 +1521,9 @@ If you are the admin, please enter the admin password.
     autocomplete="off"
 >
 
+
 <div id="adminMessage"></div>
+
 
 <div class="admin-buttons">
 
@@ -1421,6 +1548,7 @@ Continue
 </div>
 
 
+
 <!-- ================= DATE DOWNLOAD MODAL ================= -->
 
 <div id="downloadModal">
@@ -1435,6 +1563,7 @@ Continue
 Select a date to download all files uploaded on that day.
 </p>
 
+
 <div id="dateList" class="date-list">
 
 <div class="empty">
@@ -1443,7 +1572,9 @@ Loading dates...
 
 </div>
 
+
 <div id="downloadMessage"></div>
+
 
 <button
     class="close-download"
@@ -1455,6 +1586,7 @@ Cancel
 </div>
 
 </div>
+
 
 
 <!-- ================= DELETE MODAL ================= -->
@@ -1472,6 +1604,7 @@ Only the admin can delete files.<br>
 If you are the admin, please enter the admin password.
 </p>
 
+
 <input
     id="deletePassword"
     class="delete-password"
@@ -1480,7 +1613,9 @@ If you are the admin, please enter the admin password.
     autocomplete="off"
 >
 
+
 <div id="deleteMessage"></div>
+
 
 <div class="modal-buttons">
 
@@ -1505,6 +1640,7 @@ Cancel
 </div>
 
 
+
 <script>
 
 /* ================= GLOBAL VARIABLES ================= */
@@ -1520,6 +1656,48 @@ let allFiles = [];
 let selectedFiles = [];
 
 
+/* ================= SCREEN AUTHENTICATION EFFECT ================= */
+
+function authenticationEffect(type) {
+
+    document.body.classList.remove(
+        "auth-success",
+        "auth-error"
+    );
+
+    /*
+        Force browser to restart the animation
+        if the user tries again quickly.
+    */
+
+    void document.body.offsetWidth;
+
+    if (type === "success") {
+
+        document.body.classList.add(
+            "auth-success"
+        );
+
+    } else {
+
+        document.body.classList.add(
+            "auth-error"
+        );
+
+    }
+
+    setTimeout(function() {
+
+        document.body.classList.remove(
+            "auth-success",
+            "auth-error"
+        );
+
+    }, 2600);
+
+}
+
+
 /* ================= LOGIN ================= */
 
 async function login() {
@@ -1530,10 +1708,16 @@ async function login() {
     const message =
         document.getElementById("loginMessage");
 
+    const loginButton =
+        document.querySelector(".login-button");
+
     const password =
         input.value.trim();
 
+
     if (!password) {
+
+        authenticationEffect("error");
 
         message.textContent =
             "Please enter your password.";
@@ -1544,10 +1728,14 @@ async function login() {
         return;
     }
 
+
     message.textContent =
         "AUTHENTICATING...";
 
     message.className = "";
+
+    loginButton.disabled = true;
+
 
     try {
 
@@ -1557,7 +1745,10 @@ async function login() {
                 encodeURIComponent(password)
             );
 
+
         if (!response.ok) {
+
+            authenticationEffect("error");
 
             message.textContent =
                 "🔴 ACCESS DENIED";
@@ -1569,11 +1760,18 @@ async function login() {
 
             input.focus();
 
+            loginButton.disabled = false;
+
             return;
         }
 
+
+        authenticationEffect("success");
+
+
         accessPassword =
             password;
+
 
         message.textContent =
             "🟢 ACCESS GRANTED";
@@ -1581,30 +1779,39 @@ async function login() {
         message.className =
             "granted";
 
+
         setTimeout(function() {
 
             document
                 .getElementById("loginScreen")
                 .style.display = "none";
 
+
             document
                 .getElementById("dashboard")
                 .style.display = "block";
+
 
             loadFiles();
 
         }, 700);
 
+
     } catch (error) {
 
         console.error(error);
+
+        authenticationEffect("error");
 
         message.textContent =
             "Connection error. Try again.";
 
         message.className =
             "denied";
+
+        loginButton.disabled = false;
     }
+
 }
 
 
@@ -1638,25 +1845,31 @@ function logout() {
 
     selectedFiles = [];
 
+
     document
         .getElementById("dashboard")
         .style.display = "none";
+
 
     document
         .getElementById("loginScreen")
         .style.display = "flex";
 
+
     document
         .getElementById("password")
         .value = "";
+
 
     document
         .getElementById("loginMessage")
         .textContent = "";
 
+
     document
         .getElementById("fileInput")
         .value = "";
+
 
     updateSelectedFiles();
 
@@ -1670,8 +1883,10 @@ async function loadFiles() {
     const list =
         document.getElementById("fileList");
 
+
     list.innerHTML =
         '<div class="empty">Loading files...</div>';
+
 
     try {
 
@@ -1683,6 +1898,7 @@ async function loadFiles() {
                 )
             );
 
+
         if (!response.ok) {
 
             logout();
@@ -1690,16 +1906,21 @@ async function loadFiles() {
             return;
         }
 
+
         const result =
             await response.json();
+
 
         const files =
             result.files || [];
 
+
         allFiles =
             files;
 
+
         list.innerHTML = "";
+
 
         if (files.length === 0) {
 
@@ -1709,6 +1930,7 @@ async function loadFiles() {
             return;
         }
 
+
         files.forEach(function(file) {
 
             const card =
@@ -1717,11 +1939,13 @@ async function loadFiles() {
             card.className =
                 "file-card";
 
+
             const info =
                 document.createElement("div");
 
             info.className =
                 "file-info";
+
 
             const name =
                 document.createElement("div");
@@ -1733,16 +1957,19 @@ async function loadFiles() {
                 "📄 " +
                 file.originalName;
 
+
             const meta =
                 document.createElement("div");
 
             meta.className =
                 "file-meta";
 
+
             const date =
                 new Date(
                     file.createdAt
                 );
+
 
             meta.textContent =
                 formatDate(date) +
@@ -1751,15 +1978,18 @@ async function loadFiles() {
                 " • " +
                 formatSize(file.size);
 
+
             info.appendChild(name);
 
             info.appendChild(meta);
+
 
             const actions =
                 document.createElement("div");
 
             actions.className =
                 "actions";
+
 
             const download =
                 document.createElement("a");
@@ -1769,6 +1999,7 @@ async function loadFiles() {
 
             download.textContent =
                 "Download";
+
 
             download.href =
                 "/download/" +
@@ -1780,6 +2011,7 @@ async function loadFiles() {
                     accessPassword
                 );
 
+
             const deleteButton =
                 document.createElement("button");
 
@@ -1788,6 +2020,7 @@ async function loadFiles() {
 
             deleteButton.textContent =
                 "❌ Delete";
+
 
             deleteButton.onclick =
                 function() {
@@ -1798,6 +2031,7 @@ async function loadFiles() {
 
                 };
 
+
             actions.appendChild(
                 download
             );
@@ -1806,13 +2040,16 @@ async function loadFiles() {
                 deleteButton
             );
 
+
             card.appendChild(info);
 
             card.appendChild(actions);
 
+
             list.appendChild(card);
 
         });
+
 
     } catch (error) {
 
@@ -1820,7 +2057,9 @@ async function loadFiles() {
 
         list.innerHTML =
             '<div class="empty">Unable to load files.</div>';
+
     }
+
 }
 
 
@@ -1835,10 +2074,12 @@ document
             const newFiles =
                 Array.from(this.files);
 
+
             if (newFiles.length === 0) {
 
                 return;
             }
+
 
             for (
                 let i = 0;
@@ -1848,6 +2089,7 @@ document
 
                 const file =
                     newFiles[i];
+
 
                 const duplicate =
                     selectedFiles.some(
@@ -1862,6 +2104,7 @@ document
                         }
                     );
 
+
                 if (!duplicate) {
 
                     selectedFiles.push(file);
@@ -1870,6 +2113,7 @@ document
 
             }
 
+
             if (selectedFiles.length > 20) {
 
                 selectedFiles =
@@ -1877,6 +2121,7 @@ document
                         0,
                         20
                     );
+
 
                 document
                     .getElementById(
@@ -1887,9 +2132,12 @@ document
 
             }
 
+
             selectedFiles.reverse();
 
+
             updateSelectedFiles();
+
 
             this.value = "";
 
@@ -1906,6 +2154,7 @@ function updateSelectedFiles() {
             "selectedFiles"
         );
 
+
     if (selectedFiles.length === 0) {
 
         selected.textContent =
@@ -1913,6 +2162,7 @@ function updateSelectedFiles() {
 
         return;
     }
+
 
     let html =
         '<span class="selected-file-count">' +
@@ -1925,7 +2175,9 @@ function updateSelectedFiles() {
         ) +
         " selected</span>";
 
+
     html += "<br>";
+
 
     selectedFiles.forEach(
         function(file, index) {
@@ -1936,6 +2188,7 @@ function updateSelectedFiles() {
                 ". 📄 " +
                 escapeHTML(file.name) +
                 "</span>";
+
 
             if (
                 index <
@@ -1949,8 +2202,10 @@ function updateSelectedFiles() {
         }
     );
 
+
     selected.innerHTML =
         html;
+
 }
 
 
@@ -1964,15 +2219,18 @@ document
 
             e.preventDefault();
 
+
             const message =
                 document.getElementById(
                     "uploadMessage"
                 );
 
+
             const uploadButton =
                 document.getElementById(
                     "uploadButton"
                 );
+
 
             if (
                 selectedFiles.length === 0
@@ -1984,6 +2242,7 @@ document
                 return;
             }
 
+
             if (
                 selectedFiles.length > 20
             ) {
@@ -1994,8 +2253,10 @@ document
                 return;
             }
 
+
             const formData =
                 new FormData();
+
 
             selectedFiles.forEach(
                 function(file) {
@@ -2008,6 +2269,7 @@ document
                 }
             );
 
+
             message.textContent =
                 "Uploading " +
                 selectedFiles.length +
@@ -2019,11 +2281,14 @@ document
                 ) +
                 "...";
 
+
             uploadButton.disabled =
                 true;
 
+
             uploadButton.textContent =
                 "Uploading...";
+
 
             try {
 
@@ -2039,8 +2304,10 @@ document
                         }
                     );
 
+
                 const result =
                     await response.json();
+
 
                 if (response.ok) {
 
@@ -2048,7 +2315,9 @@ document
                         "🟢 " +
                         result.message;
 
+
                     selectedFiles = [];
+
 
                     document
                         .getElementById(
@@ -2056,9 +2325,12 @@ document
                         )
                         .value = "";
 
+
                     updateSelectedFiles();
 
+
                     await loadFiles();
+
 
                 } else {
 
@@ -2068,7 +2340,9 @@ document
                             result.message ||
                             "Upload failed."
                         );
+
                 }
+
 
             } catch (error) {
 
@@ -2084,6 +2358,7 @@ document
 
                 uploadButton.textContent =
                     "Upload";
+
             }
 
         }
@@ -2101,6 +2376,7 @@ function escapeHTML(text) {
         text;
 
     return div.innerHTML;
+
 }
 
 
@@ -2113,22 +2389,27 @@ function openDownloadAdmin() {
             "adminModal"
         );
 
+
     const password =
         document.getElementById(
             "adminPassword"
         );
+
 
     const message =
         document.getElementById(
             "adminMessage"
         );
 
+
     password.value = "";
 
     message.textContent = "";
 
+
     modal.style.display =
         "flex";
+
 
     setTimeout(
         function() {
@@ -2138,6 +2419,7 @@ function openDownloadAdmin() {
         },
         100
     );
+
 }
 
 
@@ -2150,13 +2432,16 @@ async function verifyAdmin() {
             "adminPassword"
         );
 
+
     const message =
         document.getElementById(
             "adminMessage"
         );
 
+
     const password =
         passwordInput.value.trim();
+
 
     if (!password) {
 
@@ -2166,8 +2451,10 @@ async function verifyAdmin() {
         return;
     }
 
+
     message.textContent =
         "VERIFYING...";
+
 
     try {
 
@@ -2190,8 +2477,10 @@ async function verifyAdmin() {
                 }
             );
 
+
         const result =
             await response.json();
+
 
         if (!response.ok) {
 
@@ -2202,6 +2491,7 @@ async function verifyAdmin() {
                     "Incorrect admin password."
                 );
 
+
             passwordInput.value = "";
 
             passwordInput.focus();
@@ -2209,12 +2499,16 @@ async function verifyAdmin() {
             return;
         }
 
+
         adminPassword =
             password;
 
+
         closeAdminModal();
 
+
         openDownloadModal();
+
 
     } catch (error) {
 
@@ -2224,6 +2518,7 @@ async function verifyAdmin() {
             "Connection error. Try again.";
 
     }
+
 }
 
 
@@ -2255,6 +2550,7 @@ function closeAdminModal() {
         )
         .style.display =
         "none";
+
 }
 
 
@@ -2267,17 +2563,22 @@ function openDownloadModal() {
             "downloadModal"
         );
 
+
     const message =
         document.getElementById(
             "downloadMessage"
         );
 
+
     message.textContent = "";
+
 
     modal.style.display =
         "flex";
 
+
     buildDateList();
+
 }
 
 
@@ -2289,6 +2590,7 @@ function closeDownloadModal() {
         )
         .style.display =
         "none";
+
 }
 
 
@@ -2301,7 +2603,9 @@ function buildDateList() {
             "dateList"
         );
 
+
     dateList.innerHTML = "";
+
 
     if (!allFiles.length) {
 
@@ -2311,7 +2615,9 @@ function buildDateList() {
         return;
     }
 
+
     const dates = {};
+
 
     allFiles.forEach(
         function(file) {
@@ -2322,23 +2628,28 @@ function buildDateList() {
 
             }
 
+
             const date =
                 new Date(
                     file.createdAt
                 );
 
+
             const year =
                 date.getFullYear();
+
 
             const month =
                 String(
                     date.getMonth() + 1
                 ).padStart(2, "0");
 
+
             const day =
                 String(
                     date.getDate()
                 ).padStart(2, "0");
+
 
             const key =
                 year +
@@ -2347,10 +2658,12 @@ function buildDateList() {
                 "-" +
                 day;
 
+
             dates[key] = true;
 
         }
     );
+
 
     const sortedDates =
         Object.keys(dates).sort(
@@ -2361,6 +2674,7 @@ function buildDateList() {
             }
         );
 
+
     sortedDates.forEach(
         function(dateString) {
 
@@ -2370,13 +2684,16 @@ function buildDateList() {
                     "T00:00:00"
                 );
 
+
             const button =
                 document.createElement(
                     "button"
                 );
 
+
             button.className =
                 "date-button";
+
 
             const dayName =
                 date.toLocaleDateString(
@@ -2386,6 +2703,7 @@ function buildDateList() {
                             "long"
                     }
                 );
+
 
             const fullDate =
                 date.toLocaleDateString(
@@ -2402,6 +2720,7 @@ function buildDateList() {
                     }
                 );
 
+
             const filesOnDate =
                 allFiles.filter(
                     function(file) {
@@ -2412,23 +2731,28 @@ function buildDateList() {
 
                         }
 
+
                         const fileDate =
                             new Date(
                                 file.createdAt
                             );
 
+
                         const y =
                             fileDate.getFullYear();
+
 
                         const m =
                             String(
                                 fileDate.getMonth() + 1
                             ).padStart(2, "0");
 
+
                         const d =
                             String(
                                 fileDate.getDate()
                             ).padStart(2, "0");
+
 
                         return (
                             y +
@@ -2441,6 +2765,7 @@ function buildDateList() {
 
                     }
                 );
+
 
             button.innerHTML =
                 '<div class="date-day">' +
@@ -2459,6 +2784,7 @@ function buildDateList() {
                 ) +
                 "</div>";
 
+
             button.onclick =
                 function() {
 
@@ -2468,12 +2794,14 @@ function buildDateList() {
 
                 };
 
+
             dateList.appendChild(
                 button
             );
 
         }
     );
+
 }
 
 
@@ -2488,8 +2816,10 @@ async function downloadByDate(
             "downloadMessage"
         );
 
+
     message.textContent =
         "Preparing your files...";
+
 
     try {
 
@@ -2517,10 +2847,12 @@ async function downloadByDate(
                 }
             );
 
+
         if (!response.ok) {
 
             const errorText =
                 await response.text();
+
 
             message.textContent =
                 "🔴 " +
@@ -2529,39 +2861,50 @@ async function downloadByDate(
             return;
         }
 
+
         const blob =
             await response.blob();
+
 
         const url =
             window.URL.createObjectURL(
                 blob
             );
 
+
         const link =
             document.createElement("a");
 
+
         link.href =
             url;
+
 
         link.download =
             "Aashutosh-Files-" +
             selectedDate +
             ".zip";
 
+
         document.body.appendChild(
             link
         );
 
+
         link.click();
 
+
         link.remove();
+
 
         window.URL.revokeObjectURL(
             url
         );
 
+
         message.textContent =
             "🟢 Download started.";
+
 
     } catch (error) {
 
@@ -2571,6 +2914,7 @@ async function downloadByDate(
             "🔴 Download failed.";
 
     }
+
 }
 
 
@@ -2581,27 +2925,33 @@ function openDeleteModal(file) {
     fileToDelete =
         file;
 
+
     const modal =
         document.getElementById(
             "deleteModal"
         );
+
 
     const password =
         document.getElementById(
             "deletePassword"
         );
 
+
     const message =
         document.getElementById(
             "deleteMessage"
         );
 
+
     password.value = "";
 
     message.textContent = "";
 
+
     modal.style.display =
         "flex";
+
 
     setTimeout(
         function() {
@@ -2611,6 +2961,7 @@ function openDeleteModal(file) {
         },
         100
     );
+
 }
 
 
@@ -2623,7 +2974,9 @@ function closeDeleteModal() {
         .style.display =
         "none";
 
+
     fileToDelete = "";
+
 }
 
 
@@ -2636,13 +2989,16 @@ async function confirmDelete() {
             "deletePassword"
         );
 
+
     const message =
         document.getElementById(
             "deleteMessage"
         );
 
+
     const password =
         passwordInput.value.trim();
+
 
     if (!password) {
 
@@ -2652,8 +3008,10 @@ async function confirmDelete() {
         return;
     }
 
+
     message.textContent =
         "Deleting...";
+
 
     try {
 
@@ -2681,8 +3039,10 @@ async function confirmDelete() {
                 }
             );
 
+
         const result =
             await response.json();
+
 
         if (!response.ok) {
 
@@ -2693,6 +3053,7 @@ async function confirmDelete() {
                     "Delete failed."
                 );
 
+
             passwordInput.value = "";
 
             passwordInput.focus();
@@ -2700,10 +3061,13 @@ async function confirmDelete() {
             return;
         }
 
+
         message.textContent =
             "🟢 File deleted successfully.";
 
+
         fileToDelete = "";
+
 
         setTimeout(
             function() {
@@ -2716,6 +3080,7 @@ async function confirmDelete() {
             600
         );
 
+
     } catch (error) {
 
         console.error(error);
@@ -2724,6 +3089,7 @@ async function confirmDelete() {
             "🔴 Connection error.";
 
     }
+
 }
 
 
@@ -2757,6 +3123,7 @@ function formatDate(date) {
             year: "numeric"
         }
     );
+
 }
 
 
@@ -2771,6 +3138,7 @@ function formatTime(date) {
             minute: "2-digit"
         }
     );
+
 }
 
 
@@ -2784,6 +3152,7 @@ function formatSize(bytes) {
 
     }
 
+
     const units =
         [
             "B",
@@ -2793,11 +3162,14 @@ function formatSize(bytes) {
             "TB"
         ];
 
+
     let size =
         bytes;
 
+
     let index =
         0;
+
 
     while (
         size >= 1024 &&
@@ -2811,6 +3183,7 @@ function formatSize(bytes) {
 
     }
 
+
     return (
         size.toFixed(
             index === 0
@@ -2820,6 +3193,7 @@ function formatSize(bytes) {
         " " +
         units[index]
     );
+
 }
 
 </script>
