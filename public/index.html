@@ -8,10 +8,6 @@
 
 <title>Aashutosh's Cloud Storage</title>
 
-<!-- Font Awesome -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 <style>
 
 * {
@@ -37,25 +33,16 @@ body {
 /* ================= LOGIN ================= */
 
 #loginScreen {
-
     min-height: 100vh;
-
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
     padding: 20px;
 }
 
-
 .login-box {
-
     width: 100%;
-
     max-width: 430px;
-
     padding: 40px 35px;
 
     background:
@@ -73,12 +60,10 @@ body {
 }
 
 
-/* PFP */
+/* ================= PROFILE ================= */
 
 .profile-image {
-
     width: 90px;
-
     height: 90px;
 
     border-radius: 50%;
@@ -95,95 +80,46 @@ body {
 }
 
 
-/* LOGIN TITLE */
+/* ================= LOGIN TITLE ================= */
 
 .login-box h1 {
-
     margin: 0;
-
     font-size: 27px;
 }
 
-
 .subtitle {
-
     color: #8994a6;
-
-    margin:
-        10px 0 25px;
+    margin: 10px 0 20px;
 }
 
 
-/* ================= CONTACT / INSTAGRAM ================= */
-
-.contact-instagram {
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 7px;
-
-    margin-bottom: 25px;
-
-    font-size: 14px;
-
-    color: #8994a6;
-}
-
+/* ================= INSTAGRAM ================= */
 
 .instagram-link {
-
     display: inline-flex;
-
     align-items: center;
+    gap: 8px;
 
-    gap: 6px;
+    margin-bottom: 25px;
 
     color: #55a7ff;
 
     text-decoration: none;
 
+    font-size: 14px;
+
     transition: 0.2s;
 }
 
-
-.instagram-link i {
-
-    font-size: 17px;
-
-    background:
-        linear-gradient(
-            45deg,
-            #feda75,
-            #fa7e1e,
-            #d62976,
-            #962fbf,
-            #4f5bd5
-        );
-
-    -webkit-background-clip: text;
-
-    -webkit-text-fill-color: transparent;
-
-    background-clip: text;
-}
-
-
 .instagram-link:hover {
-
     color: white;
-
     text-decoration: underline;
 }
 
 
-/* PASSWORD */
+/* ================= PASSWORD ================= */
 
 .password-input {
-
     width: 100%;
 
     padding: 14px;
@@ -204,9 +140,7 @@ body {
     text-align: center;
 }
 
-
 .password-input:focus {
-
     border-color: #4da3ff;
 
     box-shadow:
@@ -214,10 +148,9 @@ body {
 }
 
 
-/* LOGIN BUTTON */
+/* ================= LOGIN BUTTON ================= */
 
 .login-button {
-
     width: 100%;
 
     margin-top: 15px;
@@ -241,39 +174,32 @@ body {
     transition: 0.2s;
 }
 
-
 .login-button:hover {
-
     background: #1764df;
 
-    transform: translateY(-1px);
+    transform:
+        translateY(-1px);
 }
 
 
+/* ================= LOGIN MESSAGE ================= */
+
 #loginMessage {
-
     min-height: 25px;
-
     margin-top: 20px;
-
     font-weight: bold;
 }
 
-
 .denied {
-
     color: #ff4d5a;
 
     animation:
         shake 0.35s;
 }
 
-
 .granted {
-
     color: #36e38b;
 }
-
 
 @keyframes shake {
 
@@ -303,19 +229,15 @@ body {
 /* ================= DASHBOARD ================= */
 
 #dashboard {
-
     display: none;
-
     min-height: 100vh;
 }
 
 
-/* HEADER */
+/* ================= HEADER ================= */
 
 header {
-
-    padding:
-        18px 35px;
+    padding: 18px 35px;
 
     border-bottom:
         1px solid #202938;
@@ -333,41 +255,27 @@ header {
     gap: 15px;
 }
 
-
 .brand {
-
     font-size: 21px;
-
     font-weight: bold;
 }
 
-
 .status {
-
     color: #36e38b;
-
     font-size: 13px;
-
     margin-top: 4px;
 }
 
 
-/* HEADER BUTTONS */
+/* ================= HEADER BUTTONS ================= */
 
 .header-buttons {
-
     display: flex;
-
     align-items: center;
-
     gap: 10px;
 }
 
-
-/* DOWNLOAD YOUR FILES */
-
 .download-all {
-
     background:
         linear-gradient(
             135deg,
@@ -394,9 +302,7 @@ header {
         0 5px 18px rgba(40,120,255,0.2);
 }
 
-
 .download-all:hover {
-
     transform:
         translateY(-1px);
 
@@ -405,10 +311,9 @@ header {
 }
 
 
-/* LOGOUT */
+/* ================= LOGOUT ================= */
 
 .logout {
-
     background: #1a202c;
 
     border:
@@ -426,9 +331,7 @@ header {
     transition: 0.2s;
 }
 
-
 .logout:hover {
-
     background: #242d3c;
 }
 
@@ -436,7 +339,6 @@ header {
 /* ================= MAIN ================= */
 
 main {
-
     max-width: 1000px;
 
     margin: auto;
@@ -445,21 +347,15 @@ main {
         35px 20px;
 }
 
-
 .welcome {
-
     margin-bottom: 30px;
 }
 
-
 .welcome h2 {
-
     margin-bottom: 5px;
 }
 
-
 .welcome p {
-
     color: #8994a6;
 }
 
@@ -467,7 +363,6 @@ main {
 /* ================= UPLOAD ================= */
 
 .upload-box {
-
     border:
         1px dashed #3a4659;
 
@@ -480,52 +375,118 @@ main {
     margin-bottom: 30px;
 }
 
-
 .upload-box h3 {
-
     margin-top: 0;
 }
 
-
 .upload-row {
-
     display: flex;
-
     gap: 10px;
-
     flex-wrap: wrap;
 }
 
 
+/* ================= CUSTOM FILE PICKER ================= */
+
 .file-input-wrapper {
-
     flex: 1;
-
-    min-width: 200px;
-
-    position: relative;
+    min-width: 250px;
 }
 
 
-input[type="file"] {
+/* Hide the ugly default browser file input */
 
+input[type="file"] {
+    display: none;
+}
+
+
+/* Custom Choose Files button */
+
+.file-label {
     width: 100%;
 
-    padding: 10px;
+    min-height: 45px;
 
-    background: #151c28;
-
-    color: #ddd;
-
-    border-radius: 8px;
+    padding: 11px 16px;
 
     border:
         1px solid #303b4d;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #151d2a,
+            #0e141e
+        );
+
+    color: #b9c4d4;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03);
 }
 
 
-.upload-button {
+.file-label:hover {
+    border-color: #2878ff;
 
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #192438,
+            #111a28
+        );
+
+    box-shadow:
+        0 0 15px rgba(40,120,255,0.15);
+
+    transform:
+        translateY(-1px);
+}
+
+
+.file-label:active {
+    transform:
+        translateY(0);
+}
+
+
+/* Selected file counter/name */
+
+.file-name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ================= UPLOAD BUTTON ================= */
+
+.upload-button {
     padding:
         11px 20px;
 
@@ -544,9 +505,7 @@ input[type="file"] {
     transition: 0.2s;
 }
 
-
 .upload-button:hover {
-
     background: #1764df;
 
     transform:
@@ -554,10 +513,10 @@ input[type="file"] {
 }
 
 
+/* ================= UPLOAD MESSAGE ================= */
+
 #uploadMessage {
-
     margin-top: 15px;
-
     min-height: 20px;
 }
 
@@ -565,7 +524,6 @@ input[type="file"] {
 /* ================= FILES ================= */
 
 .files-header {
-
     display: flex;
 
     justify-content:
@@ -576,15 +534,11 @@ input[type="file"] {
     margin-bottom: 15px;
 }
 
-
 .files-header h3 {
-
     margin: 0;
 }
 
-
 .refresh {
-
     background: #151c28;
 
     color: white;
@@ -600,25 +554,20 @@ input[type="file"] {
     cursor: pointer;
 }
 
-
 .refresh:hover {
-
     background: #202a39;
 }
 
 
+/* ================= FILE LIST ================= */
+
 #fileList {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 12px;
 }
 
-
 .file-card {
-
     background: #0d131d;
 
     border:
@@ -640,32 +589,23 @@ input[type="file"] {
     transition: 0.2s;
 }
 
-
 .file-card:hover {
-
     border-color: #3d4d65;
 
     transform:
         translateY(-2px);
 }
 
-
 .file-info {
-
     min-width: 0;
 }
 
-
 .file-name {
-
     font-weight: bold;
-
     word-break: break-all;
 }
 
-
 .file-meta {
-
     margin-top: 7px;
 
     color: #7e899b;
@@ -673,19 +613,16 @@ input[type="file"] {
     font-size: 13px;
 }
 
-
 .actions {
-
     display: flex;
-
     gap: 8px;
-
     flex-shrink: 0;
 }
 
 
-.download {
+/* ================= DOWNLOAD ================= */
 
+.download {
     background: #172333;
 
     color: #55a7ff;
@@ -703,15 +640,14 @@ input[type="file"] {
     transition: 0.2s;
 }
 
-
 .download:hover {
-
     background: #203247;
 }
 
 
-.delete {
+/* ================= DELETE ================= */
 
+.delete {
     background: #29171b;
 
     color: #ff6672;
@@ -727,15 +663,14 @@ input[type="file"] {
     cursor: pointer;
 }
 
-
 .delete:hover {
-
     background: #351c21;
 }
 
 
-.empty {
+/* ================= EMPTY ================= */
 
+.empty {
     text-align: center;
 
     color: #778397;
@@ -750,10 +685,9 @@ input[type="file"] {
 }
 
 
-/* ================= DATE DOWNLOAD MODAL ================= */
+/* ================= DOWNLOAD MODAL ================= */
 
 #downloadModal {
-
     display: none;
 
     position: fixed;
@@ -772,9 +706,7 @@ input[type="file"] {
     z-index: 1000;
 }
 
-
 .download-modal-box {
-
     background: #101722;
 
     border:
@@ -794,25 +726,17 @@ input[type="file"] {
         0 25px 80px rgba(0,0,0,0.65);
 }
 
-
 .download-modal-box h2 {
-
     margin-top: 0;
-
     margin-bottom: 8px;
 }
 
-
 .download-modal-box p {
-
     color: #8994a6;
-
     margin-bottom: 22px;
 }
 
-
 .date-list {
-
     max-height: 320px;
 
     overflow-y: auto;
@@ -826,9 +750,7 @@ input[type="file"] {
     margin-bottom: 18px;
 }
 
-
 .date-button {
-
     width: 100%;
 
     text-align: left;
@@ -849,9 +771,7 @@ input[type="file"] {
     transition: 0.2s;
 }
 
-
 .date-button:hover {
-
     background: #1d2838;
 
     border-color: #4b5c75;
@@ -860,27 +780,18 @@ input[type="file"] {
         translateX(2px);
 }
 
-
 .date-day {
-
     font-weight: bold;
-
     font-size: 15px;
 }
 
-
 .date-number {
-
     color: #8e9aac;
-
     font-size: 12px;
-
     margin-top: 3px;
 }
 
-
 .close-download {
-
     width: 100%;
 
     padding: 11px;
@@ -897,15 +808,11 @@ input[type="file"] {
     cursor: pointer;
 }
 
-
 .close-download:hover {
-
     background: #252f3e;
 }
 
-
 #downloadMessage {
-
     min-height: 20px;
 
     margin-bottom: 12px;
@@ -919,7 +826,6 @@ input[type="file"] {
 /* ================= DELETE MODAL ================= */
 
 #deleteModal {
-
     display: none;
 
     position: fixed;
@@ -938,9 +844,7 @@ input[type="file"] {
     z-index: 1100;
 }
 
-
 .modal {
-
     background: #101722;
 
     border:
@@ -957,23 +861,16 @@ input[type="file"] {
     text-align: center;
 }
 
-
 .modal h2 {
-
     margin-top: 0;
-
     color: #ff5966;
 }
 
-
 .modal p {
-
     color: #8994a6;
 }
 
-
 .delete-password {
-
     width: 100%;
 
     padding: 12px;
@@ -992,15 +889,11 @@ input[type="file"] {
     outline: none;
 }
 
-
 .delete-password:focus {
-
     border-color: #ff5966;
 }
 
-
 .modal-buttons {
-
     display: flex;
 
     gap: 10px;
@@ -1008,9 +901,7 @@ input[type="file"] {
     margin-top: 15px;
 }
 
-
 .modal-buttons button {
-
     flex: 1;
 
     padding: 11px;
@@ -1020,9 +911,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-
 .cancel {
-
     background: #1b2431;
 
     border:
@@ -1031,9 +920,7 @@ input[type="file"] {
     color: white;
 }
 
-
 .confirm-delete {
-
     background: #d93445;
 
     border: none;
@@ -1043,9 +930,7 @@ input[type="file"] {
     font-weight: bold;
 }
 
-
 #deleteMessage {
-
     min-height: 20px;
 
     margin-top: 12px;
@@ -1061,49 +946,46 @@ input[type="file"] {
 @media (max-width: 650px) {
 
     header {
-
         padding: 18px;
-
         align-items: flex-start;
     }
 
     .header-buttons {
-
         flex-direction: column;
-
         align-items: stretch;
     }
 
     .download-all,
     .logout {
-
         white-space: nowrap;
     }
 
     main {
-
         padding:
             25px 15px;
     }
 
     .file-card {
-
         flex-direction: column;
-
         align-items: stretch;
     }
 
     .actions {
-
         width: 100%;
     }
 
     .actions a,
     .actions button {
-
         flex: 1;
-
         text-align: center;
+    }
+
+    .upload-row {
+        flex-direction: column;
+    }
+
+    .upload-button {
+        width: 100%;
     }
 
 }
@@ -1120,7 +1002,6 @@ input[type="file"] {
 <section id="loginScreen">
 
 <div class="login-box">
-
 
 <img
     class="profile-image"
@@ -1140,29 +1021,17 @@ Private cloud storage • Authorized access only
 </p>
 
 
-<!-- CONTACT -->
-
-<div class="contact-instagram">
-
-<span>
-Contact:
-</span>
-
-
 <a
     class="instagram-link"
     href="https://www.instagram.com/aashutosh.dhungana/"
     target="_blank"
-    rel="noopener noreferrer"
 >
+<span>Contact:</span>
 
-<i class="fa-brands fa-instagram"></i>
+<span>📷</span>
 
-aashutosh.dhungana
-
+<span>aashutosh.dhungana</span>
 </a>
-
-</div>
 
 
 <input
@@ -1252,7 +1121,7 @@ Upload, store and share your programs securely.
 <div class="upload-box">
 
 <h3>
-⬆️ Upload File
+⬆️ Upload Files
 </h3>
 
 
@@ -1261,11 +1130,30 @@ Upload, store and share your programs securely.
 <div class="upload-row">
 
 
+<div class="file-input-wrapper">
+
+<label
+    for="fileInput"
+    class="file-label"
+>
+<span>📁</span>
+
+<span class="file-name" id="fileName">
+Choose files
+</span>
+</label>
+
+
 <input
     type="file"
     id="fileInput"
+    name="files"
+    multiple
     required
 >
+
+
+</div>
 
 
 <button
@@ -1414,6 +1302,48 @@ let fileToDelete = "";
 let allFiles = [];
 
 
+// ================= FILE PICKER =================
+
+document
+    .getElementById("fileInput")
+    .addEventListener(
+        "change",
+        function() {
+
+            const fileName =
+                document.getElementById(
+                    "fileName"
+                );
+
+            const files =
+                this.files;
+
+
+            if (!files.length) {
+
+                fileName.textContent =
+                    "Choose files";
+
+                return;
+            }
+
+
+            if (files.length === 1) {
+
+                fileName.textContent =
+                    files[0].name;
+
+            } else {
+
+                fileName.textContent =
+                    files.length +
+                    " files selected";
+            }
+
+        }
+    );
+
+
 // ================= LOGIN =================
 
 async function login() {
@@ -1486,12 +1416,14 @@ async function login() {
 
             document
                 .getElementById("loginScreen")
-                .style.display = "none";
+                .style.display =
+                "none";
 
 
             document
                 .getElementById("dashboard")
-                .style.display = "block";
+                .style.display =
+                "block";
 
 
             loadFiles();
@@ -1675,7 +1607,6 @@ async function loadFiles() {
                 download
             );
 
-
             actions.appendChild(
                 deleteButton
             );
@@ -1699,7 +1630,7 @@ async function loadFiles() {
 }
 
 
-// ================= UPLOAD =================
+// ================= UPLOAD MULTIPLE FILES =================
 
 document
     .getElementById("uploadForm")
@@ -1725,7 +1656,7 @@ document
             if (!input.files.length) {
 
                 message.textContent =
-                    "Please select a file.";
+                    "Please select at least one file.";
 
                 return;
             }
@@ -1735,14 +1666,22 @@ document
                 new FormData();
 
 
-            formData.append(
-                "file",
-                input.files[0]
-            );
+            for (
+                const file of input.files
+            ) {
+
+                formData.append(
+                    "files",
+                    file
+                );
+
+            }
 
 
             message.textContent =
-                "Uploading...";
+                "Uploading " +
+                input.files.length +
+                " file(s)...";
 
 
             try {
@@ -1760,13 +1699,26 @@ document
                     );
 
 
+                const result =
+                    await response.json();
+
+
                 if (response.ok) {
 
                     message.textContent =
-                        "🟢 File uploaded successfully.";
+                        "🟢 " +
+                        result.message;
 
 
                     input.value = "";
+
+
+                    document
+                        .getElementById(
+                            "fileName"
+                        )
+                        .textContent =
+                        "Choose files";
 
 
                     loadFiles();
@@ -1774,7 +1726,11 @@ document
                 } else {
 
                     message.textContent =
-                        "🔴 Upload failed.";
+                        "🔴 " +
+                        (
+                            result.message ||
+                            "Upload failed."
+                        );
 
                 }
 
@@ -2434,4 +2390,3 @@ document
 </body>
 
 </html>
-```
