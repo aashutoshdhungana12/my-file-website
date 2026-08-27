@@ -1,18 +1,18 @@
 {
-  "name": "aashutosh-file-storage",
+  "name": "website",
   "version": "1.0.0",
-  "description": "Personal cloud file storage",
+  "description": "Aashutosh's personal file storage",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "Aashutosh Dhungana",
+  "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.0",
     "express": "^5.2.1",
-    "multer": "^2.2.0",
-    "@supabase/supabase-js": "^2.57.0"
+    "multer": "^2.2.0"
   }
 }
