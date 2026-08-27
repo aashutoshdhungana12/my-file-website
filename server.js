@@ -24,8 +24,7 @@ const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET;
 // ======================================================
 
 console.log("========================================");
-console.log("AASHUTOSH'S CLOUD STORAGE");
-console.log("Starting server...");
+console.log("Checking environment variables...");
 console.log("========================================");
 
 if (!PASSWORD) {
@@ -48,30 +47,16 @@ if (!SUPABASE_BUCKET) {
     console.error("ERROR: SUPABASE_BUCKET is missing.");
 }
 
-if (
-    SUPABASE_URL &&
-    SUPABASE_KEY &&
-    SUPABASE_BUCKET
-) {
-    console.log("Supabase configuration found.");
-    console.log(
-        "Supabase bucket:",
-        SUPABASE_BUCKET
-    );
-}
+console.log("========================================");
 
 // ======================================================
 // SUPABASE
 // ======================================================
 
-let supabase = null;
-
-if (SUPABASE_URL && SUPABASE_KEY) {
-    supabase = createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-}
+const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 // ======================================================
 // MIDDLEWARE
@@ -94,7 +79,7 @@ const upload = multer({
 });
 
 // ======================================================
-// HELPER FUNCTIONS
+// AUTHENTICATION
 // ======================================================
 
 function checkPassword(req) {
@@ -103,26 +88,12 @@ function checkPassword(req) {
         req.query.password ||
         req.body?.password;
 
-    return (
-        PASSWORD &&
-        password === PASSWORD
-    );
+    return password === PASSWORD;
 }
 
 function checkAdminPassword(password) {
 
-    return (
-        ADMIN_PASSWORD &&
-        password === ADMIN_PASSWORD
-    );
-}
-
-function storageReady() {
-
-    return (
-        supabase &&
-        SUPABASE_BUCKET
-    );
+    return password === ADMIN_PASSWORD;
 }
 
 // ======================================================
@@ -135,14 +106,6 @@ app.get("/files", async (req, res) => {
 
         return res.status(401).json({
             message: "Access denied."
-        });
-    }
-
-    if (!storageReady()) {
-
-        return res.status(500).json({
-            message:
-                "Storage configuration is missing."
         });
     }
 
@@ -223,14 +186,6 @@ app.post(
             return res.status(401).json({
                 message:
                     "Access denied."
-            });
-        }
-
-        if (!storageReady()) {
-
-            return res.status(500).json({
-                message:
-                    "Storage configuration is missing."
             });
         }
 
@@ -365,13 +320,6 @@ app.get(
             );
         }
 
-        if (!storageReady()) {
-
-            return res.status(500).send(
-                "Storage configuration is missing."
-            );
-        }
-
         try {
 
             const filename =
@@ -473,19 +421,16 @@ app.post(
             date
         } = req.body;
 
+        // --------------------------------------------------
+        // ADMIN PASSWORD CHECK
+        // --------------------------------------------------
+
         if (
             !checkAdminPassword(password)
         ) {
 
             return res.status(401).send(
                 "Incorrect admin password."
-            );
-        }
-
-        if (!storageReady()) {
-
-            return res.status(500).send(
-                "Storage configuration is missing."
             );
         }
 
@@ -498,12 +443,24 @@ app.post(
 
         try {
 
+            console.log(
+                `Preparing ZIP for date: ${date}`
+            );
+
+            // --------------------------------------------------
+            // GET FILE LIST
+            // --------------------------------------------------
+
             const { data, error } =
                 await supabase
                     .storage
                     .from(SUPABASE_BUCKET)
                     .list("", {
-                        limit: 1000
+                        limit: 1000,
+                        sortBy: {
+                            column: "created_at",
+                            order: "desc"
+                        }
                     });
 
             if (error) {
@@ -518,14 +475,15 @@ app.post(
                 );
             }
 
+            // --------------------------------------------------
+            // FILTER USING NEPAL TIME
+            // --------------------------------------------------
+
             const filesForDate =
                 (data || []).filter(
                     file => {
 
-                        if (
-                            !file.created_at
-                        ) {
-
+                        if (!file.created_at) {
                             return false;
                         }
 
@@ -534,50 +492,56 @@ app.post(
                                 file.created_at
                             );
 
-                        const year =
-                            fileDate.getFullYear();
+                        const nepalDate =
+                            new Intl.DateTimeFormat(
+                                "en-CA",
+                                {
+                                    timeZone:
+                                        "Asia/Kathmandu",
 
-                        const month =
-                            String(
-                                fileDate.getMonth() + 1
-                            ).padStart(
-                                2,
-                                "0"
-                            );
+                                    year:
+                                        "numeric",
 
-                        const day =
-                            String(
-                                fileDate.getDate()
-                            ).padStart(
-                                2,
-                                "0"
+                                    month:
+                                        "2-digit",
+
+                                    day:
+                                        "2-digit"
+                                }
+                            ).format(
+                                fileDate
                             );
 
                         return (
-                            `${year}-${month}-${day}` ===
-                            date
+                            nepalDate === date
                         );
                     }
                 );
+
+            // --------------------------------------------------
+            // NO FILES
+            // --------------------------------------------------
 
             if (
                 filesForDate.length === 0
             ) {
 
+                console.log(
+                    `No files found for ${date}`
+                );
+
                 return res.status(404).send(
-                    "No files were uploaded on this date."
+                    `No files were uploaded on ${date}.`
                 );
             }
 
-            res.setHeader(
-                "Content-Type",
-                "application/zip"
+            console.log(
+                `Found ${filesForDate.length} file(s) for ${date}`
             );
 
-            res.setHeader(
-                "Content-Disposition",
-                `attachment; filename="Aashutosh-Files-${date}.zip"`
-            );
+            // --------------------------------------------------
+            // CREATE ZIP
+            // --------------------------------------------------
 
             const archive =
                 archiver(
@@ -589,32 +553,45 @@ app.post(
                     }
                 );
 
+            const chunks = [];
+
+            let archiveError = null;
+
+            archive.on(
+                "data",
+                chunk => {
+
+                    chunks.push(chunk);
+
+                }
+            );
+
             archive.on(
                 "error",
                 error => {
+
+                    archiveError =
+                        error;
 
                     console.error(
                         "ARCHIVE ERROR:",
                         error
                     );
 
-                    if (
-                        !res.headersSent
-                    ) {
-
-                        res.status(
-                            500
-                        ).end();
-
-                    }
                 }
             );
 
-            archive.pipe(res);
+            // --------------------------------------------------
+            // DOWNLOAD EACH FILE
+            // --------------------------------------------------
 
             for (
                 const file of filesForDate
             ) {
+
+                console.log(
+                    `Downloading for ZIP: ${file.name}`
+                );
 
                 const {
                     data: fileData,
@@ -627,13 +604,20 @@ app.post(
                             file.name
                         );
 
-                if (
-                    downloadError
-                ) {
+                if (downloadError) {
 
                     console.error(
-                        "ZIP FILE DOWNLOAD ERROR:",
+                        `FAILED TO DOWNLOAD ${file.name}:`,
                         downloadError
+                    );
+
+                    continue;
+                }
+
+                if (!fileData) {
+
+                    console.error(
+                        `No data received for ${file.name}`
                     );
 
                     continue;
@@ -644,6 +628,10 @@ app.post(
                         await fileData.arrayBuffer()
                     );
 
+                console.log(
+                    `Adding to ZIP: ${file.name}`
+                );
+
                 archive.append(
                     buffer,
                     {
@@ -653,7 +641,69 @@ app.post(
                 );
             }
 
+            // --------------------------------------------------
+            // FINALIZE ZIP
+            // --------------------------------------------------
+
             await archive.finalize();
+
+            // --------------------------------------------------
+            // CHECK ARCHIVE ERROR
+            // --------------------------------------------------
+
+            if (archiveError) {
+
+                return res.status(500).send(
+                    "The ZIP file could not be created."
+                );
+            }
+
+            // --------------------------------------------------
+            // CREATE FINAL ZIP BUFFER
+            // --------------------------------------------------
+
+            const zipBuffer =
+                Buffer.concat(chunks);
+
+            console.log(
+                `ZIP created successfully: ${zipBuffer.length} bytes`
+            );
+
+            if (
+                zipBuffer.length === 0
+            ) {
+
+                return res.status(500).send(
+                    "The ZIP file could not be created."
+                );
+            }
+
+            // --------------------------------------------------
+            // SEND ZIP
+            // --------------------------------------------------
+
+            res.setHeader(
+                "Content-Type",
+                "application/zip"
+            );
+
+            res.setHeader(
+                "Content-Disposition",
+                `attachment; filename="Aashutosh-Files-${date}.zip"`
+            );
+
+            res.setHeader(
+                "Content-Length",
+                zipBuffer.length
+            );
+
+            res.send(
+                zipBuffer
+            );
+
+            console.log(
+                `ZIP sent successfully for ${date}`
+            );
 
         } catch (error) {
 
@@ -667,7 +717,7 @@ app.post(
             ) {
 
                 res.status(500).send(
-                    "ZIP download failed."
+                    `ZIP download failed: ${error.message}`
                 );
             }
         }
@@ -695,16 +745,6 @@ app.post(
 
                 message:
                     "Incorrect admin password."
-
-            });
-        }
-
-        if (!storageReady()) {
-
-            return res.status(500).json({
-
-                message:
-                    "Storage configuration is missing."
 
             });
         }
@@ -776,20 +816,9 @@ app.listen(
     PORT,
     () => {
 
-        console.log("========================================");
         console.log(
             `Server running on port ${PORT}`
         );
-
-        if (SUPABASE_BUCKET) {
-
-            console.log(
-                `Storage bucket: ${SUPABASE_BUCKET}`
-            );
-
-        }
-
-        console.log("========================================");
 
     }
 );
