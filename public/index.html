@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Aashutosh Secure File Vault</title>
+<title>Aashutosh's Cloud Storage</title>
 
 <style>
 
@@ -19,387 +18,1047 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
+
     background:
-        radial-gradient(circle at top, #172033, #070a10 60%);
+        radial-gradient(
+            circle at top,
+            #172033,
+            #070a10 60%
+        );
+
     color: white;
 }
 
-/* LOGIN */
+
+/* ================= LOGIN ================= */
 
 #loginScreen {
+
     min-height: 100vh;
+
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
     padding: 20px;
 }
 
+
 .login-box {
+
     width: 100%;
+
     max-width: 430px;
-    padding: 45px 35px;
-    background: rgba(15,20,30,0.96);
-    border: 1px solid #273246;
+
+    padding: 40px 35px;
+
+    background:
+        rgba(15,20,30,0.96);
+
+    border:
+        1px solid #273246;
+
     border-radius: 20px;
+
     text-align: center;
-    box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,0.6);
 }
 
-.lock {
-    font-size: 55px;
-    margin-bottom: 15px;
+
+/* PFP */
+
+.profile-image {
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    margin-bottom: 18px;
+
+    border:
+        3px solid #2878ff;
+
+    box-shadow:
+        0 0 25px rgba(40,120,255,0.35);
 }
+
+
+/* LOGIN TITLE */
 
 .login-box h1 {
+
     margin: 0;
-    font-size: 28px;
+
+    font-size: 27px;
 }
+
 
 .subtitle {
+
     color: #8994a6;
-    margin: 10px 0 30px;
+
+    margin:
+        10px 0 25px;
 }
 
-.password-input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #344054;
-    background: #0b1018;
+
+/* INSTAGRAM */
+
+.instagram-link {
+
+    display: inline-block;
+
+    margin-bottom: 25px;
+
+    color: #55a7ff;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+
+.instagram-link:hover {
+
     color: white;
+
+    text-decoration: underline;
+}
+
+
+/* PASSWORD */
+
+.password-input {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid #344054;
+
+    background: #0b1018;
+
+    color: white;
+
     font-size: 16px;
+
     outline: none;
+
     text-align: center;
 }
 
+
 .password-input:focus {
+
     border-color: #4da3ff;
+
+    box-shadow:
+        0 0 15px rgba(77,163,255,0.2);
 }
+
+
+/* LOGIN BUTTON */
 
 .login-button {
+
     width: 100%;
+
     margin-top: 15px;
+
     padding: 14px;
+
     border: none;
+
     border-radius: 10px;
+
     background: #2878ff;
+
     color: white;
+
     font-size: 16px;
+
     font-weight: bold;
+
     cursor: pointer;
+
+    transition: 0.2s;
 }
+
 
 .login-button:hover {
+
     background: #1764df;
+
+    transform: translateY(-1px);
 }
 
+
 #loginMessage {
+
     min-height: 25px;
+
     margin-top: 20px;
+
     font-weight: bold;
 }
 
+
 .denied {
+
     color: #ff4d5a;
-    animation: shake 0.35s;
+
+    animation:
+        shake 0.35s;
 }
 
+
 .granted {
+
     color: #36e38b;
 }
+
 
 @keyframes shake {
 
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    50% { transform: translateX(8px); }
-    75% { transform: translateX(-8px); }
-    100% { transform: translateX(0); }
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    50% {
+        transform: translateX(8px);
+    }
+
+    75% {
+        transform: translateX(-8px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 
 }
 
-/* DASHBOARD */
+
+/* ================= DASHBOARD ================= */
 
 #dashboard {
+
     display: none;
+
     min-height: 100vh;
 }
 
+
+/* HEADER */
+
 header {
-    padding: 22px 35px;
-    border-bottom: 1px solid #202938;
-    background: rgba(8,12,18,0.9);
+
+    padding:
+        18px 35px;
+
+    border-bottom:
+        1px solid #202938;
+
+    background:
+        rgba(8,12,18,0.95);
+
     display: flex;
-    justify-content: space-between;
+
+    justify-content:
+        space-between;
+
     align-items: center;
-}
 
-.brand {
-    font-size: 21px;
-    font-weight: bold;
-}
-
-.status {
-    color: #36e38b;
-    font-size: 13px;
-    margin-top: 4px;
-}
-
-.logout {
-    background: #1a202c;
-    border: 1px solid #303a4c;
-    color: white;
-    padding: 9px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-main {
-    max-width: 1000px;
-    margin: auto;
-    padding: 35px 20px;
-}
-
-.welcome {
-    margin-bottom: 30px;
-}
-
-.welcome h2 {
-    margin-bottom: 5px;
-}
-
-.welcome p {
-    color: #8994a6;
-}
-
-/* UPLOAD */
-
-.upload-box {
-    border: 1px dashed #3a4659;
-    background: #0d131d;
-    padding: 25px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-}
-
-.upload-box h3 {
-    margin-top: 0;
-}
-
-.upload-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-input[type="file"] {
-    flex: 1;
-    min-width: 200px;
-    padding: 10px;
-    background: #151c28;
-    color: #ddd;
-    border-radius: 8px;
-    border: 1px solid #303b4d;
-}
-
-.upload-button {
-    padding: 11px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #2878ff;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#uploadMessage {
-    margin-top: 15px;
-}
-
-/* FILES */
-
-.files-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.refresh {
-    background: #151c28;
-    color: white;
-    border: 1px solid #303b4d;
-    padding: 8px 13px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#fileList {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.file-card {
-    background: #0d131d;
-    border: 1px solid #202a39;
-    border-radius: 13px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     gap: 15px;
 }
 
-.file-card:hover {
-    border-color: #3d4d65;
-}
 
-.file-info {
-    min-width: 0;
-}
+.brand {
 
-.file-name {
+    font-size: 21px;
+
     font-weight: bold;
-    word-break: break-all;
 }
 
-.file-meta {
-    margin-top: 7px;
-    color: #7e899b;
+
+.status {
+
+    color: #36e38b;
+
     font-size: 13px;
+
+    margin-top: 4px;
 }
 
-.actions {
+
+/* HEADER BUTTONS */
+
+.header-buttons {
+
     display: flex;
-    gap: 8px;
-}
 
-.download {
-    background: #172333;
-    color: #55a7ff;
-    border: 1px solid #29415d;
-    padding: 8px 12px;
-    border-radius: 7px;
-    text-decoration: none;
-}
-
-.delete {
-    background: #29171b;
-    color: #ff6672;
-    border: 1px solid #543038;
-    padding: 8px 12px;
-    border-radius: 7px;
-    cursor: pointer;
-}
-
-.empty {
-    text-align: center;
-    color: #778397;
-    padding: 50px 20px;
-    border: 1px dashed #2b3545;
-    border-radius: 13px;
-}
-
-/* DELETE MODAL */
-
-#deleteModal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    justify-content: center;
     align-items: center;
-    padding: 20px;
+
+    gap: 10px;
 }
 
-.modal {
-    background: #101722;
-    border: 1px solid #303b4d;
-    width: 100%;
-    max-width: 400px;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
+
+/* DOWNLOAD YOUR FILES */
+
+.download-all {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2878ff,
+            #1554c7
+        );
+
+    border: none;
+
+    color: white;
+
+    padding:
+        10px 15px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+
+    box-shadow:
+        0 5px 18px rgba(40,120,255,0.2);
 }
 
-.modal h2 {
-    margin-top: 0;
-    color: #ff5966;
+
+.download-all:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 7px 22px rgba(40,120,255,0.35);
 }
 
-.modal p {
+
+/* LOGOUT */
+
+.logout {
+
+    background: #1a202c;
+
+    border:
+        1px solid #303a4c;
+
+    color: white;
+
+    padding:
+        10px 15px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.logout:hover {
+
+    background: #242d3c;
+}
+
+
+/* ================= MAIN ================= */
+
+main {
+
+    max-width: 1000px;
+
+    margin: auto;
+
+    padding:
+        35px 20px;
+}
+
+
+.welcome {
+
+    margin-bottom: 30px;
+}
+
+
+.welcome h2 {
+
+    margin-bottom: 5px;
+}
+
+
+.welcome p {
+
     color: #8994a6;
 }
 
-.delete-password {
-    width: 100%;
-    padding: 12px;
-    background: #080d14;
-    color: white;
-    border: 1px solid #364154;
-    border-radius: 8px;
-    text-align: center;
-    outline: none;
+
+/* ================= UPLOAD ================= */
+
+.upload-box {
+
+    border:
+        1px dashed #3a4659;
+
+    background: #0d131d;
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    margin-bottom: 30px;
 }
 
-.modal-buttons {
+
+.upload-box h3 {
+
+    margin-top: 0;
+}
+
+
+.upload-row {
+
     display: flex;
+
     gap: 10px;
-    margin-top: 15px;
+
+    flex-wrap: wrap;
 }
 
-.modal-buttons button {
+
+.file-input-wrapper {
+
     flex: 1;
-    padding: 11px;
+
+    min-width: 200px;
+
+    position: relative;
+}
+
+
+input[type="file"] {
+
+    width: 100%;
+
+    padding: 10px;
+
+    background: #151c28;
+
+    color: #ddd;
+
     border-radius: 8px;
+
+    border:
+        1px solid #303b4d;
+}
+
+
+.upload-button {
+
+    padding:
+        11px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2878ff;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.upload-button:hover {
+
+    background: #1764df;
+
+    transform:
+        translateY(-1px);
+}
+
+
+#uploadMessage {
+
+    margin-top: 15px;
+
+    min-height: 20px;
+}
+
+
+/* ================= FILES ================= */
+
+.files-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.files-header h3 {
+
+    margin: 0;
+}
+
+
+.refresh {
+
+    background: #151c28;
+
+    color: white;
+
+    border:
+        1px solid #303b4d;
+
+    padding:
+        8px 13px;
+
+    border-radius: 8px;
+
     cursor: pointer;
 }
 
-.cancel {
-    background: #1b2431;
-    border: 1px solid #303b4d;
-    color: white;
+
+.refresh:hover {
+
+    background: #202a39;
 }
 
-.confirm-delete {
-    background: #d93445;
-    border: none;
-    color: white;
+
+#fileList {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.file-card {
+
+    background: #0d131d;
+
+    border:
+        1px solid #202a39;
+
+    border-radius: 13px;
+
+    padding: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content:
+        space-between;
+
+    gap: 15px;
+
+    transition: 0.2s;
+}
+
+
+.file-card:hover {
+
+    border-color: #3d4d65;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.file-info {
+
+    min-width: 0;
+}
+
+
+.file-name {
+
     font-weight: bold;
+
+    word-break: break-all;
 }
 
-#deleteMessage {
+
+.file-meta {
+
+    margin-top: 7px;
+
+    color: #7e899b;
+
+    font-size: 13px;
+}
+
+
+.actions {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+.download {
+
+    background: #172333;
+
+    color: #55a7ff;
+
+    border:
+        1px solid #29415d;
+
+    padding:
+        8px 12px;
+
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+
+.download:hover {
+
+    background: #203247;
+}
+
+
+.delete {
+
+    background: #29171b;
+
+    color: #ff6672;
+
+    border:
+        1px solid #543038;
+
+    padding:
+        8px 12px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+
+.delete:hover {
+
+    background: #351c21;
+}
+
+
+.empty {
+
+    text-align: center;
+
+    color: #778397;
+
+    padding:
+        50px 20px;
+
+    border:
+        1px dashed #2b3545;
+
+    border-radius: 13px;
+}
+
+
+/* ================= DATE DOWNLOAD MODAL ================= */
+
+#downloadModal {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,0.78);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    z-index: 1000;
+}
+
+
+.download-modal-box {
+
+    background: #101722;
+
+    border:
+        1px solid #303b4d;
+
+    width: 100%;
+
+    max-width: 480px;
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,0.65);
+}
+
+
+.download-modal-box h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 8px;
+}
+
+
+.download-modal-box p {
+
+    color: #8994a6;
+
+    margin-bottom: 22px;
+}
+
+
+.date-list {
+
+    max-height: 320px;
+
+    overflow-y: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+
+.date-button {
+
+    width: 100%;
+
+    text-align: left;
+
+    padding: 13px 15px;
+
+    background: #151c28;
+
+    color: white;
+
+    border:
+        1px solid #303b4d;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.date-button:hover {
+
+    background: #1d2838;
+
+    border-color: #4b5c75;
+
+    transform:
+        translateX(2px);
+}
+
+
+.date-day {
+
+    font-weight: bold;
+
+    font-size: 15px;
+}
+
+
+.date-number {
+
+    color: #8e9aac;
+
+    font-size: 12px;
+
+    margin-top: 3px;
+}
+
+
+.close-download {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border-radius: 8px;
+
+    border:
+        1px solid #303b4d;
+
+    background: #1b2431;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+
+.close-download:hover {
+
+    background: #252f3e;
+}
+
+
+#downloadMessage {
+
     min-height: 20px;
-    margin-top: 12px;
-    color: #ff5966;
+
+    margin-bottom: 12px;
+
+    color: #36e38b;
+
     font-size: 14px;
 }
 
-/* MOBILE */
+
+/* ================= DELETE MODAL ================= */
+
+#deleteModal {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,0.78);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    z-index: 1100;
+}
+
+
+.modal {
+
+    background: #101722;
+
+    border:
+        1px solid #303b4d;
+
+    width: 100%;
+
+    max-width: 400px;
+
+    padding: 30px;
+
+    border-radius: 15px;
+
+    text-align: center;
+}
+
+
+.modal h2 {
+
+    margin-top: 0;
+
+    color: #ff5966;
+}
+
+
+.modal p {
+
+    color: #8994a6;
+}
+
+
+.delete-password {
+
+    width: 100%;
+
+    padding: 12px;
+
+    background: #080d14;
+
+    color: white;
+
+    border:
+        1px solid #364154;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    outline: none;
+}
+
+
+.delete-password:focus {
+
+    border-color: #ff5966;
+}
+
+
+.modal-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+
+.modal-buttons button {
+
+    flex: 1;
+
+    padding: 11px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+
+.cancel {
+
+    background: #1b2431;
+
+    border:
+        1px solid #303b4d;
+
+    color: white;
+}
+
+
+.confirm-delete {
+
+    background: #d93445;
+
+    border: none;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+
+#deleteMessage {
+
+    min-height: 20px;
+
+    margin-top: 12px;
+
+    color: #ff5966;
+
+    font-size: 14px;
+}
+
+
+/* ================= MOBILE ================= */
 
 @media (max-width: 650px) {
 
     header {
+
         padding: 18px;
+
+        align-items: flex-start;
+    }
+
+    .header-buttons {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .download-all,
+    .logout {
+
+        white-space: nowrap;
     }
 
     main {
-        padding: 25px 15px;
+
+        padding:
+            25px 15px;
     }
 
     .file-card {
+
         flex-direction: column;
+
         align-items: stretch;
     }
 
     .actions {
+
         width: 100%;
     }
 
     .actions a,
     .actions button {
+
         flex: 1;
+
         text-align: center;
     }
 
@@ -411,19 +1070,45 @@ input[type="file"] {
 
 <body>
 
-<!-- LOGIN -->
+
+<!-- ================= LOGIN ================= -->
 
 <section id="loginScreen">
 
 <div class="login-box">
 
-<div class="lock">🔐</div>
+<!--
+    Your Getty page is not a direct image file,
+    so it cannot reliably be used as an <img src>.
+    This avatar can be replaced later with a direct image URL.
+-->
 
-<h1>SECURE FILE VAULT</h1>
+<img
+    class="profile-image"
+    src="https://www.instagram.com/p/DcgfuXzCKAO/"
+    alt="Aashutosh"
+    onerror="this.style.display='none';"
+>
+
+
+<h1>
+Aashutosh's Cloud Storage
+</h1>
+
 
 <p class="subtitle">
-Authorized access only
+Private cloud storage • Authorized access only
 </p>
+
+
+<a
+    class="instagram-link"
+    href="https://www.instagram.com/aashutosh.dhungana/"
+    target="_blank"
+>
+@aashutosh.dhungana
+</a>
+
 
 <input
     id="password"
@@ -433,12 +1118,14 @@ Authorized access only
     autocomplete="off"
 >
 
+
 <button
     class="login-button"
     onclick="login()"
 >
 AUTHENTICATE
 </button>
+
 
 <div id="loginMessage"></div>
 
@@ -447,16 +1134,17 @@ AUTHENTICATE
 </section>
 
 
-<!-- DASHBOARD -->
+<!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard">
+
 
 <header>
 
 <div>
 
 <div class="brand">
-📁 AASHUTOSH FILE VAULT
+☁️ AASHUTOSH'S CLOUD STORAGE
 </div>
 
 <div class="status">
@@ -465,6 +1153,17 @@ AUTHENTICATE
 
 </div>
 
+
+<div class="header-buttons">
+
+<button
+    class="download-all"
+    onclick="openDownloadModal()"
+>
+📦 DOWNLOAD YOUR FILES
+</button>
+
+
 <button
     class="logout"
     onclick="logout()"
@@ -472,10 +1171,13 @@ AUTHENTICATE
 Logout
 </button>
 
+</div>
+
 </header>
 
 
 <main>
+
 
 <div class="welcome">
 
@@ -484,13 +1186,13 @@ Welcome, Aashutosh.
 </h2>
 
 <p>
-Secure file storage dashboard
+Upload, store and share your programs securely.
 </p>
 
 </div>
 
 
-<!-- UPLOAD -->
+<!-- ================= UPLOAD ================= -->
 
 <div class="upload-box">
 
@@ -498,15 +1200,18 @@ Secure file storage dashboard
 ⬆️ Upload File
 </h3>
 
+
 <form id="uploadForm">
 
 <div class="upload-row">
+
 
 <input
     type="file"
     id="fileInput"
     required
 >
+
 
 <button
     class="upload-button"
@@ -515,22 +1220,25 @@ Secure file storage dashboard
 Upload
 </button>
 
+
 </div>
 
 </form>
+
 
 <div id="uploadMessage"></div>
 
 </div>
 
 
-<!-- FILE LIST -->
+<!-- ================= FILE LIST ================= -->
 
 <div class="files-header">
 
 <h3>
-📂 My Files
+📂 Recently Uploaded Files
 </h3>
+
 
 <button
     class="refresh"
@@ -541,24 +1249,70 @@ Upload
 
 </div>
 
+
 <div id="fileList"></div>
+
 
 </main>
 
 </section>
 
 
-<!-- DELETE MODAL -->
+<!-- ================= DATE DOWNLOAD MODAL ================= -->
+
+<div id="downloadModal">
+
+<div class="download-modal-box">
+
+<h2>
+📦 Download Your Files
+</h2>
+
+
+<p>
+Select a date to download all files uploaded on that day.
+</p>
+
+
+<div id="dateList" class="date-list">
+
+<div class="empty">
+Loading dates...
+</div>
+
+</div>
+
+
+<div id="downloadMessage"></div>
+
+
+<button
+    class="close-download"
+    onclick="closeDownloadModal()"
+>
+Cancel
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ================= DELETE MODAL ================= -->
 
 <div id="deleteModal">
 
 <div class="modal">
 
-<h2>⚠️ SECURE DELETE</h2>
+<h2>
+⚠️ SECURE DELETE
+</h2>
+
 
 <p>
 This action permanently deletes the selected file.
 </p>
+
 
 <input
     id="deletePassword"
@@ -568,7 +1322,9 @@ This action permanently deletes the selected file.
     autocomplete="off"
 >
 
+
 <div id="deleteMessage"></div>
+
 
 <div class="modal-buttons">
 
@@ -578,6 +1334,7 @@ This action permanently deletes the selected file.
 >
 Cancel
 </button>
+
 
 <button
     class="confirm-delete"
@@ -596,10 +1353,13 @@ Delete
 <script>
 
 let accessPassword = "";
+
 let fileToDelete = "";
 
+let allFiles = [];
 
-/* LOGIN */
+
+// ================= LOGIN =================
 
 async function login() {
 
@@ -612,6 +1372,7 @@ async function login() {
     const password =
         input.value.trim();
 
+
     if (!password) {
 
         message.textContent =
@@ -623,17 +1384,21 @@ async function login() {
         return;
     }
 
+
     message.textContent =
         "AUTHENTICATING...";
 
     message.className = "";
 
+
     try {
 
-        const response = await fetch(
-            "/files?password=" +
-            encodeURIComponent(password)
-        );
+        const response =
+            await fetch(
+                "/files?password=" +
+                encodeURIComponent(password)
+            );
+
 
         if (!response.ok) {
 
@@ -644,12 +1409,16 @@ async function login() {
                 "denied";
 
             input.value = "";
+
             input.focus();
 
             return;
         }
 
-        accessPassword = password;
+
+        accessPassword =
+            password;
+
 
         message.textContent =
             "🟢 ACCESS GRANTED";
@@ -657,23 +1426,25 @@ async function login() {
         message.className =
             "granted";
 
-        setTimeout(() => {
+
+        setTimeout(function() {
 
             document
                 .getElementById("loginScreen")
                 .style.display = "none";
 
+
             document
                 .getElementById("dashboard")
                 .style.display = "block";
+
 
             loadFiles();
 
         }, 700);
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         message.textContent =
             "Connection error. Try again.";
@@ -684,36 +1455,51 @@ async function login() {
 }
 
 
-/* LOAD FILES */
+// ================= LOAD FILES =================
 
 async function loadFiles() {
 
     const list =
         document.getElementById("fileList");
 
+
     list.innerHTML =
         '<div class="empty">Loading files...</div>';
 
+
     try {
 
-        const response = await fetch(
-            "/files?password=" +
-            encodeURIComponent(accessPassword)
-        );
+        const response =
+            await fetch(
+                "/files?password=" +
+                encodeURIComponent(
+                    accessPassword
+                )
+            );
+
 
         if (!response.ok) {
 
             logout();
+
             return;
         }
+
 
         const result =
             await response.json();
 
+
         const files =
             result.files || [];
 
+
+        allFiles =
+            files;
+
+
         list.innerHTML = "";
+
 
         if (files.length === 0) {
 
@@ -723,7 +1509,8 @@ async function loadFiles() {
             return;
         }
 
-        files.forEach(file => {
+
+        files.forEach(function(file) {
 
             const card =
                 document.createElement("div");
@@ -745,8 +1532,10 @@ async function loadFiles() {
             name.className =
                 "file-name";
 
+
             name.textContent =
-                "📄 " + file.originalName;
+                "📄 " +
+                file.originalName;
 
 
             const meta =
@@ -757,7 +1546,9 @@ async function loadFiles() {
 
 
             const date =
-                new Date(file.createdAt);
+                new Date(
+                    file.createdAt
+                );
 
 
             meta.textContent =
@@ -769,6 +1560,7 @@ async function loadFiles() {
 
 
             info.appendChild(name);
+
             info.appendChild(meta);
 
 
@@ -782,57 +1574,77 @@ async function loadFiles() {
             const download =
                 document.createElement("a");
 
+
             download.className =
                 "download";
+
 
             download.textContent =
                 "Download";
 
+
             download.href =
                 "/download/" +
-                encodeURIComponent(file.name) +
+                encodeURIComponent(
+                    file.name
+                ) +
                 "?password=" +
-                encodeURIComponent(accessPassword);
+                encodeURIComponent(
+                    accessPassword
+                );
 
 
             const deleteButton =
                 document.createElement("button");
 
+
             deleteButton.className =
                 "delete";
+
 
             deleteButton.textContent =
                 "Delete";
 
-            deleteButton.onclick = () => {
 
-                openDeleteModal(file.name);
+            deleteButton.onclick =
+                function() {
 
-            };
+                    openDeleteModal(
+                        file.name
+                    );
+
+                };
 
 
-            actions.appendChild(download);
-            actions.appendChild(deleteButton);
+            actions.appendChild(
+                download
+            );
+
+
+            actions.appendChild(
+                deleteButton
+            );
+
 
             card.appendChild(info);
+
             card.appendChild(actions);
+
 
             list.appendChild(card);
 
         });
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         list.innerHTML =
             '<div class="empty">Unable to load files.</div>';
-
     }
 }
 
 
-/* UPLOAD */
+// ================= UPLOAD =================
 
 document
     .getElementById("uploadForm")
@@ -842,11 +1654,18 @@ document
 
             e.preventDefault();
 
+
             const input =
-                document.getElementById("fileInput");
+                document.getElementById(
+                    "fileInput"
+                );
+
 
             const message =
-                document.getElementById("uploadMessage");
+                document.getElementById(
+                    "uploadMessage"
+                );
+
 
             if (!input.files.length) {
 
@@ -856,35 +1675,44 @@ document
                 return;
             }
 
+
             const formData =
                 new FormData();
+
 
             formData.append(
                 "file",
                 input.files[0]
             );
 
+
             message.textContent =
                 "Uploading...";
+
 
             try {
 
                 const response =
                     await fetch(
                         "/upload?password=" +
-                        encodeURIComponent(accessPassword),
+                        encodeURIComponent(
+                            accessPassword
+                        ),
                         {
                             method: "POST",
                             body: formData
                         }
                     );
 
+
                 if (response.ok) {
 
                     message.textContent =
                         "🟢 File uploaded successfully.";
 
+
                     input.value = "";
+
 
                     loadFiles();
 
@@ -895,39 +1723,350 @@ document
 
                 }
 
-            }
 
-            catch (error) {
+            } catch (error) {
 
                 message.textContent =
                     "Connection error.";
-
             }
 
         }
     );
 
 
-/* DELETE */
+// ================= DOWNLOAD YOUR FILES =================
+
+function openDownloadModal() {
+
+    const modal =
+        document.getElementById(
+            "downloadModal"
+        );
+
+
+    const dateList =
+        document.getElementById(
+            "dateList"
+        );
+
+
+    const message =
+        document.getElementById(
+            "downloadMessage"
+        );
+
+
+    message.textContent = "";
+
+
+    modal.style.display =
+        "flex";
+
+
+    buildDateList();
+}
+
+
+function closeDownloadModal() {
+
+    document
+        .getElementById(
+            "downloadModal"
+        )
+        .style.display =
+        "none";
+}
+
+
+function buildDateList() {
+
+    const dateList =
+        document.getElementById(
+            "dateList"
+        );
+
+
+    dateList.innerHTML = "";
+
+
+    if (!allFiles.length) {
+
+        dateList.innerHTML =
+            '<div class="empty">No uploaded files available.</div>';
+
+        return;
+    }
+
+
+    const dates = {};
+
+
+    allFiles.forEach(
+        function(file) {
+
+            if (!file.createdAt) {
+                return;
+            }
+
+
+            const date =
+                new Date(
+                    file.createdAt
+                );
+
+
+            const year =
+                date.getFullYear();
+
+
+            const month =
+                String(
+                    date.getMonth() + 1
+                ).padStart(2, "0");
+
+
+            const day =
+                String(
+                    date.getDate()
+                ).padStart(2, "0");
+
+
+            const key =
+                year +
+                "-" +
+                month +
+                "-" +
+                day;
+
+
+            dates[key] = true;
+
+        }
+    );
+
+
+    const sortedDates =
+        Object.keys(dates).sort(
+            function(a, b) {
+
+                return b.localeCompare(a);
+
+            }
+        );
+
+
+    sortedDates.forEach(
+        function(dateString) {
+
+            const date =
+                new Date(
+                    dateString +
+                    "T00:00:00"
+                );
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "date-button";
+
+
+            const dayName =
+                date.toLocaleDateString(
+                    "en-US",
+                    {
+                        weekday: "long"
+                    }
+                );
+
+
+            const fullDate =
+                date.toLocaleDateString(
+                    "en-US",
+                    {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric"
+                    }
+                );
+
+
+            const filesOnDate =
+                allFiles.filter(
+                    function(file) {
+
+                        if (!file.createdAt) {
+                            return false;
+                        }
+
+
+                        const fileDate =
+                            new Date(
+                                file.createdAt
+                            );
+
+
+                        const y =
+                            fileDate.getFullYear();
+
+
+                        const m =
+                            String(
+                                fileDate.getMonth() + 1
+                            ).padStart(2, "0");
+
+
+                        const d =
+                            String(
+                                fileDate.getDate()
+                            ).padStart(2, "0");
+
+
+                        return (
+                            y +
+                            "-" +
+                            m +
+                            "-" +
+                            d
+                        ) === dateString;
+
+                    }
+                ).length;
+
+
+            button.innerHTML =
+                '<div class="date-day">' +
+                "📁 " +
+                dayName +
+                "</div>" +
+
+                '<div class="date-number">' +
+                fullDate +
+                " • " +
+                filesOnDate +
+                (
+                    filesOnDate === 1
+                        ? " file"
+                        : " files"
+                ) +
+                "</div>";
+
+
+            button.onclick =
+                function() {
+
+                    downloadDate(
+                        dateString
+                    );
+
+                };
+
+
+            dateList.appendChild(
+                button
+            );
+
+        }
+    );
+}
+
+
+// ================= DOWNLOAD SELECTED DATE =================
+
+function downloadDate(date) {
+
+    const message =
+        document.getElementById(
+            "downloadMessage"
+        );
+
+
+    message.textContent =
+        "Preparing your files...";
+
+
+    const url =
+        "/download-date?date=" +
+        encodeURIComponent(date) +
+        "&password=" +
+        encodeURIComponent(
+            accessPassword
+        );
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    document.body.removeChild(
+        link
+    );
+
+
+    message.textContent =
+        "🟢 Download started.";
+
+
+    setTimeout(
+        function() {
+
+            closeDownloadModal();
+
+        },
+        1200
+    );
+}
+
+
+// ================= DELETE =================
 
 function openDeleteModal(file) {
 
-    fileToDelete = file;
+    fileToDelete =
+        file;
+
 
     document
-        .getElementById("deletePassword")
+        .getElementById(
+            "deletePassword"
+        )
         .value = "";
 
+
     document
-        .getElementById("deleteMessage")
+        .getElementById(
+            "deleteMessage"
+        )
         .textContent = "";
 
-    document
-        .getElementById("deleteModal")
-        .style.display = "flex";
 
     document
-        .getElementById("deletePassword")
+        .getElementById(
+            "deleteModal"
+        )
+        .style.display =
+        "flex";
+
+
+    document
+        .getElementById(
+            "deletePassword"
+        )
         .focus();
 }
 
@@ -935,9 +2074,11 @@ function openDeleteModal(file) {
 function closeDeleteModal() {
 
     document
-        .getElementById("deleteModal")
-        .style.display = "none";
-
+        .getElementById(
+            "deleteModal"
+        )
+        .style.display =
+        "none";
 }
 
 
@@ -945,12 +2086,18 @@ async function confirmDelete() {
 
     const password =
         document
-        .getElementById("deletePassword")
-        .value;
+            .getElementById(
+                "deletePassword"
+            )
+            .value;
+
 
     const message =
         document
-        .getElementById("deleteMessage");
+            .getElementById(
+                "deleteMessage"
+            );
+
 
     if (!password) {
 
@@ -960,8 +2107,10 @@ async function confirmDelete() {
         return;
     }
 
+
     message.textContent =
         "Checking password...";
+
 
     try {
 
@@ -977,77 +2126,107 @@ async function confirmDelete() {
                     },
 
                     body: JSON.stringify({
-                        file: fileToDelete,
-                        password: password
+
+                        file:
+                            fileToDelete,
+
+                        password:
+                            password
+
                     })
                 }
             );
+
 
         if (response.ok) {
 
             message.textContent =
                 "🟢 File deleted.";
 
-            setTimeout(() => {
 
-                closeDeleteModal();
+            setTimeout(
+                function() {
 
-                loadFiles();
+                    closeDeleteModal();
 
-            }, 700);
+                    loadFiles();
+
+                },
+                700
+            );
 
         } else {
 
             message.textContent =
                 "🔴 Incorrect deletion password.";
 
+
             document
-                .getElementById("deletePassword")
+                .getElementById(
+                    "deletePassword"
+                )
                 .value = "";
 
-            document
-                .getElementById("deletePassword")
-                .focus();
 
+            document
+                .getElementById(
+                    "deletePassword"
+                )
+                .focus();
         }
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         message.textContent =
             "Connection error.";
-
     }
 }
 
 
-/* LOGOUT */
+// ================= LOGOUT =================
 
 function logout() {
 
-    accessPassword = "";
+    accessPassword =
+        "";
+
 
     document
-        .getElementById("dashboard")
-        .style.display = "none";
+        .getElementById(
+            "dashboard"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("loginScreen")
-        .style.display = "flex";
+        .getElementById(
+            "loginScreen"
+        )
+        .style.display =
+        "flex";
+
 
     document
-        .getElementById("password")
+        .getElementById(
+            "password"
+        )
         .value = "";
 
+
     document
-        .getElementById("loginMessage")
+        .getElementById(
+            "loginMessage"
+        )
         .textContent = "";
 
+
+    allFiles = [];
 }
 
 
-/* DATE */
+// ================= DATE =================
 
 function formatDate(date) {
 
@@ -1059,9 +2238,10 @@ function formatDate(date) {
             year: "numeric"
         }
     );
-
 }
 
+
+// ================= TIME =================
 
 function formatTime(date) {
 
@@ -1073,17 +2253,18 @@ function formatTime(date) {
             second: "2-digit"
         }
     );
-
 }
 
 
-/* FILE SIZE */
+// ================= FILE SIZE =================
 
 function formatSize(bytes) {
 
     if (!bytes) {
+
         return "Unknown size";
     }
+
 
     const units = [
         "B",
@@ -1092,37 +2273,48 @@ function formatSize(bytes) {
         "GB"
     ];
 
-    let size = bytes;
-    let index = 0;
+
+    let size =
+        bytes;
+
+
+    let index =
+        0;
+
 
     while (
         size >= 1024 &&
-        index < units.length - 1
+        index <
+        units.length - 1
     ) {
 
-        size /= 1024;
-        index++;
+        size /=
+            1024;
 
+        index++;
     }
+
 
     return (
         size.toFixed(1) +
         " " +
         units[index]
     );
-
 }
 
 
-/* ENTER KEY */
+// ================= ENTER KEY =================
 
 document
-    .getElementById("password")
+    .getElementById(
+        "password"
+    )
     .addEventListener(
         "keydown",
         function(e) {
 
             if (e.key === "Enter") {
+
                 login();
             }
 
@@ -1131,13 +2323,58 @@ document
 
 
 document
-    .getElementById("deletePassword")
+    .getElementById(
+        "deletePassword"
+    )
     .addEventListener(
         "keydown",
         function(e) {
 
             if (e.key === "Enter") {
+
                 confirmDelete();
+            }
+
+        }
+    );
+
+
+// ================= CLOSE MODALS =================
+
+document
+    .getElementById(
+        "downloadModal"
+    )
+    .addEventListener(
+        "click",
+        function(e) {
+
+            if (
+                e.target ===
+                this
+            ) {
+
+                closeDownloadModal();
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "deleteModal"
+    )
+    .addEventListener(
+        "click",
+        function(e) {
+
+            if (
+                e.target ===
+                this
+            ) {
+
+                closeDeleteModal();
             }
 
         }
@@ -1148,4 +2385,3 @@ document
 </body>
 
 </html>
-```
