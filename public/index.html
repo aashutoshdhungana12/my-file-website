@@ -4,596 +4,591 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Aashutosh Secure File Vault</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-            background:
-                radial-gradient(circle at top, #172033, #070a10 60%);
-            color: #ffffff;
-        }
-
-        /* ================= LOGIN ================= */
-
-        #loginScreen {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .login-box {
-            width: 100%;
-            max-width: 430px;
-            padding: 45px 35px;
-            background: rgba(15, 20, 30, 0.95);
-            border: 1px solid #273246;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 70px rgba(0,0,0,0.6);
-        }
-
-        .lock {
-            font-size: 55px;
-            margin-bottom: 15px;
-        }
-
-        .login-box h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #8994a6;
-            margin: 10px 0 30px;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #344054;
-            background: #0b1018;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            text-align: center;
-        }
-
-        .password-input:focus {
-            border-color: #4da3ff;
-            box-shadow: 0 0 15px rgba(77,163,255,0.25);
-        }
-
-        .login-button {
-            width: 100%;
-            margin-top: 15px;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #2878ff;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .login-button:hover {
-            background: #1764df;
-        }
-
-        #loginMessage {
-            min-height: 25px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        .denied {
-            color: #ff4d5a;
-            animation: shake 0.35s;
-        }
-
-        .granted {
-            color: #36e38b;
-        }
-
-        @keyframes shake {
-
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            50% { transform: translateX(8px); }
-            75% { transform: translateX(-8px); }
-            100% { transform: translateX(0); }
-
-        }
-
-        /* ================= DASHBOARD ================= */
-
-        #dashboard {
-            display: none;
-            min-height: 100vh;
-        }
-
-        header {
-            padding: 22px 35px;
-            border-bottom: 1px solid #202938;
-            background: rgba(8, 12, 18, 0.9);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .brand {
-            font-size: 21px;
-            font-weight: bold;
-        }
-
-        .status {
-            color: #36e38b;
-            font-size: 13px;
-        }
-
-        .logout {
-            background: #1a202c;
-            border: 1px solid #303a4c;
-            color: white;
-            padding: 9px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        main {
-            max-width: 1000px;
-            margin: auto;
-            padding: 35px 20px;
-        }
-
-        .welcome {
-            margin-bottom: 30px;
-        }
-
-        .welcome h2 {
-            margin-bottom: 5px;
-        }
-
-        .welcome p {
-            color: #8994a6;
-        }
-
-        /* Upload */
-
-        .upload-box {
-            border: 1px dashed #3a4659;
-            background: #0d131d;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-
-        .upload-box h3 {
-            margin-top: 0;
-        }
-
-        .upload-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        input[type="file"] {
-            flex: 1;
-            min-width: 200px;
-            padding: 10px;
-            background: #151c28;
-            color: #ddd;
-            border-radius: 8px;
-            border: 1px solid #303b4d;
-        }
-
-        .upload-button {
-            padding: 11px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #2878ff;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        #uploadMessage {
-            margin-top: 15px;
-            color: #36e38b;
-        }
-
-        /* Files */
-
-        .files-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .refresh {
-            background: #151c28;
-            color: white;
-            border: 1px solid #303b4d;
-            padding: 8px 13px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        #fileList {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .file-card {
-            background: #0d131d;
-            border: 1px solid #202a39;
-            border-radius: 13px;
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            transition: 0.2s;
-        }
-
-        .file-card:hover {
-            border-color: #3d4d65;
-            transform: translateY(-2px);
-        }
-
-        .file-info {
-            min-width: 0;
-        }
-
-        .file-name {
-            font-weight: bold;
-            word-break: break-all;
-        }
-
-        .file-meta {
-            margin-top: 7px;
-            color: #7e899b;
-            font-size: 13px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .download {
-            background: #172333;
-            color: #55a7ff;
-            border: 1px solid #29415d;
-            padding: 8px 12px;
-            border-radius: 7px;
-            text-decoration: none;
-        }
-
-        .delete {
-            background: #29171b;
-            color: #ff6672;
-            border: 1px solid #543038;
-            padding: 8px 12px;
-            border-radius: 7px;
-            cursor: pointer;
-        }
-
-        .empty {
-            text-align: center;
-            color: #778397;
-            padding: 50px 20px;
-            border: 1px dashed #2b3545;
-            border-radius: 13px;
-        }
-
-        /* ================= MODAL ================= */
-
-        #deleteModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.75);
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal {
-            background: #101722;
-            border: 1px solid #303b4d;
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .modal h2 {
-            margin-top: 0;
-            color: #ff5966;
-        }
-
-        .modal p {
-            color: #8994a6;
-        }
-
-        .delete-password {
-            width: 100%;
-            padding: 12px;
-            background: #080d14;
-            color: white;
-            border: 1px solid #364154;
-            border-radius: 8px;
-            text-align: center;
-            outline: none;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 11px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .cancel {
-            background: #1b2431;
-            border: 1px solid #303b4d;
-            color: white;
-        }
-
-        .confirm-delete {
-            background: #d93445;
-            border: none;
-            color: white;
-            font-weight: bold;
-        }
-
-        #deleteMessage {
-            min-height: 20px;
-            margin-top: 12px;
-            color: #ff5966;
-            font-size: 14px;
-        }
-
-        /* Mobile */
-
-        @media (max-width: 650px) {
-
-            header {
-                padding: 18px;
-            }
-
-            main {
-                padding: 25px 15px;
-            }
-
-            .file-card {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .actions {
-                width: 100%;
-            }
-
-            .actions a,
-            .actions button {
-                flex: 1;
-                text-align: center;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aashutosh Secure File Vault</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at top, #172033, #070a10 60%);
+    color: white;
+}
+
+/* LOGIN */
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 430px;
+    padding: 45px 35px;
+    background: rgba(15,20,30,0.96);
+    border: 1px solid #273246;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+}
+
+.lock {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.login-box h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.subtitle {
+    color: #8994a6;
+    margin: 10px 0 30px;
+}
+
+.password-input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #344054;
+    background: #0b1018;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    text-align: center;
+}
+
+.password-input:focus {
+    border-color: #4da3ff;
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #2878ff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background: #1764df;
+}
+
+#loginMessage {
+    min-height: 25px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.denied {
+    color: #ff4d5a;
+    animation: shake 0.35s;
+}
+
+.granted {
+    color: #36e38b;
+}
+
+@keyframes shake {
+
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-8px); }
+    100% { transform: translateX(0); }
+
+}
+
+/* DASHBOARD */
+
+#dashboard {
+    display: none;
+    min-height: 100vh;
+}
+
+header {
+    padding: 22px 35px;
+    border-bottom: 1px solid #202938;
+    background: rgba(8,12,18,0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.status {
+    color: #36e38b;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.logout {
+    background: #1a202c;
+    border: 1px solid #303a4c;
+    color: white;
+    padding: 9px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 35px 20px;
+}
+
+.welcome {
+    margin-bottom: 30px;
+}
+
+.welcome h2 {
+    margin-bottom: 5px;
+}
+
+.welcome p {
+    color: #8994a6;
+}
+
+/* UPLOAD */
+
+.upload-box {
+    border: 1px dashed #3a4659;
+    background: #0d131d;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.upload-box h3 {
+    margin-top: 0;
+}
+
+.upload-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input[type="file"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    background: #151c28;
+    color: #ddd;
+    border-radius: 8px;
+    border: 1px solid #303b4d;
+}
+
+.upload-button {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #2878ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#uploadMessage {
+    margin-top: 15px;
+}
+
+/* FILES */
+
+.files-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.refresh {
+    background: #151c28;
+    color: white;
+    border: 1px solid #303b4d;
+    padding: 8px 13px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#fileList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.file-card {
+    background: #0d131d;
+    border: 1px solid #202a39;
+    border-radius: 13px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.file-card:hover {
+    border-color: #3d4d65;
+}
+
+.file-info {
+    min-width: 0;
+}
+
+.file-name {
+    font-weight: bold;
+    word-break: break-all;
+}
+
+.file-meta {
+    margin-top: 7px;
+    color: #7e899b;
+    font-size: 13px;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.download {
+    background: #172333;
+    color: #55a7ff;
+    border: 1px solid #29415d;
+    padding: 8px 12px;
+    border-radius: 7px;
+    text-decoration: none;
+}
+
+.delete {
+    background: #29171b;
+    color: #ff6672;
+    border: 1px solid #543038;
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    color: #778397;
+    padding: 50px 20px;
+    border: 1px dashed #2b3545;
+    border-radius: 13px;
+}
+
+/* DELETE MODAL */
+
+#deleteModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal {
+    background: #101722;
+    border: 1px solid #303b4d;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.modal h2 {
+    margin-top: 0;
+    color: #ff5966;
+}
+
+.modal p {
+    color: #8994a6;
+}
+
+.delete-password {
+    width: 100%;
+    padding: 12px;
+    background: #080d14;
+    color: white;
+    border: 1px solid #364154;
+    border-radius: 8px;
+    text-align: center;
+    outline: none;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 11px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.cancel {
+    background: #1b2431;
+    border: 1px solid #303b4d;
+    color: white;
+}
+
+.confirm-delete {
+    background: #d93445;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+#deleteMessage {
+    min-height: 20px;
+    margin-top: 12px;
+    color: #ff5966;
+    font-size: 14px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+    header {
+        padding: 18px;
+    }
+
+    main {
+        padding: 25px 15px;
+    }
+
+    .file-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions a,
+    .actions button {
+        flex: 1;
+        text-align: center;
+    }
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<!-- LOGIN -->
 
 <section id="loginScreen">
 
-    <div class="login-box">
+<div class="login-box">
 
-        <div class="lock">🔐</div>
+<div class="lock">🔐</div>
 
-        <h1>SECURE FILE VAULT</h1>
+<h1>SECURE FILE VAULT</h1>
 
-        <p class="subtitle">
-            Authorized access only
-        </p>
+<p class="subtitle">
+Authorized access only
+</p>
 
-        <input
-            id="password"
-            class="password-input"
-            type="password"
-            placeholder="Enter access password"
-            autocomplete="off"
-        >
+<input
+    id="password"
+    class="password-input"
+    type="password"
+    placeholder="Enter access password"
+    autocomplete="off"
+>
 
-        <button
-            class="login-button"
-            onclick="login()"
-        >
-            AUTHENTICATE
-        </button>
+<button
+    class="login-button"
+    onclick="login()"
+>
+AUTHENTICATE
+</button>
 
-        <div id="loginMessage"></div>
+<div id="loginMessage"></div>
 
-    </div>
+</div>
 
 </section>
 
 
-<!-- ================= DASHBOARD ================= -->
+<!-- DASHBOARD -->
 
 <section id="dashboard">
 
-    <header>
+<header>
 
-        <div>
+<div>
 
-            <div class="brand">
-                📁 AASHUTOSH FILE VAULT
-            </div>
+<div class="brand">
+📁 AASHUTOSH FILE VAULT
+</div>
 
-            <div class="status">
-                ● SYSTEM ONLINE
-            </div>
+<div class="status">
+● SYSTEM ONLINE
+</div>
 
-        </div>
+</div>
 
-        <button
-            class="logout"
-            onclick="logout()"
-        >
-            Logout
-        </button>
+<button
+    class="logout"
+    onclick="logout()"
+>
+Logout
+</button>
 
-    </header>
-
-
-    <main>
-
-        <div class="welcome">
-
-            <h2>
-                Welcome, Aashutosh.
-            </h2>
-
-            <p>
-                Secure file storage dashboard
-            </p>
-
-        </div>
+</header>
 
 
-        <!-- Upload -->
+<main>
 
-        <div class="upload-box">
+<div class="welcome">
 
-            <h3>
-                ⬆️ Upload File
-            </h3>
+<h2>
+Welcome, Aashutosh.
+</h2>
 
-            <form id="uploadForm">
+<p>
+Secure file storage dashboard
+</p>
 
-                <div class="upload-row">
-
-                    <input
-                        type="file"
-                        id="fileInput"
-                        required
-                    >
-
-                    <button
-                        class="upload-button"
-                        type="submit"
-                    >
-                        Upload
-                    </button>
-
-                </div>
-
-            </form>
-
-            <div id="uploadMessage"></div>
-
-        </div>
+</div>
 
 
-        <!-- Files -->
+<!-- UPLOAD -->
 
-        <div class="files-header">
+<div class="upload-box">
 
-            <h3>
-                📂 My Files
-            </h3>
+<h3>
+⬆️ Upload File
+</h3>
 
-            <button
-                class="refresh"
-                onclick="loadFiles()"
-            >
-                ↻ Refresh
-            </button>
+<form id="uploadForm">
 
-        </div>
+<div class="upload-row">
 
-        <div id="fileList"></div>
+<input
+    type="file"
+    id="fileInput"
+    required
+>
 
-    </main>
+<button
+    class="upload-button"
+    type="submit"
+>
+Upload
+</button>
+
+</div>
+
+</form>
+
+<div id="uploadMessage"></div>
+
+</div>
+
+
+<!-- FILE LIST -->
+
+<div class="files-header">
+
+<h3>
+📂 My Files
+</h3>
+
+<button
+    class="refresh"
+    onclick="loadFiles()"
+>
+↻ Refresh
+</button>
+
+</div>
+
+<div id="fileList"></div>
+
+</main>
 
 </section>
 
 
-<!-- ================= DELETE MODAL ================= -->
+<!-- DELETE MODAL -->
 
 <div id="deleteModal">
 
-    <div class="modal">
+<div class="modal">
 
-        <h2>⚠️ SECURE DELETE</h2>
+<h2>⚠️ SECURE DELETE</h2>
 
-        <p>
-            This action permanently deletes the selected file.
-        </p>
+<p>
+This action permanently deletes the selected file.
+</p>
 
-        <input
-            id="deletePassword"
-            class="delete-password"
-            type="password"
-            placeholder="Enter deletion password"
-            autocomplete="off"
-        >
+<input
+    id="deletePassword"
+    class="delete-password"
+    type="password"
+    placeholder="Enter deletion password"
+    autocomplete="off"
+>
 
-        <div id="deleteMessage"></div>
+<div id="deleteMessage"></div>
 
-        <div class="modal-buttons">
+<div class="modal-buttons">
 
-            <button
-                class="cancel"
-                onclick="closeDeleteModal()"
-            >
-                Cancel
-            </button>
+<button
+    class="cancel"
+    onclick="closeDeleteModal()"
+>
+Cancel
+</button>
 
-            <button
-                class="confirm-delete"
-                onclick="confirmDelete()"
-            >
-                Delete
-            </button>
+<button
+    class="confirm-delete"
+    onclick="confirmDelete()"
+>
+Delete
+</button>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </div>
 
@@ -604,27 +599,34 @@ let accessPassword = "";
 let fileToDelete = "";
 
 
-/* ================= LOGIN ================= */
+/* LOGIN */
 
 async function login() {
 
-    const input = document.getElementById("password");
+    const input =
+        document.getElementById("password");
 
-    const password = input.value;
+    const message =
+        document.getElementById("loginMessage");
 
-    const message = document.getElementById("loginMessage");
+    const password =
+        input.value.trim();
 
     if (!password) {
 
-        message.textContent = "Please enter your password.";
-        message.className = "denied";
+        message.textContent =
+            "Please enter your password.";
+
+        message.className =
+            "denied";
 
         return;
     }
 
-    message.textContent = "AUTHENTICATING...";
-    message.className = "";
+    message.textContent =
+        "AUTHENTICATING...";
 
+    message.className = "";
 
     try {
 
@@ -635,8 +637,11 @@ async function login() {
 
         if (!response.ok) {
 
-            message.textContent = "🔴 ACCESS DENIED";
-            message.className = "denied";
+            message.textContent =
+                "🔴 ACCESS DENIED";
+
+            message.className =
+                "denied";
 
             input.value = "";
             input.focus();
@@ -644,18 +649,23 @@ async function login() {
             return;
         }
 
-
         accessPassword = password;
 
-        message.textContent = "🟢 ACCESS GRANTED";
-        message.className = "granted";
+        message.textContent =
+            "🟢 ACCESS GRANTED";
 
+        message.className =
+            "granted";
 
         setTimeout(() => {
 
-            document.getElementById("loginScreen").style.display = "none";
+            document
+                .getElementById("loginScreen")
+                .style.display = "none";
 
-            document.getElementById("dashboard").style.display = "block";
+            document
+                .getElementById("dashboard")
+                .style.display = "block";
 
             loadFiles();
 
@@ -665,23 +675,24 @@ async function login() {
 
     catch (error) {
 
-        message.textContent = "Connection error. Try again.";
-        message.className = "denied";
+        message.textContent =
+            "Connection error. Try again.";
 
+        message.className =
+            "denied";
     }
-
 }
 
 
-/* ================= LOAD FILES ================= */
+/* LOAD FILES */
 
 async function loadFiles() {
 
-    const list = document.getElementById("fileList");
+    const list =
+        document.getElementById("fileList");
 
     list.innerHTML =
         '<div class="empty">Loading files...</div>';
-
 
     try {
 
@@ -693,17 +704,16 @@ async function loadFiles() {
         if (!response.ok) {
 
             logout();
-
             return;
         }
 
+        const result =
+            await response.json();
 
-        const result = await response.json();
-
-        const files = result.files || [];
+        const files =
+            result.files || [];
 
         list.innerHTML = "";
-
 
         if (files.length === 0) {
 
@@ -713,33 +723,41 @@ async function loadFiles() {
             return;
         }
 
-
         files.forEach(file => {
 
-            const card = document.createElement("div");
+            const card =
+                document.createElement("div");
 
-            card.className = "file-card";
-
-
-            const info = document.createElement("div");
-
-            info.className = "file-info";
+            card.className =
+                "file-card";
 
 
-            const name = document.createElement("div");
+            const info =
+                document.createElement("div");
 
-            name.className = "file-name";
+            info.className =
+                "file-info";
+
+
+            const name =
+                document.createElement("div");
+
+            name.className =
+                "file-name";
 
             name.textContent =
                 "📄 " + file.originalName;
 
 
-            const meta = document.createElement("div");
+            const meta =
+                document.createElement("div");
 
-            meta.className = "file-meta";
+            meta.className =
+                "file-meta";
 
 
-            const date = new Date(file.createdAt);
+            const date =
+                new Date(file.createdAt);
 
 
             meta.textContent =
@@ -751,20 +769,24 @@ async function loadFiles() {
 
 
             info.appendChild(name);
-
             info.appendChild(meta);
 
 
-            const actions = document.createElement("div");
+            const actions =
+                document.createElement("div");
 
-            actions.className = "actions";
+            actions.className =
+                "actions";
 
 
-            const download = document.createElement("a");
+            const download =
+                document.createElement("a");
 
-            download.className = "download";
+            download.className =
+                "download";
 
-            download.textContent = "Download";
+            download.textContent =
+                "Download";
 
             download.href =
                 "/download/" +
@@ -776,9 +798,11 @@ async function loadFiles() {
             const deleteButton =
                 document.createElement("button");
 
-            deleteButton.className = "delete";
+            deleteButton.className =
+                "delete";
 
-            deleteButton.textContent = "Delete";
+            deleteButton.textContent =
+                "Delete";
 
             deleteButton.onclick = () => {
 
@@ -788,14 +812,10 @@ async function loadFiles() {
 
 
             actions.appendChild(download);
-
             actions.appendChild(deleteButton);
 
-
             card.appendChild(info);
-
             card.appendChild(actions);
-
 
             list.appendChild(card);
 
@@ -809,90 +829,86 @@ async function loadFiles() {
             '<div class="empty">Unable to load files.</div>';
 
     }
-
 }
 
 
-/* ================= UPLOAD ================= */
+/* UPLOAD */
 
 document
-.getElementById("uploadForm")
-.addEventListener("submit", async function(e) {
+    .getElementById("uploadForm")
+    .addEventListener(
+        "submit",
+        async function(e) {
 
-    e.preventDefault();
+            e.preventDefault();
 
+            const input =
+                document.getElementById("fileInput");
 
-    const input =
-        document.getElementById("fileInput");
+            const message =
+                document.getElementById("uploadMessage");
 
-    const message =
-        document.getElementById("uploadMessage");
+            if (!input.files.length) {
 
+                message.textContent =
+                    "Please select a file.";
 
-    if (!input.files.length) {
+                return;
+            }
 
-        message.textContent =
-            "Please select a file.";
+            const formData =
+                new FormData();
 
-        return;
-    }
+            formData.append(
+                "file",
+                input.files[0]
+            );
 
+            message.textContent =
+                "Uploading...";
 
-    const formData = new FormData();
+            try {
 
-    formData.append(
-        "file",
-        input.files[0]
+                const response =
+                    await fetch(
+                        "/upload?password=" +
+                        encodeURIComponent(accessPassword),
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+                if (response.ok) {
+
+                    message.textContent =
+                        "🟢 File uploaded successfully.";
+
+                    input.value = "";
+
+                    loadFiles();
+
+                } else {
+
+                    message.textContent =
+                        "🔴 Upload failed.";
+
+                }
+
+            }
+
+            catch (error) {
+
+                message.textContent =
+                    "Connection error.";
+
+            }
+
+        }
     );
 
 
-    message.textContent =
-        "Uploading...";
-
-
-    try {
-
-        const response = await fetch(
-            "/upload?password=" +
-            encodeURIComponent(accessPassword),
-            {
-                method: "POST",
-                body: formData
-            }
-        );
-
-
-        if (response.ok) {
-
-            message.textContent =
-                "🟢 File uploaded successfully.";
-
-            input.value = "";
-
-            loadFiles();
-
-        }
-
-        else {
-
-            message.textContent =
-                "🔴 Upload failed.";
-
-        }
-
-    }
-
-    catch (error) {
-
-        message.textContent =
-            "Connection error.";
-
-    }
-
-});
-
-
-/* ================= DELETE ================= */
+/* DELETE */
 
 function openDeleteModal(file) {
 
@@ -913,7 +929,6 @@ function openDeleteModal(file) {
     document
         .getElementById("deletePassword")
         .focus();
-
 }
 
 
@@ -933,11 +948,9 @@ async function confirmDelete() {
         .getElementById("deletePassword")
         .value;
 
-
     const message =
         document
         .getElementById("deleteMessage");
-
 
     if (!password) {
 
@@ -947,30 +960,28 @@ async function confirmDelete() {
         return;
     }
 
-
     message.textContent =
         "Checking password...";
 
-
     try {
 
-        const response = await fetch(
-            "/delete",
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                "/delete",
+                {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                body: JSON.stringify({
-                    file: fileToDelete,
-                    password: password
-                })
-            }
-        );
-
+                    body: JSON.stringify({
+                        file: fileToDelete,
+                        password: password
+                    })
+                }
+            );
 
         if (response.ok) {
 
@@ -985,9 +996,7 @@ async function confirmDelete() {
 
             }, 700);
 
-        }
-
-        else {
+        } else {
 
             message.textContent =
                 "🔴 Incorrect deletion password.";
@@ -995,6 +1004,10 @@ async function confirmDelete() {
             document
                 .getElementById("deletePassword")
                 .value = "";
+
+            document
+                .getElementById("deletePassword")
+                .focus();
 
         }
 
@@ -1006,11 +1019,10 @@ async function confirmDelete() {
             "Connection error.";
 
     }
-
 }
 
 
-/* ================= LOGOUT ================= */
+/* LOGOUT */
 
 function logout() {
 
@@ -1035,7 +1047,7 @@ function logout() {
 }
 
 
-/* ================= DATE ================= */
+/* DATE */
 
 function formatDate(date) {
 
@@ -1065,13 +1077,13 @@ function formatTime(date) {
 }
 
 
-/* ================= FILE SIZE ================= */
+/* FILE SIZE */
 
 function formatSize(bytes) {
 
-    if (!bytes)
+    if (!bytes) {
         return "Unknown size";
-
+    }
 
     const units = [
         "B",
@@ -1080,11 +1092,8 @@ function formatSize(bytes) {
         "GB"
     ];
 
-
     let size = bytes;
-
     let index = 0;
-
 
     while (
         size >= 1024 &&
@@ -1092,11 +1101,9 @@ function formatSize(bytes) {
     ) {
 
         size /= 1024;
-
         index++;
 
     }
-
 
     return (
         size.toFixed(1) +
@@ -1107,32 +1114,34 @@ function formatSize(bytes) {
 }
 
 
-/* ================= ENTER KEY ================= */
+/* ENTER KEY */
 
 document
-.getElementById("password")
-.addEventListener("keydown", function(e) {
+    .getElementById("password")
+    .addEventListener(
+        "keydown",
+        function(e) {
 
-    if (e.key === "Enter") {
+            if (e.key === "Enter") {
+                login();
+            }
 
-        login();
-
-    }
-
-});
+        }
+    );
 
 
 document
-.getElementById("deletePassword")
-.addEventListener("keydown", function(e) {
+    .getElementById("deletePassword")
+    .addEventListener(
+        "keydown",
+        function(e) {
 
-    if (e.key === "Enter") {
+            if (e.key === "Enter") {
+                confirmDelete();
+            }
 
-        confirmDelete();
-
-    }
-
-});
+        }
+    );
 
 </script>
 
