@@ -99,18 +99,15 @@ app.post(
                 });
             }
 
-
             const originalName =
                 path.basename(
                     req.file.originalname
                 );
 
-
             const randomID =
                 Math.random()
                     .toString(36)
                     .substring(2, 8);
-
 
             const fileName =
                 Date.now() +
@@ -118,7 +115,6 @@ app.post(
                 randomID +
                 "-" +
                 originalName;
-
 
             const result =
                 await supabase.storage
@@ -134,7 +130,6 @@ app.post(
                         }
                     );
 
-
             if (result.error) {
 
                 console.error(
@@ -148,19 +143,16 @@ app.post(
                 });
             }
 
-
             console.log(
                 "File uploaded: " +
                 fileName
             );
-
 
             res.json({
                 success: true,
                 message:
                     "File uploaded successfully."
             });
-
 
         } catch (error) {
 
@@ -174,7 +166,6 @@ app.post(
                 message: "Upload failed."
             });
         }
-
     }
 );
 
@@ -204,7 +195,6 @@ app.get(
                         }
                     );
 
-
             if (result.error) {
 
                 console.error(
@@ -219,10 +209,8 @@ app.get(
                 });
             }
 
-
             const data =
                 result.data || [];
-
 
             const files =
                 data
@@ -234,29 +222,23 @@ app.get(
                         let originalName =
                             file.name;
 
-
                         originalName =
                             originalName.replace(
                                 /^\d+-[a-z0-9]+-/,
                                 ""
                             );
 
-
                         let size = 0;
-
 
                         if (
                             file.metadata &&
                             file.metadata.size
                         ) {
-
                             size =
                                 file.metadata.size;
                         }
 
-
                         return {
-
                             name:
                                 file.name,
 
@@ -273,9 +255,7 @@ app.get(
 
                     });
 
-
-            // Make absolutely sure newest files
-            // appear first.
+            // Newest files first
 
             files.sort(
                 function(a, b) {
@@ -288,12 +268,10 @@ app.get(
                 }
             );
 
-
             res.json({
                 success: true,
                 files: files
             });
-
 
         } catch (error) {
 
@@ -308,12 +286,11 @@ app.get(
                     "Could not load files."
             });
         }
-
     }
 );
 
 
-// ==================== DOWNLOAD ====================
+// ==================== DOWNLOAD INDIVIDUAL FILE ====================
 
 app.get(
     "/download/:file",
@@ -325,12 +302,10 @@ app.get(
             const fileName =
                 req.params.file;
 
-
             const result =
                 await supabase.storage
                     .from(BUCKET)
                     .download(fileName);
-
 
             if (result.error) {
 
@@ -344,19 +319,14 @@ app.get(
                     .send("File not found.");
             }
 
-
             let originalName =
                 fileName;
-
 
             originalName =
                 originalName.replace(
                     /^\d+-[a-z0-9]+-/,
                     ""
                 );
-
-
-            // No backticks used here.
 
             res.setHeader(
                 "Content-Disposition",
@@ -365,15 +335,12 @@ app.get(
                 "\""
             );
 
-
             const buffer =
                 Buffer.from(
                     await result.data.arrayBuffer()
                 );
 
-
             res.send(buffer);
-
 
         } catch (error) {
 
@@ -386,7 +353,6 @@ app.get(
                 .status(500)
                 .send("Download failed.");
         }
-
     }
 );
 
@@ -402,10 +368,8 @@ app.post(
             const file =
                 req.body.file;
 
-
             const password =
                 req.body.password;
-
 
             if (!password) {
 
@@ -415,7 +379,6 @@ app.post(
                         "Deletion password required."
                 });
             }
-
 
             if (
                 password !==
@@ -429,7 +392,6 @@ app.post(
                 });
             }
 
-
             if (!file) {
 
                 return res.status(400).json({
@@ -439,12 +401,10 @@ app.post(
                 });
             }
 
-
             const result =
                 await supabase.storage
                     .from(BUCKET)
                     .remove([file]);
-
 
             if (result.error) {
 
@@ -460,19 +420,16 @@ app.post(
                 });
             }
 
-
             console.log(
                 "File deleted: " +
                 file
             );
-
 
             res.json({
                 success: true,
                 message:
                     "File deleted successfully."
             });
-
 
         } catch (error) {
 
@@ -487,7 +444,6 @@ app.post(
                     "Delete failed."
             });
         }
-
     }
 );
 
