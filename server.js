@@ -7,13 +7,35 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Environment variables
+// ==================== ENVIRONMENT VARIABLES ====================
+
 const PASSWORD = process.env.PASSWORD;
 const DELETE_PASSWORD = process.env.DELETE_PASSWORD;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 
-// Supabase connection
+if (!PASSWORD) {
+    console.error("ERROR: PASSWORD is missing.");
+    process.exit(1);
+}
+
+if (!DELETE_PASSWORD) {
+    console.error("ERROR: DELETE_PASSWORD is missing.");
+    process.exit(1);
+}
+
+if (!SUPABASE_URL) {
+    console.error("ERROR: SUPABASE_URL is missing.");
+    process.exit(1);
+}
+
+if (!SUPABASE_SECRET_KEY) {
+    console.error("ERROR: SUPABASE_SECRET_KEY is missing.");
+    process.exit(1);
+}
+
+// ==================== SUPABASE ====================
+
 const supabase = createClient(
     SUPABASE_URL,
     SUPABASE_SECRET_KEY
@@ -21,18 +43,28 @@ const supabase = createClient(
 
 const BUCKET = "files";
 
-// Upload files into memory temporarily
+// ==================== MULTER ====================
+
 const upload = multer({
     storage: multer.memoryStorage()
 });
 
-// Middleware
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// ==================== MIDDLEWARE ====================
 
-// Check main password
+app.use(express.json());
+
+app.use(
+    express.static(
+        path.join(__dirname, "public")
+    )
+);
+
+// ==================== MAIN PASSWORD ====================
+
 function checkPassword(req, res, next) {
+
     if (req.query.password !== PASSWORD) {
+
         return res.status(401).json({
             success: false,
             message: "Incorrect password."
@@ -50,162 +82,345 @@ app.post(
     upload.single("file"),
     async (req, res) => {
 
-        if (!req.file) {
-            return res.status(400).json({
-                success: false,
-                message: "No file selected."
+        try {
+
+            if (!req.file) {
+
+                return res.status(400).json({
+                    success: false,
+                    message: "No file selected."
+                });
+            }
+
+            const originalName =
+                path.basename(req.file.originalname);
+
+            const fileName =
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(2, 8) +
+                "-" +
+                originalName;
+
+            const { error } =
+                await supabase.storage
+                    .from(BUCKET)
+                    .upload(
+                        fileName,
+                        req.file.buffer,
+                        {
+                            contentType:
+                                req.file.mimetype,
+                            upsert: false
+                        }
+                    );
+
+            if (error) {
+
+                console.error(
+                    "Supabase upload error:",
+                    error
+                );
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Upload failed."
+                });
+            }
+
+            console.log(
+                "File uploaded:",
+                fileName
+            );
+
+            res.json({
+                success: true,
+                message: "File uploaded successfully."
             });
-        }
 
-        const fileName =
-            Date.now() +
-            "-" +
-            Math.random().toString(36).substring(2, 8) +
-            "-" +
-            req.file.originalname;
+        } catch (error) {
 
-        const { error } = await supabase.storage
-            .from(BUCKET)
-            .upload(fileName, req.file.buffer, {
-                contentType: req.file.mimetype,
-                upsert: false
-            });
+            console.error(
+                "Upload error:",
+                error
+            );
 
-        if (error) {
-            console.error("Supabase upload error:", error);
-
-            return res.status(500).json({
+            res.status(500).json({
                 success: false,
                 message: "Upload failed."
             });
         }
-
-        res.json({
-            success: true,
-            message: "File uploaded successfully."
-        });
     }
 );
 
 // ==================== LIST FILES ====================
 
-app.get("/files", checkPassword, async (req, res) => {
+app.get(
+    "/files",
+    checkPassword,
+    async (req, res) => {
 
-    const { data, error } = await supabase.storage
-        .from(BUCKET)
-        .list("", {
-            limit: 1000,
-            sortBy: {
-                column: "created_at",
-                order: "desc"
+        try {
+
+            const { data, error } =
+                await supabase.storage
+                    .from(BUCKET)
+                    .list(
+                        "",
+                        {
+                            limit: 1000,
+                            offset: 0,
+                            sortBy: {
+                                column: "created_at",
+                                order: "desc"
+                            }
+                        }
+                    );
+
+            if (error) {
+
+                console.error(
+                    "Supabase list error:",
+                    error
+                );
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Could not load files."
+                });
             }
-        });
 
-    if (error) {
-        console.error("Supabase list error:", error);
+            const files = (data || [])
+                .filter(file => file.name)
+                .map(file => {
 
-        return res.status(500).json({
-            success: false,
-            message: "Could not load files."
-        });
+                    let originalName =
+                        file.name;
+
+                    // Remove timestamp and random ID
+                    originalName =
+                        originalName.replace(
+                            /^\d+-[a-z0-9]+-/,
+                            ""
+                        );
+
+                    return {
+                        name: file.name,
+
+                        originalName:
+                            originalName,
+
+                        createdAt:
+                            file.created_at ||
+                            file.updated_at,
+
+                        size:
+                            file.metadata &&
+                            file.metadata.size
+                                ? file.metadata.size
+                                : 0
+                    };
+                });
+
+            // Newest first
+            files.sort(
+                (a, b) =>
+                    new Date(b.createdAt) -
+                    new Date(a.createdAt)
+            );
+
+            res.json({
+                success: true,
+                files: files
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Files error:",
+                error
+            );
+
+            res.status(500).json({
+                success: false,
+                message: "Could not load files."
+            });
+        }
     }
-
-    const files = data
-        .filter(file => file.name)
-        .map(file => ({
-            name: file.name,
-
-            originalName: file.name.replace(
-                /^\d+-[a-z0-9]+-/,
-                ""
-            ),
-
-            createdAt: file.created_at,
-
-            size: file.metadata?.size || 0
-        }));
-
-    res.json({
-        success: true,
-        files: files
-    });
-});
+);
 
 // ==================== DOWNLOAD ====================
 
-app.get("/download/:file", checkPassword, async (req, res) => {
+app.get(
+    "/download/:file",
+    checkPassword,
+    async (req, res) => {
 
-    const fileName = req.params.file;
+        try {
 
-    const { data, error } = await supabase.storage
-        .from(BUCKET)
-        .download(fileName);
+            const fileName =
+                req.params.file;
 
-    if (error) {
-        console.error("Supabase download error:", error);
+            const { data, error } =
+                await supabase.storage
+                    .from(BUCKET)
+                    .download(fileName);
 
-        return res.status(404).send("File not found.");
+            if (error) {
+
+                console.error(
+                    "Supabase download error:",
+                    error
+                );
+
+                return res
+                    .status(404)
+                    .send("File not found.");
+            }
+
+            let originalName =
+                fileName.replace(
+                    /^\d+-[a-z0-9]+-/,
+                    ""
+                );
+
+            // FIXED CONTENT-DISPOSITION LINE
+            res.setHeader(
+                "Content-Disposition",
+                "attachment; filename=\"" +
+                originalName +
+                "\""
+            );
+
+            res.send(
+                Buffer.from(
+                    await data.arrayBuffer()
+                )
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Download error:",
+                error
+            );
+
+            res
+                .status(500)
+                .send("Download failed.");
+        }
     }
-
-    const originalName = fileName.replace(
-        /^\d+-[a-z0-9]+-/,
-        ""
-    );
-
-    res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="${originalName}"`
-    );
-
-    res.send(
-        Buffer.from(
-            await data.arrayBuffer()
-        )
-    );
-});
+);
 
 // ==================== DELETE ====================
 
-app.post("/delete", async (req, res) => {
+app.post(
+    "/delete",
+    async (req, res) => {
 
-    const { file, password } = req.body;
+        try {
 
-    if (password !== DELETE_PASSWORD) {
-        return res.status(401).json({
-            success: false,
-            message: "Incorrect deletion password."
+            const file =
+                req.body.file;
+
+            const password =
+                req.body.password;
+
+            if (!password) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Deletion password required."
+                });
+            }
+
+            if (password !== DELETE_PASSWORD) {
+
+                return res.status(401).json({
+                    success: false,
+                    message:
+                        "Incorrect deletion password."
+                });
+            }
+
+            if (!file) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "No file specified."
+                });
+            }
+
+            const { error } =
+                await supabase.storage
+                    .from(BUCKET)
+                    .remove([file]);
+
+            if (error) {
+
+                console.error(
+                    "Supabase delete error:",
+                    error
+                );
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Delete failed."
+                });
+            }
+
+            console.log(
+                "File deleted:",
+                file
+            );
+
+            res.json({
+                success: true,
+                message:
+                    "File deleted successfully."
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Delete error:",
+                error
+            );
+
+            res.status(500).json({
+                success: false,
+                message: "Delete failed."
+            });
+        }
+    }
+);
+
+// ==================== HEALTH CHECK ====================
+
+app.get(
+    "/health",
+    (req, res) => {
+
+        res.json({
+            status: "online"
         });
     }
+);
 
-    if (!file) {
-        return res.status(400).json({
-            success: false,
-            message: "No file specified."
-        });
+// ==================== START SERVER ====================
+
+app.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
+
+        console.log(
+            `Server running on port ${PORT}`
+        );
     }
-
-    const { error } = await supabase.storage
-        .from(BUCKET)
-        .remove([file]);
-
-    if (error) {
-        console.error("Supabase delete error:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Delete failed."
-        });
-    }
-
-    res.json({
-        success: true,
-        message: "File deleted successfully."
-    });
-});
-
-// ==================== SERVER ====================
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+);
 ```
