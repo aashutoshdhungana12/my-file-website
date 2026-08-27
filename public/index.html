@@ -1144,7 +1144,7 @@ main {
 
 <img
     class="profile-image"
-    src="pfp.png"
+    src="/pfp.png"
     alt="Aashutosh"
 >
 
@@ -1788,9 +1788,6 @@ document
                 return;
             }
 
-            /* Add newly selected files
-               instead of replacing old ones */
-
             for (
                 let i = 0;
                 i < newFiles.length;
@@ -1821,8 +1818,6 @@ document
 
             }
 
-            /* Maximum 20 files */
-
             if (selectedFiles.length > 20) {
 
                 selectedFiles =
@@ -1840,14 +1835,9 @@ document
 
             }
 
-            /* Newest selected file first */
-
             selectedFiles.reverse();
 
             updateSelectedFiles();
-
-            /* Reset the input so selecting
-               the same file again is possible */
 
             this.value = "";
 
