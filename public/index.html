@@ -1,5 +1,5 @@
-```html
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -29,91 +29,6 @@ body {
 
     color: white;
 }
-
-/* ================= AUTHENTICATION SCREEN EFFECT ================= */
-
-body.auth-success::after,
-body.auth-error::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    border: 4px solid transparent;
-}
-
-body.auth-success::after {
-    animation: greenScreenGlow 2.5s ease-out forwards;
-}
-
-body.auth-error::after {
-    animation: redScreenGlow 2.5s ease-out forwards;
-}
-
-@keyframes greenScreenGlow {
-
-    0% {
-        border-color: rgba(54, 227, 139, 0);
-        box-shadow:
-            inset 0 0 0 rgba(54, 227, 139, 0),
-            0 0 0 rgba(54, 227, 139, 0);
-    }
-
-    20% {
-        border-color: rgba(54, 227, 139, 0.95);
-        box-shadow:
-            inset 0 0 35px rgba(54, 227, 139, 0.45),
-            0 0 35px rgba(54, 227, 139, 0.45);
-    }
-
-    60% {
-        border-color: rgba(54, 227, 139, 0.7);
-        box-shadow:
-            inset 0 0 25px rgba(54, 227, 139, 0.3),
-            0 0 25px rgba(54, 227, 139, 0.3);
-    }
-
-    100% {
-        border-color: rgba(54, 227, 139, 0);
-        box-shadow:
-            inset 0 0 0 rgba(54, 227, 139, 0),
-            0 0 0 rgba(54, 227, 139, 0);
-    }
-
-}
-
-@keyframes redScreenGlow {
-
-    0% {
-        border-color: rgba(255, 77, 90, 0);
-        box-shadow:
-            inset 0 0 0 rgba(255, 77, 90, 0),
-            0 0 0 rgba(255, 77, 90, 0);
-    }
-
-    20% {
-        border-color: rgba(255, 77, 90, 0.95);
-        box-shadow:
-            inset 0 0 35px rgba(255, 77, 90, 0.45),
-            0 0 35px rgba(255, 77, 90, 0.45);
-    }
-
-    60% {
-        border-color: rgba(255, 77, 90, 0.7);
-        box-shadow:
-            inset 0 0 25px rgba(255, 77, 90, 0.3),
-            0 0 25px rgba(255, 77, 90, 0.3);
-    }
-
-    100% {
-        border-color: rgba(255, 77, 90, 0);
-        box-shadow:
-            inset 0 0 0 rgba(255, 77, 90, 0),
-            0 0 0 rgba(255, 77, 90, 0);
-    }
-
-}
-
 
 /* ================= LOGIN ================= */
 
@@ -165,34 +80,26 @@ body.auth-error::after {
 
 .login-box h1 {
     margin: 0;
-
     font-size: 27px;
 }
 
 .subtitle {
     color: #8994a6;
-
     margin: 10px 0 25px;
 }
-
 
 /* ================= INSTAGRAM ================= */
 
 .instagram-link {
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
 
     gap: 8px;
-
     margin-bottom: 25px;
 
     color: #55a7ff;
-
     text-decoration: none;
-
     font-size: 14px;
 
     transition: 0.2s;
@@ -200,20 +107,16 @@ body.auth-error::after {
 
 .instagram-link:hover {
     color: white;
-
     text-decoration: underline;
 }
 
 .instagram-icon {
     width: 19px;
-
     height: 19px;
 
     display: block;
-
     flex-shrink: 0;
 }
-
 
 /* ================= PASSWORD ================= */
 
@@ -243,7 +146,6 @@ body.auth-error::after {
     box-shadow:
         0 0 15px rgba(77,163,255,0.2);
 }
-
 
 /* ================= LOGIN BUTTON ================= */
 
@@ -320,6 +222,93 @@ body.auth-error::after {
 
 }
 
+/* ================= ACCESS LIGHT ================= */
+
+#accessLight {
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 5000;
+
+    opacity: 0;
+
+    transition: opacity 0.2s ease;
+}
+
+#accessLight.success {
+    opacity: 1;
+
+    box-shadow:
+        inset 0 0 25px rgba(54,227,139,0.85),
+        inset 0 0 65px rgba(54,227,139,0.45),
+        inset 0 0 110px rgba(54,227,139,0.2);
+
+    animation:
+        greenPulse 2.5s ease-in-out;
+}
+
+#accessLight.failure {
+    opacity: 1;
+
+    box-shadow:
+        inset 0 0 25px rgba(255,77,90,0.85),
+        inset 0 0 65px rgba(255,77,90,0.45),
+        inset 0 0 110px rgba(255,77,90,0.2);
+
+    animation:
+        redPulse 2.5s ease-in-out;
+}
+
+@keyframes greenPulse {
+
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.85;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+
+}
+
+@keyframes redPulse {
+
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.85;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+
+}
 
 /* ================= DASHBOARD ================= */
 
@@ -328,7 +317,6 @@ body.auth-error::after {
 
     min-height: 100vh;
 }
-
 
 /* ================= HEADER ================= */
 
@@ -370,7 +358,6 @@ header {
     gap: 10px;
 }
 
-
 /* ================= DOWNLOAD ALL ================= */
 
 .download-all {
@@ -406,7 +393,6 @@ header {
         0 7px 22px rgba(40,120,255,0.35);
 }
 
-
 /* ================= LOGOUT ================= */
 
 .logout {
@@ -429,7 +415,6 @@ header {
     background: #242d3c;
 }
 
-
 /* ================= MAIN ================= */
 
 main {
@@ -451,7 +436,6 @@ main {
 .welcome p {
     color: #8994a6;
 }
-
 
 /* ================= UPLOAD ================= */
 
@@ -478,7 +462,6 @@ main {
 
     flex-wrap: wrap;
 }
-
 
 /* ================= FILE INPUT ================= */
 
@@ -535,9 +518,6 @@ main {
     font-weight: bold;
 
     transition: 0.2s;
-
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.03);
 }
 
 .choose-files-button:hover {
@@ -598,7 +578,6 @@ main {
     color: #aeb9ca;
 }
 
-
 /* ================= UPLOAD BUTTON ================= */
 
 .upload-button {
@@ -648,7 +627,6 @@ main {
 
     min-height: 20px;
 }
-
 
 /* ================= FILES ================= */
 
@@ -798,7 +776,6 @@ main {
     border-radius: 13px;
 }
 
-
 /* ================= ADMIN MODAL ================= */
 
 #adminModal {
@@ -884,9 +861,9 @@ main {
 
     margin-top: 12px;
 
-    color: #ff5966;
-
     font-size: 14px;
+
+    font-weight: bold;
 }
 
 .admin-buttons {
@@ -930,7 +907,6 @@ main {
     font-weight: bold;
 }
 
-
 /* ================= DOWNLOAD MODAL ================= */
 
 #downloadModal {
@@ -958,7 +934,7 @@ main {
 
     width: 100%;
 
-    max-width: 480px;
+    max-width: 520px;
 
     padding: 30px;
 
@@ -991,15 +967,15 @@ main {
 
     flex-direction: column;
 
-    gap: 8px;
+    gap: 10px;
 
     margin-bottom: 18px;
 }
 
-.date-button {
-    width: 100%;
+/* ================= DATE ROW ================= */
 
-    text-align: left;
+.date-row {
+    width: 100%;
 
     padding: 13px 15px;
 
@@ -1011,17 +987,19 @@ main {
 
     border-radius: 9px;
 
-    cursor: pointer;
+    display: flex;
 
-    transition: 0.2s;
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    text-align: left;
 }
 
-.date-button:hover {
-    background: #1d2838;
-
-    border-color: #4b5c75;
-
-    transform: translateX(2px);
+.date-info {
+    min-width: 0;
 }
 
 .date-day {
@@ -1036,6 +1014,57 @@ main {
     font-size: 12px;
 
     margin-top: 3px;
+}
+
+/* ================= DATE DOWNLOAD BUTTON ================= */
+
+.date-download {
+    flex-shrink: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2878ff,
+            #1554c7
+        );
+
+    color: white;
+
+    border: none;
+
+    padding: 9px 13px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+.date-download:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #3584ff,
+            #1764df
+        );
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 16px rgba(40,120,255,0.25);
+}
+
+.date-download:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
 }
 
 .close-download {
@@ -1067,7 +1096,6 @@ main {
 
     font-size: 14px;
 }
-
 
 /* ================= DELETE MODAL ================= */
 
@@ -1188,7 +1216,6 @@ main {
     font-size: 14px;
 }
 
-
 /* ================= MOBILE ================= */
 
 @media (max-width: 650px) {
@@ -1243,6 +1270,14 @@ main {
         padding: 35px 25px;
     }
 
+    .date-row {
+        align-items: stretch;
+    }
+
+    .date-download {
+        align-self: center;
+    }
+
 }
 
 </style>
@@ -1251,6 +1286,9 @@ main {
 
 <body>
 
+<!-- ACCESS LIGHT -->
+
+<div id="accessLight"></div>
 
 <!-- ================= LOGIN ================= -->
 
@@ -1259,9 +1297,10 @@ main {
 <div class="login-box">
 
 <img
-    class="profile-image"
-    src="https://m.gettywallpapers.com/wp-content/uploads/2023/09/Grand-Theft-Auto-5-Dp.jpg"
-    alt="Aashutosh"
+class="profile-image"
+src="https://m.gettywallpapers.com/wp-content/uploads/2023/09/Grand-Theft-Auto-5-Dp.jpg"
+alt="Aashutosh"
+
 >
 
 <h1>
@@ -1272,46 +1311,50 @@ Aashutosh's Cloud Storage
 Private cloud storage • Authorized access only
 </p>
 
-
 <a
-    class="instagram-link"
-    href="https://www.instagram.com/aashutosh.dhungana/"
-    target="_blank"
-    rel="noopener noreferrer"
+class="instagram-link"
+href="https://www.instagram.com/aashutosh.dhungana/"
+target="_blank"
+rel="noopener noreferrer"
+
 >
 
 <svg
-    class="instagram-icon"
-    viewBox="0 0 24 24"
-    aria-hidden="true"
+class="instagram-icon"
+viewBox="0 0 24 24"
+aria-hidden="true"
+
 >
 
 <rect
-    x="3"
-    y="3"
-    width="18"
-    height="18"
-    rx="5"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-></rect>
+x="3"
+y="3"
+width="18"
+height="18"
+rx="5"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+
+> </rect>
 
 <circle
-    cx="12"
-    cy="12"
-    r="4"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-></circle>
+cx="12"
+cy="12"
+r="4"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+
+> </circle>
 
 <circle
-    cx="17.5"
-    cy="6.5"
-    r="1.2"
-    fill="currentColor"
-></circle>
+cx="17.5"
+cy="6.5"
+r="1.2"
+fill="currentColor"
+
+> </circle>
 
 </svg>
 
@@ -1321,29 +1364,28 @@ aashutosh.dhungana
 
 </a>
 
-
 <input
-    id="password"
-    class="password-input"
-    type="password"
-    placeholder="Enter access password"
-    autocomplete="off"
+id="password"
+class="password-input"
+type="password"
+placeholder="Enter access password"
+autocomplete="off"
+
 >
 
 <button
-    class="login-button"
-    onclick="login()"
+class="login-button"
+onclick="login()"
+
 >
-AUTHENTICATE
-</button>
+
+AUTHENTICATE </button>
 
 <div id="loginMessage"></div>
 
 </div>
 
 </section>
-
-
 
 <!-- ================= DASHBOARD ================= -->
 
@@ -1363,30 +1405,29 @@ AASHUTOSH'S CLOUD STORAGE
 
 </div>
 
-
 <div class="header-buttons">
 
 <button
-    class="download-all"
-    onclick="openDownloadAdmin()"
+class="download-all"
+onclick="openDownloadAdmin()"
+
 >
-⬇️ DOWNLOAD YOUR FILES
-</button>
+
+⬇️ DOWNLOAD YOUR FILES </button>
 
 <button
-    class="logout"
-    onclick="logout()"
+class="logout"
+onclick="logout()"
+
 >
-Logout
-</button>
+
+Logout </button>
 
 </div>
 
 </header>
 
-
 <main>
-
 
 <div class="welcome">
 
@@ -1400,8 +1441,6 @@ Dashboard
 
 </div>
 
-
-
 <!-- ================= UPLOAD ================= -->
 
 <div class="upload-box">
@@ -1414,19 +1453,20 @@ Upload Files
 
 <div class="upload-row">
 
-
 <div class="file-input-wrapper">
 
 <input
-    type="file"
-    id="fileInput"
-    class="file-input"
-    multiple
+type="file"
+id="fileInput"
+class="file-input"
+multiple
+
 >
 
 <label
-    for="fileInput"
-    class="choose-files-button"
+for="fileInput"
+class="choose-files-button"
+
 >
 
 <span class="choose-icon">
@@ -1439,24 +1479,22 @@ CHOOSE FILES
 
 </label>
 
-
 <div class="file-limit">
 Maximum of 20 files can be selected at once
 </div>
 
 </div>
 
-
 <button
-    class="upload-button"
-    type="submit"
-    id="uploadButton"
+class="upload-button"
+type="submit"
+id="uploadButton"
+
 >
-Upload
-</button>
+
+Upload </button>
 
 </div>
-
 
 <div id="selectedFiles">
 No files selected.
@@ -1464,12 +1502,9 @@ No files selected.
 
 </form>
 
-
 <div id="uploadMessage"></div>
 
 </div>
-
-
 
 <!-- ================= FILE LIST ================= -->
 
@@ -1480,22 +1515,20 @@ Recently Uploaded Files
 </h3>
 
 <button
-    class="refresh"
-    onclick="loadFiles()"
+class="refresh"
+onclick="loadFiles()"
+
 >
-↻ Refresh
-</button>
+
+↻ Refresh </button>
 
 </div>
-
 
 <div id="fileList"></div>
 
 </main>
 
 </section>
-
-
 
 <!-- ================= ADMIN MODAL ================= -->
 
@@ -1512,34 +1545,34 @@ Only the admin can use this feature.<br>
 If you are the admin, please enter the admin password.
 </p>
 
-
 <input
-    id="adminPassword"
-    class="admin-password"
-    type="password"
-    placeholder="Enter admin password"
-    autocomplete="off"
+id="adminPassword"
+class="admin-password"
+type="password"
+placeholder="Enter admin password"
+autocomplete="off"
+
 >
 
-
 <div id="adminMessage"></div>
-
 
 <div class="admin-buttons">
 
 <button
-    class="admin-cancel"
-    onclick="closeAdminModal()"
+class="admin-cancel"
+onclick="closeAdminModal()"
+
 >
-Cancel
-</button>
+
+Cancel </button>
 
 <button
-    class="admin-continue"
-    onclick="verifyAdmin()"
+class="admin-continue"
+onclick="verifyAdmin()"
+
 >
-Continue
-</button>
+
+Continue </button>
 
 </div>
 
@@ -1547,9 +1580,7 @@ Continue
 
 </div>
 
-
-
-<!-- ================= DATE DOWNLOAD MODAL ================= -->
+<!-- ================= DOWNLOAD MODAL ================= -->
 
 <div id="downloadModal">
 
@@ -1563,8 +1594,10 @@ Continue
 Select a date to download all files uploaded on that day.
 </p>
 
-
-<div id="dateList" class="date-list">
+<div
+    id="dateList"
+    class="date-list"
+>
 
 <div class="empty">
 Loading dates...
@@ -1572,22 +1605,19 @@ Loading dates...
 
 </div>
 
-
 <div id="downloadMessage"></div>
 
-
 <button
-    class="close-download"
-    onclick="closeDownloadModal()"
+class="close-download"
+onclick="closeDownloadModal()"
+
 >
-Cancel
-</button>
+
+Cancel </button>
 
 </div>
 
 </div>
-
-
 
 <!-- ================= DELETE MODAL ================= -->
 
@@ -1604,42 +1634,40 @@ Only the admin can delete files.<br>
 If you are the admin, please enter the admin password.
 </p>
 
-
 <input
-    id="deletePassword"
-    class="delete-password"
-    type="password"
-    placeholder="Enter admin password"
-    autocomplete="off"
+id="deletePassword"
+class="delete-password"
+type="password"
+placeholder="Enter admin password"
+autocomplete="off"
+
 >
 
-
 <div id="deleteMessage"></div>
-
 
 <div class="modal-buttons">
 
 <button
-    class="cancel"
-    onclick="closeDeleteModal()"
+class="cancel"
+onclick="closeDeleteModal()"
+
 >
-Cancel
-</button>
+
+Cancel </button>
 
 <button
-    class="confirm-delete"
-    onclick="confirmDelete()"
+class="confirm-delete"
+onclick="confirmDelete()"
+
 >
-❌ Delete
-</button>
+
+❌ Delete </button>
 
 </div>
 
 </div>
 
 </div>
-
-
 
 <script>
 
@@ -1656,45 +1684,24 @@ let allFiles = [];
 let selectedFiles = [];
 
 
-/* ================= SCREEN AUTHENTICATION EFFECT ================= */
+/* ================= ACCESS LIGHT ================= */
 
-function authenticationEffect(type) {
+function showAccessLight(type) {
 
-    document.body.classList.remove(
-        "auth-success",
-        "auth-error"
-    );
+    const light =
+        document.getElementById("accessLight");
 
-    /*
-        Force browser to restart the animation
-        if the user tries again quickly.
-    */
+    light.className = "";
 
-    void document.body.offsetWidth;
+    void light.offsetWidth;
 
-    if (type === "success") {
-
-        document.body.classList.add(
-            "auth-success"
-        );
-
-    } else {
-
-        document.body.classList.add(
-            "auth-error"
-        );
-
-    }
+    light.classList.add(type);
 
     setTimeout(function() {
 
-        document.body.classList.remove(
-            "auth-success",
-            "auth-error"
-        );
+        light.className = "";
 
-    }, 2600);
-
+    }, 2500);
 }
 
 
@@ -1708,16 +1715,10 @@ async function login() {
     const message =
         document.getElementById("loginMessage");
 
-    const loginButton =
-        document.querySelector(".login-button");
-
     const password =
         input.value.trim();
 
-
     if (!password) {
-
-        authenticationEffect("error");
 
         message.textContent =
             "Please enter your password.";
@@ -1725,17 +1726,15 @@ async function login() {
         message.className =
             "denied";
 
+        showAccessLight("failure");
+
         return;
     }
-
 
     message.textContent =
         "AUTHENTICATING...";
 
     message.className = "";
-
-    loginButton.disabled = true;
-
 
     try {
 
@@ -1745,10 +1744,7 @@ async function login() {
                 encodeURIComponent(password)
             );
 
-
         if (!response.ok) {
-
-            authenticationEffect("error");
 
             message.textContent =
                 "🔴 ACCESS DENIED";
@@ -1756,22 +1752,17 @@ async function login() {
             message.className =
                 "denied";
 
+            showAccessLight("failure");
+
             input.value = "";
 
             input.focus();
 
-            loginButton.disabled = false;
-
             return;
         }
 
-
-        authenticationEffect("success");
-
-
         accessPassword =
             password;
-
 
         message.textContent =
             "🟢 ACCESS GRANTED";
@@ -1779,6 +1770,7 @@ async function login() {
         message.className =
             "granted";
 
+        showAccessLight("success");
 
         setTimeout(function() {
 
@@ -1786,22 +1778,17 @@ async function login() {
                 .getElementById("loginScreen")
                 .style.display = "none";
 
-
             document
                 .getElementById("dashboard")
                 .style.display = "block";
-
 
             loadFiles();
 
         }, 700);
 
-
     } catch (error) {
 
         console.error(error);
-
-        authenticationEffect("error");
 
         message.textContent =
             "Connection error. Try again.";
@@ -1809,9 +1796,8 @@ async function login() {
         message.className =
             "denied";
 
-        loginButton.disabled = false;
+        showAccessLight("failure");
     }
-
 }
 
 
@@ -1845,34 +1831,27 @@ function logout() {
 
     selectedFiles = [];
 
-
     document
         .getElementById("dashboard")
         .style.display = "none";
-
 
     document
         .getElementById("loginScreen")
         .style.display = "flex";
 
-
     document
         .getElementById("password")
         .value = "";
-
 
     document
         .getElementById("loginMessage")
         .textContent = "";
 
-
     document
         .getElementById("fileInput")
         .value = "";
 
-
     updateSelectedFiles();
-
 }
 
 
@@ -1883,21 +1862,16 @@ async function loadFiles() {
     const list =
         document.getElementById("fileList");
 
-
     list.innerHTML =
         '<div class="empty">Loading files...</div>';
-
 
     try {
 
         const response =
             await fetch(
                 "/files?password=" +
-                encodeURIComponent(
-                    accessPassword
-                )
+                encodeURIComponent(accessPassword)
             );
-
 
         if (!response.ok) {
 
@@ -1906,21 +1880,16 @@ async function loadFiles() {
             return;
         }
 
-
         const result =
             await response.json();
-
 
         const files =
             result.files || [];
 
-
         allFiles =
             files;
 
-
         list.innerHTML = "";
-
 
         if (files.length === 0) {
 
@@ -1930,7 +1899,6 @@ async function loadFiles() {
             return;
         }
 
-
         files.forEach(function(file) {
 
             const card =
@@ -1939,13 +1907,11 @@ async function loadFiles() {
             card.className =
                 "file-card";
 
-
             const info =
                 document.createElement("div");
 
             info.className =
                 "file-info";
-
 
             const name =
                 document.createElement("div");
@@ -1957,19 +1923,14 @@ async function loadFiles() {
                 "📄 " +
                 file.originalName;
 
-
             const meta =
                 document.createElement("div");
 
             meta.className =
                 "file-meta";
 
-
             const date =
-                new Date(
-                    file.createdAt
-                );
-
+                new Date(file.createdAt);
 
             meta.textContent =
                 formatDate(date) +
@@ -1978,18 +1939,15 @@ async function loadFiles() {
                 " • " +
                 formatSize(file.size);
 
-
             info.appendChild(name);
 
             info.appendChild(meta);
-
 
             const actions =
                 document.createElement("div");
 
             actions.className =
                 "actions";
-
 
             const download =
                 document.createElement("a");
@@ -1999,7 +1957,6 @@ async function loadFiles() {
 
             download.textContent =
                 "Download";
-
 
             download.href =
                 "/download/" +
@@ -2011,7 +1968,6 @@ async function loadFiles() {
                     accessPassword
                 );
 
-
             const deleteButton =
                 document.createElement("button");
 
@@ -2020,7 +1976,6 @@ async function loadFiles() {
 
             deleteButton.textContent =
                 "❌ Delete";
-
 
             deleteButton.onclick =
                 function() {
@@ -2031,25 +1986,17 @@ async function loadFiles() {
 
                 };
 
+            actions.appendChild(download);
 
-            actions.appendChild(
-                download
-            );
-
-            actions.appendChild(
-                deleteButton
-            );
-
+            actions.appendChild(deleteButton);
 
             card.appendChild(info);
 
             card.appendChild(actions);
 
-
             list.appendChild(card);
 
         });
-
 
     } catch (error) {
 
@@ -2057,9 +2004,7 @@ async function loadFiles() {
 
         list.innerHTML =
             '<div class="empty">Unable to load files.</div>';
-
     }
-
 }
 
 
@@ -2074,12 +2019,10 @@ document
             const newFiles =
                 Array.from(this.files);
 
-
             if (newFiles.length === 0) {
 
                 return;
             }
-
 
             for (
                 let i = 0;
@@ -2089,7 +2032,6 @@ document
 
                 const file =
                     newFiles[i];
-
 
                 const duplicate =
                     selectedFiles.some(
@@ -2104,7 +2046,6 @@ document
                         }
                     );
 
-
                 if (!duplicate) {
 
                     selectedFiles.push(file);
@@ -2113,7 +2054,6 @@ document
 
             }
 
-
             if (selectedFiles.length > 20) {
 
                 selectedFiles =
@@ -2121,7 +2061,6 @@ document
                         0,
                         20
                     );
-
 
                 document
                     .getElementById(
@@ -2132,12 +2071,7 @@ document
 
             }
 
-
-            selectedFiles.reverse();
-
-
             updateSelectedFiles();
-
 
             this.value = "";
 
@@ -2154,7 +2088,6 @@ function updateSelectedFiles() {
             "selectedFiles"
         );
 
-
     if (selectedFiles.length === 0) {
 
         selected.textContent =
@@ -2162,7 +2095,6 @@ function updateSelectedFiles() {
 
         return;
     }
-
 
     let html =
         '<span class="selected-file-count">' +
@@ -2175,9 +2107,7 @@ function updateSelectedFiles() {
         ) +
         " selected</span>";
 
-
     html += "<br>";
-
 
     selectedFiles.forEach(
         function(file, index) {
@@ -2188,7 +2118,6 @@ function updateSelectedFiles() {
                 ". 📄 " +
                 escapeHTML(file.name) +
                 "</span>";
-
 
             if (
                 index <
@@ -2202,14 +2131,12 @@ function updateSelectedFiles() {
         }
     );
 
-
     selected.innerHTML =
         html;
-
 }
 
 
-/* ================= UPLOAD MULTIPLE FILES ================= */
+/* ================= UPLOAD ================= */
 
 document
     .getElementById("uploadForm")
@@ -2219,18 +2146,15 @@ document
 
             e.preventDefault();
 
-
             const message =
                 document.getElementById(
                     "uploadMessage"
                 );
 
-
             const uploadButton =
                 document.getElementById(
                     "uploadButton"
                 );
-
 
             if (
                 selectedFiles.length === 0
@@ -2242,7 +2166,6 @@ document
                 return;
             }
 
-
             if (
                 selectedFiles.length > 20
             ) {
@@ -2253,10 +2176,8 @@ document
                 return;
             }
 
-
             const formData =
                 new FormData();
-
 
             selectedFiles.forEach(
                 function(file) {
@@ -2269,7 +2190,6 @@ document
                 }
             );
 
-
             message.textContent =
                 "Uploading " +
                 selectedFiles.length +
@@ -2281,14 +2201,11 @@ document
                 ) +
                 "...";
 
-
             uploadButton.disabled =
                 true;
 
-
             uploadButton.textContent =
                 "Uploading...";
-
 
             try {
 
@@ -2304,10 +2221,8 @@ document
                         }
                     );
 
-
                 const result =
                     await response.json();
-
 
                 if (response.ok) {
 
@@ -2315,9 +2230,7 @@ document
                         "🟢 " +
                         result.message;
 
-
                     selectedFiles = [];
-
 
                     document
                         .getElementById(
@@ -2325,12 +2238,9 @@ document
                         )
                         .value = "";
 
-
                     updateSelectedFiles();
 
-
                     await loadFiles();
-
 
                 } else {
 
@@ -2340,9 +2250,7 @@ document
                             result.message ||
                             "Upload failed."
                         );
-
                 }
-
 
             } catch (error) {
 
@@ -2358,7 +2266,6 @@ document
 
                 uploadButton.textContent =
                     "Upload";
-
             }
 
         }
@@ -2376,7 +2283,6 @@ function escapeHTML(text) {
         text;
 
     return div.innerHTML;
-
 }
 
 
@@ -2389,27 +2295,24 @@ function openDownloadAdmin() {
             "adminModal"
         );
 
-
     const password =
         document.getElementById(
             "adminPassword"
         );
-
 
     const message =
         document.getElementById(
             "adminMessage"
         );
 
-
     password.value = "";
 
     message.textContent = "";
 
+    message.style.color = "";
 
     modal.style.display =
         "flex";
-
 
     setTimeout(
         function() {
@@ -2419,7 +2322,6 @@ function openDownloadAdmin() {
         },
         100
     );
-
 }
 
 
@@ -2432,29 +2334,32 @@ async function verifyAdmin() {
             "adminPassword"
         );
 
-
     const message =
         document.getElementById(
             "adminMessage"
         );
 
-
     const password =
         passwordInput.value.trim();
-
 
     if (!password) {
 
         message.textContent =
             "Please enter the admin password.";
 
+        message.style.color =
+            "#ff5966";
+
+        showAccessLight("failure");
+
         return;
     }
-
 
     message.textContent =
         "VERIFYING...";
 
+    message.style.color =
+        "#8994a6";
 
     try {
 
@@ -2477,20 +2382,18 @@ async function verifyAdmin() {
                 }
             );
 
-
         const result =
             await response.json();
-
 
         if (!response.ok) {
 
             message.textContent =
-                "🔴 " +
-                (
-                    result.message ||
-                    "Incorrect admin password."
-                );
+                "🔴 ACCESS DENIED";
 
+            message.style.color =
+                "#ff5966";
+
+            showAccessLight("failure");
 
             passwordInput.value = "";
 
@@ -2499,16 +2402,30 @@ async function verifyAdmin() {
             return;
         }
 
-
         adminPassword =
             password;
 
+        message.textContent =
+            "🟢 ACCESS GRANTED";
 
-        closeAdminModal();
+        message.style.color =
+            "#36e38b";
 
+        showAccessLight("success");
 
-        openDownloadModal();
+        /*
+         * Keep ACCESS GRANTED visible
+         * for a moment before opening
+         * the date download window.
+         */
 
+        setTimeout(function() {
+
+            closeAdminModal();
+
+            openDownloadModal();
+
+        }, 900);
 
     } catch (error) {
 
@@ -2517,8 +2434,11 @@ async function verifyAdmin() {
         message.textContent =
             "Connection error. Try again.";
 
-    }
+        message.style.color =
+            "#ff5966";
 
+        showAccessLight("failure");
+    }
 }
 
 
@@ -2550,7 +2470,6 @@ function closeAdminModal() {
         )
         .style.display =
         "none";
-
 }
 
 
@@ -2563,22 +2482,17 @@ function openDownloadModal() {
             "downloadModal"
         );
 
-
     const message =
         document.getElementById(
             "downloadMessage"
         );
 
-
     message.textContent = "";
-
 
     modal.style.display =
         "flex";
 
-
     buildDateList();
-
 }
 
 
@@ -2590,7 +2504,6 @@ function closeDownloadModal() {
         )
         .style.display =
         "none";
-
 }
 
 
@@ -2603,9 +2516,7 @@ function buildDateList() {
             "dateList"
         );
 
-
     dateList.innerHTML = "";
-
 
     if (!allFiles.length) {
 
@@ -2615,9 +2526,7 @@ function buildDateList() {
         return;
     }
 
-
     const dates = {};
-
 
     allFiles.forEach(
         function(file) {
@@ -2628,28 +2537,23 @@ function buildDateList() {
 
             }
 
-
             const date =
                 new Date(
                     file.createdAt
                 );
 
-
             const year =
                 date.getFullYear();
-
 
             const month =
                 String(
                     date.getMonth() + 1
                 ).padStart(2, "0");
 
-
             const day =
                 String(
                     date.getDate()
                 ).padStart(2, "0");
-
 
             const key =
                 year +
@@ -2658,12 +2562,10 @@ function buildDateList() {
                 "-" +
                 day;
 
-
             dates[key] = true;
 
         }
     );
-
 
     const sortedDates =
         Object.keys(dates).sort(
@@ -2674,7 +2576,6 @@ function buildDateList() {
             }
         );
 
-
     sortedDates.forEach(
         function(dateString) {
 
@@ -2684,17 +2585,6 @@ function buildDateList() {
                     "T00:00:00"
                 );
 
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-
-            button.className =
-                "date-button";
-
-
             const dayName =
                 date.toLocaleDateString(
                     "en-US",
@@ -2703,7 +2593,6 @@ function buildDateList() {
                             "long"
                     }
                 );
-
 
             const fullDate =
                 date.toLocaleDateString(
@@ -2720,7 +2609,6 @@ function buildDateList() {
                     }
                 );
 
-
             const filesOnDate =
                 allFiles.filter(
                     function(file) {
@@ -2731,28 +2619,23 @@ function buildDateList() {
 
                         }
 
-
                         const fileDate =
                             new Date(
                                 file.createdAt
                             );
 
-
                         const y =
                             fileDate.getFullYear();
-
 
                         const m =
                             String(
                                 fileDate.getMonth() + 1
                             ).padStart(2, "0");
 
-
                         const d =
                             String(
                                 fileDate.getDate()
                             ).padStart(2, "0");
-
 
                         return (
                             y +
@@ -2766,13 +2649,47 @@ function buildDateList() {
                     }
                 );
 
+            /* DATE ROW */
 
-            button.innerHTML =
-                '<div class="date-day">' +
-                dayName +
-                "</div>" +
+            const row =
+                document.createElement(
+                    "div"
+                );
 
-                '<div class="date-number">' +
+            row.className =
+                "date-row";
+
+
+            /* DATE INFORMATION */
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "date-info";
+
+            const day =
+                document.createElement(
+                    "div"
+                );
+
+            day.className =
+                "date-day";
+
+            day.textContent =
+                dayName;
+
+            const number =
+                document.createElement(
+                    "div"
+                );
+
+            number.className =
+                "date-number";
+
+            number.textContent =
                 fullDate +
                 " • " +
                 filesOnDate.length +
@@ -2781,34 +2698,58 @@ function buildDateList() {
                     filesOnDate.length === 1
                         ? ""
                         : "s"
-                ) +
-                "</div>";
+                );
+
+            info.appendChild(day);
+
+            info.appendChild(number);
 
 
-            button.onclick =
+            /* DOWNLOAD BUTTON */
+
+            const downloadButton =
+                document.createElement(
+                    "button"
+                );
+
+            downloadButton.className =
+                "date-download";
+
+            downloadButton.textContent =
+                "DOWNLOAD";
+
+            downloadButton.type =
+                "button";
+
+            downloadButton.onclick =
                 function() {
 
                     downloadByDate(
-                        dateString
+                        dateString,
+                        downloadButton
                     );
 
                 };
 
 
-            dateList.appendChild(
-                button
+            row.appendChild(info);
+
+            row.appendChild(
+                downloadButton
             );
+
+            dateList.appendChild(row);
 
         }
     );
-
 }
 
 
 /* ================= DOWNLOAD BY DATE ================= */
 
 async function downloadByDate(
-    selectedDate
+    selectedDate,
+    button
 ) {
 
     const message =
@@ -2816,10 +2757,18 @@ async function downloadByDate(
             "downloadMessage"
         );
 
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "PREPARING...";
+
+    }
 
     message.textContent =
         "Preparing your files...";
-
 
     try {
 
@@ -2847,64 +2796,65 @@ async function downloadByDate(
                 }
             );
 
-
         if (!response.ok) {
 
             const errorText =
                 await response.text();
 
-
             message.textContent =
                 "🔴 " +
                 errorText;
 
+            if (button) {
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    "DOWNLOAD";
+
+            }
+
             return;
         }
 
-
         const blob =
             await response.blob();
-
 
         const url =
             window.URL.createObjectURL(
                 blob
             );
 
-
         const link =
             document.createElement("a");
 
-
         link.href =
             url;
-
 
         link.download =
             "Aashutosh-Files-" +
             selectedDate +
             ".zip";
 
-
         document.body.appendChild(
             link
         );
 
-
         link.click();
-
 
         link.remove();
 
+        setTimeout(function() {
 
-        window.URL.revokeObjectURL(
-            url
-        );
+            window.URL.revokeObjectURL(
+                url
+            );
 
+        }, 1000);
 
         message.textContent =
             "🟢 Download started.";
-
 
     } catch (error) {
 
@@ -2913,8 +2863,19 @@ async function downloadByDate(
         message.textContent =
             "🔴 Download failed.";
 
-    }
+    } finally {
 
+        if (button) {
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                "DOWNLOAD";
+
+        }
+
+    }
 }
 
 
@@ -2925,33 +2886,27 @@ function openDeleteModal(file) {
     fileToDelete =
         file;
 
-
     const modal =
         document.getElementById(
             "deleteModal"
         );
-
 
     const password =
         document.getElementById(
             "deletePassword"
         );
 
-
     const message =
         document.getElementById(
             "deleteMessage"
         );
 
-
     password.value = "";
 
     message.textContent = "";
 
-
     modal.style.display =
         "flex";
-
 
     setTimeout(
         function() {
@@ -2961,7 +2916,6 @@ function openDeleteModal(file) {
         },
         100
     );
-
 }
 
 
@@ -2974,9 +2928,7 @@ function closeDeleteModal() {
         .style.display =
         "none";
 
-
     fileToDelete = "";
-
 }
 
 
@@ -2989,16 +2941,13 @@ async function confirmDelete() {
             "deletePassword"
         );
 
-
     const message =
         document.getElementById(
             "deleteMessage"
         );
 
-
     const password =
         passwordInput.value.trim();
-
 
     if (!password) {
 
@@ -3008,10 +2957,8 @@ async function confirmDelete() {
         return;
     }
 
-
     message.textContent =
         "Deleting...";
-
 
     try {
 
@@ -3039,10 +2986,8 @@ async function confirmDelete() {
                 }
             );
 
-
         const result =
             await response.json();
-
 
         if (!response.ok) {
 
@@ -3053,7 +2998,6 @@ async function confirmDelete() {
                     "Delete failed."
                 );
 
-
             passwordInput.value = "";
 
             passwordInput.focus();
@@ -3061,13 +3005,10 @@ async function confirmDelete() {
             return;
         }
 
-
         message.textContent =
             "🟢 File deleted successfully.";
 
-
         fileToDelete = "";
-
 
         setTimeout(
             function() {
@@ -3080,7 +3021,6 @@ async function confirmDelete() {
             600
         );
 
-
     } catch (error) {
 
         console.error(error);
@@ -3089,7 +3029,6 @@ async function confirmDelete() {
             "🔴 Connection error.";
 
     }
-
 }
 
 
@@ -3123,7 +3062,6 @@ function formatDate(date) {
             year: "numeric"
         }
     );
-
 }
 
 
@@ -3138,7 +3076,6 @@ function formatTime(date) {
             minute: "2-digit"
         }
     );
-
 }
 
 
@@ -3152,7 +3089,6 @@ function formatSize(bytes) {
 
     }
 
-
     const units =
         [
             "B",
@@ -3162,14 +3098,11 @@ function formatSize(bytes) {
             "TB"
         ];
 
-
     let size =
         bytes;
 
-
     let index =
         0;
-
 
     while (
         size >= 1024 &&
@@ -3183,7 +3116,6 @@ function formatSize(bytes) {
 
     }
 
-
     return (
         size.toFixed(
             index === 0
@@ -3193,7 +3125,6 @@ function formatSize(bytes) {
         " " +
         units[index]
     );
-
 }
 
 </script>
@@ -3201,4 +3132,3 @@ function formatSize(bytes) {
 </body>
 
 </html>
-```
